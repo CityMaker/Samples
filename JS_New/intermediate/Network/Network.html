@@ -1,0 +1,303 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Network</title>
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+
+<body style="margin:0px;scroll:no"  > 
+<div style="float:left">停靠点生效策略:   
+   <select id="cbOrderPolicy">
+       <option value="1">按顺序（默认值）</option>
+       <option value="2">固定起点，其他可以改变顺序</option>
+       <option value="3">固定起点，中间可以改变顺序，最后返回起点</option>
+       <option value="4">固定首尾点，中间可以改变顺序</option>
+       <option value="5">允许随意排列</option>
+   </select>   
+   <input type="button" value="加载网络" onclick="loadNetwork()"/>
+   <input type="button" value="加载景点" onclick="loadPOI()"/>
+   <input type="button" value="选择景点" onclick="selectLocation()"/>
+   <input type="button" value="生成路径" onclick="buildRoute()"/>
+   <input type="button" value="找厕所" onclick="findWC()"/>
+</div>
+        
+<div>
+    <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object><!-- object里的style="height: 600px; width: 800px " 必须有，否则无法全页面显示-->
+</div>
+</body>
+
+<script type="text/javascript">
+    var routeSolver;
+    var renderline;
+    var multiRenderline;
+    var network;
+    var renderLineArray = new Array();
+    var multiRenderLineArray = new Array();
+
+     window.onload = function () {
+         initialize();
+     }
+
+	function initialize() {
+        //初始化三维控件
+        initAxControl();
+
+        //设置选择对象类型
+        __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectFeatureLayer;
+
+        // 加载场景
+        loadFdb("Network.FDB");
+	}
+
+
+    function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+        if (pickResult == null)
+            return;
+        
+        if (pickResult != null) {
+            if (pickResult.type == gviObjectType.gviObjectFeatureLayer) {
+                var fid = pickResult.featureId;
+                var fl = pickResult.featureLayer;
+
+                for (var fcGuid in __fcMap) {
+                    var fc = __fcMap[fcGuid];
+                    if (fcGuid == fl.featureClassId) {
+                        var row = fc.getRow(fid);
+                        var pos = row.fieldIndex("Geometry");
+                        var point = row.getValue(pos);
+                        var location = __g.new_NetworkLocation;
+                        location.position = point;
+                        routeSolver.addLocation(location);
+                        
+                        __g.featureManager.highlightFeature(fc, fid, 0xffff0000);
+                    }
+                }
+                
+            }
+        }
+
+    }
+
+    /*
+     *	清除选择
+     */
+    function clear() {
+        if (renderline) {
+            __g.objectManager.deleteObject(renderline.guid);
+            renderline = null;
+        }
+        if (multiRenderline) {
+            __g.objectManager.deleteObject(multiRenderline.guid);
+            multiRenderline = null;
+        }
+        if (renderLineArray.length > 0) {
+            for (var i = 0; i < renderLineArray.length; i++) {
+                __g.objectManager.deleteObject(renderLineArray[i].guid);
+            }
+            renderLineArray.length = 0;
+        }
+        if (multiRenderLineArray.length > 0) {
+            for (var i = 0; i < multiRenderLineArray.length; i++) {
+                __g.objectManager.deleteObject(multiRenderLineArray[i].guid);
+            }
+            multiRenderLineArray.length = 0;
+        }   
+    }
+
+    function clearDeep() {
+        __g.featureManager.unhighlightAll();
+        routeSolver.clearLocations();
+        
+    }
+
+    /*
+    *	加载网络
+    */
+    function loadNetwork() {    
+        var dsManager = __fds.getNetworkManager();  //__fds是road数据源中的dataset
+        var networkDatasetNames = dsManager.getNetworkNames();
+        var hasNetworkDataset = false;
+        for (var i = 0; i < networkDatasetNames.length; i++)
+        {
+            if (networkDatasetNames[i] == "newNetworkDataset")
+                hasNetworkDataset = true;
+        }
+
+        if (!hasNetworkDataset)
+        {
+            var dsLoader = dsManager.createNetworkLoader();
+            dsLoader.name = "newNetworkDataset";
+            dsLoader.xyTolerance = 10.0;
+            var edgeNS = __g.new_EdgeNetworkSource;
+            edgeNS.sourceName = "road";
+            edgeNS.connectivityPolicy = 2;
+            edgeNS.geoColumnName = "Geometry";
+            edgeNS.classConnectivityGroup = 1;
+            dsLoader.addSource(edgeNS);
+            var attr =  __g.new_NetworkAttribute;
+            attr.fieldType = 6;
+            attr.name = "Length";
+            attr.usageType = 0;
+            var fieldEvaluator = __g.new_NetworkFieldEvaluator;
+            fieldEvaluator.fieldName = "Geometry";
+            attr.setEvaluator(edgeNS, 1, fieldEvaluator);
+            attr.setEvaluator(edgeNS, 2, fieldEvaluator);
+            dsLoader.addNetworkAttribute(attr);
+            dsLoader.loadNetwork();
+        }
+        network = dsManager.getNetwork("newNetworkDataset");
+
+        routeSolver = network.createRouteSolver();
+        routeSolver.impedanceAttributeName = "Length";
+        routeSolver.locationSearchTolerance = 60.0;
+        alert("网络加载成功!");
+    }
+
+    /*
+    *	加载景点
+    */
+    function loadPOI() {
+        // 加载POI
+        var textRender = __g.new_SimpleTextRender;
+        textRender.expression = "$(Name)";
+        textRender.dynamicPlacement = true;
+        textRender.minimizeOverlap = true;
+        var textSymbol = __g.new_TextSymbol;
+        textSymbol.verticalOffset = 10;
+        textRender.symbol = textSymbol;
+        var geoRender = __g.new_SimpleGeometryRender;
+        var imagePointSymbol = __g.new_ImagePointSymbol;
+        imagePointSymbol.imageName = "#(1)";
+        imagePointSymbol.size = 30;
+        geoRender.symbol = imagePointSymbol;
+        loadFdb("POI-1.FDB", textRender, geoRender);
+    }  
+     
+    /*
+    *	开始拾取
+    */
+    function selectLocation() {
+        clear();
+        clearDeep();
+        
+        __g.interactMode = gviInteractMode.gviInteractSelect;
+    }
+
+    /*
+    *	生成路径
+    */
+    function buildRoute() {
+        clear();
+        var ordermode = $("cbOrderPolicy");
+        routeSolver.locationOrderPolicy = ordermode.value;
+        if (routeSolver.solve()) {
+            var route = routeSolver.getRoute();
+            if (route != null) {
+                var geo = route.getRouteGeometry();
+                var lineSym = __g.new_CurveSymbol;
+                lineSym.color = 0xffffff00;
+                lineSym.width = -2;
+                if (geo.geometryType == gviGeometryType.gviGeometryPolyline) {
+                    renderline = __g.objectManager.createRenderPolyline(geo, lineSym, '');
+                    renderline.maxVisibleDistance = 10000;
+                }
+                else if (geo.geometryType == gviGeometryType.gviGeometryMultiPolyline) {
+                    multiRenderline = __g.objectManager.createRenderMultiPolyline(geo, lineSym, '');
+                    multiRenderline.maxVisibleDistance = 10000;
+                }
+            }
+        }
+        __g.interactMode = gviInteractMode.gviInteractNormal;
+    }
+
+
+    /*
+    *	找厕所
+    */
+    function findWC() {
+        clear();
+        clearDeep();
+
+        var closestFacilitySolver = network.createClosestFacilitySolver();
+        closestFacilitySolver.impedanceAttributeName = "Length";
+        closestFacilitySolver.locationSearchTolerance = 60;
+        closestFacilitySolver.clearFacilityLocations();
+        closestFacilitySolver.clearEventLocations();
+
+        for (var fcGuid in __fcMap) {
+            var fc = __fcMap[fcGuid];
+            if (fc.name.indexOf("WC") >= 0) {
+                var cursor = fc.search(null, true);
+                var row = null;
+                while ((row = cursor.nextRow()) != null) {
+                    var facility = __g.new_NetworkLocation;
+                    var pos = row.fieldIndex("Geometry");
+                    var point = row.getValue(pos);
+                    facility.position = point;
+                    facility.name = fc.guid + "_" + row.getValue(0);
+                    closestFacilitySolver.addFacilityLocation(facility);
+                }
+            }
+        }
+
+        if (closestFacilitySolver.facilityLocationCount == 0) {
+            alert("添加的厕所数为0，请调整LocationSearchTolerance大小");
+            return;
+        }
+
+        // 添加人所在的位置
+        var location = __g.new_NetworkEventLocation;
+        var mm = __g.camera.getCamera2();
+        location.position = mm["position"];
+        location.name = "I'mHere";
+        location.targetFacilityCount = 3;
+        location.setCutoff("Length", 500.5);
+        closestFacilitySolver.addEventLocation(location);
+        // 可视化人的位置
+
+        if (closestFacilitySolver.solve()) {
+            var routeCount = closestFacilitySolver.routeCount;
+            if (routeCount == 0) {
+                alert("没有厕所在指定范围内");
+                return;
+            }
+            for (var i = 0; i < routeCount; i++) {
+                var route = closestFacilitySolver.getRoute(i);
+                if (route != null) {
+                    var geo = route.getRouteGeometry();
+                    var lineSym = __g.new_CurveSymbol;
+                    lineSym.color = 0xffffff00;
+                    lineSym.width = -2;
+                    if (geo.geometryType == gviGeometryType.gviGeometryPolyline) {
+                        renderline = __g.objectManager.createRenderPolyline(geo, lineSym, '');
+                        renderline.maxVisibleDistance = 10000;
+                        renderLineArray.push(renderline);
+                    }
+                    else if (geo.geometryType == gviGeometryType.gviGeometryMultiPolyline) {
+                        multiRenderline = __g.objectManager.createRenderMultiPolyline(geo, lineSym, '');
+                        multiRenderline.maxVisibleDistance = 10000;
+                        multiRenderLineArray.push(multiRenderline);
+                    }
+
+                    //高亮厕所
+                    var segmentCount = route.segmentCount;
+                    for (var j = 0; j < segmentCount; j++) {
+                        var endLocation = route.getSegment(j).endLocation;
+                        var strs = endLocation.name.split('_');
+                        for (var fcGuid in __fcMap) {
+                            var fc = __fcMap[fcGuid];
+                            if (fcGuid == strs[0]) {
+                                __g.featureManager.highlightFeature(fc, strs[1], 0xffff0000);
+                            }
+                        }
+                    }//end 高亮厕所
+                }                
+            }
+            
+        }
+        
+    }
+</script>
+</html>

@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML  .0 Transitional//EN" "http://www.w3.org/TR/xhtml /DTD/xhtml -transitional.dtd">
+<html xmlns="http://www.w3.org/ 999/xhtml">
+<head>
+    <title>DynamicImage</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+   
+   
+</head>
+    
+<body >
+   
+    <div style="text-align:center">
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 700px; width:  1000px" > 
+        </object>
+    </div>
+
+</body>
+
+<script type="text/javascript">
+  
+     window.onload = function () {
+         Initialize();
+    
+     }
+    function Initialize() {
+        initAxControl();
+        loadFdb("SDKDEMO.FDB");
+
+        __g.new_LicenseServer.setHost("192.168.2.200", 8588, "");
+        this.imgOld = __fds.getImage("paizi6");
+
+        var vec3 = __g.new_Vector3;
+        vec3.set(15389.639063421025, 35981.563066037575, 10.179414184165951);
+        var point = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+        point.position = vec3;
+        //point.spatialCRS = __datasetCRS;
+        var ang = __g.new_EulerAngle;
+        ang.set(-5.479650049770498, -16.108832377369747, 6.957463365701443e-16);
+        __g.camera.setCamera2(point, ang, 0);
+
+        var imgPath = getSamplesRelatePath("") + "\\frameImage\\Gvitech";
+        var img = __g.resourceFactory.createImageFromFile(imgPath);
+        img.frameInterval = 1000;
+        img.convertFormat(gviImageFormat.gviImageDDS);
+
+        setTimeout(function () {
+            __fds.updateImage("paizi6", img);
+            __g.refreshImage(__fds, "paizi6");
+        }, 1000);
+    }
+   
+</script>
+</html>

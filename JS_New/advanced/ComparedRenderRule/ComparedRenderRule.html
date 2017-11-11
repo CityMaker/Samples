@@ -1,0 +1,139 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>ComparedRenderRule</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+
+<body style="margin:0px;scroll:no" >
+    <div style="float:left">
+        比较值：
+		<select id="cValue" onchange="changeValue()">
+			<option>1</option>
+			<option>2</option>
+			<option>3</option>
+			<option>4</option>
+		</select>
+    </div>
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object>
+    </div>  
+</body>
+
+<script type="text/javascript">
+
+     window.onload = function () {
+         initialize();
+     }
+
+    function initialize() {
+        //初始化三维控件
+        initAxControl();
+
+        // 加载FDB场景
+	    var c = __g.new_ConnectionInfo;
+	    c.connectionType = gviConnectionType.gviConnectionFireBird2x;
+	    c.database = getSamplesRelatePath("/") + "SDKDEMO.FDB";
+	    try {
+	        var ds = __g.dataSourceFactory.openDataSource(c);
+	        var fdsNames = ds.getFeatureDatasetNames();
+	        if (fdsNames.length == 0)
+	            return false;
+	        __fds = ds.openFeatureDataset(fdsNames[0]);
+	        __dataspatialCRS = __fds.spatialReference;
+	        var fcNames = __fds.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+	        if (fcNames.length == 0)
+	            return false;
+
+	        for (var i = 0; i < fcNames.length; i++) {
+	            var fc = __fds.openFeatureClass(fcNames[i]);
+	            __fc = fc;
+	            // 找到FC里面的所有空间列字段
+	            var geoNames = [];
+	            var fieldinfos = fc.getFields();
+	            for (var j = 0; j < fieldinfos.count; j++) {
+	                var fi = fieldinfos.get(j);
+	                if (fi && fi.geometryDef)
+	                    geoNames.push(fi.name);
+	            }
+	            __fcMap[fc.guid] = fc;
+	            __fcGeoMap[fc.guid] = geoNames;
+	        }
+	    }
+	    catch (e) {
+	        exceptionHandler(e);
+	    }
+
+	    // CreateFeautureLayer
+	    var hasfly = false;
+	    for (var fcId in __fcGeoMap) {
+	        var fc = __fcMap[fcId];
+	        var geoNames = __fcGeoMap[fcId];
+	        for (var k = 0; k < geoNames.length; k++) {
+	            var geoName = geoNames[k];
+	            var fl = __g.objectManager.createFeatureLayer(fc, geoName, null, null, __rootId);
+				if(fc.name =="Building" && geoName == "Geometry"){
+					pset = __g.new_PropertySet;
+					var mode = $("cValue");
+					pset.setProperty("type", mode);
+					fl.compareRenderRuleVariants = pset;
+
+					var render = __g.new_ValueMapGeometryRender;
+					{
+						var scheme = __g.new_GeometryRenderScheme;
+						var rule = __g.new_ComparedRenderRule;
+						rule.lookUpField = "BuildType";
+						rule.compareVariant = "type";
+						rule.compareOperator = gviCompareType.gviCompareEqual;
+						scheme.addRule(rule);
+						var symbol = __g.new_ModelPointSymbol;
+						symbol.enableColor = true;
+						symbol.color = 0xff00ff00;
+						scheme.symbol = symbol;
+						render.addScheme(scheme);
+					}
+					{
+						var scheme = __g.new_GeometryRenderScheme;
+						var rule = __g.new_ComparedRenderRule;
+						rule.lookUpField = "BuildType";
+						rule.compareVariant = "type";
+						rule.compareOperator = gviCompareType.gviCompareLessOrEqual;
+						scheme.addRule(rule);
+						render.addScheme(scheme);
+					}
+					fl.setGeometryRender(render);					
+					__fl=fl;
+				}				
+				
+	            if (!hasfly) {
+	                var fieldinfos = fc.getFields();
+	                var fi = fieldinfos.get(fieldinfos.indexOf(geoName));
+	                var env = fi.geometryDef.envelope;
+	                if (env.maxX == 0.0 && env.maxY == 0.0 && env.maxZ == 0.0 &&
+	                        env.minX == 0.0 && env.minY == 0.0 && env.minZ == 0.0)
+	                    continue;
+
+	                var pos = __g.new_Vector3;
+	                var ang = __g.new_EulerAngle;
+	                pos.set((env.maxX + env.minX) / 2, (env.maxY + env.minY) / 2, (env.maxZ + env.minZ) / 2);
+	                ang.heading = 0;
+	                ang.tilt = -20;
+	                __g.camera.lookAt(pos, 600, ang);
+
+	                hasfly = true;
+	            }
+	        }
+	    }//end for
+    }
+
+    function changeValue(){
+		var times = $("cValue");
+        var tt = times.options[times.selectedIndex].value;
+		pset.setProperty("type", parseInt(tt));
+        __fl.compareRenderRuleVariants = pset;
+	}
+
+</script>
+</html>

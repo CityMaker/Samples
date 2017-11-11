@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>FeatureSelect</title>
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+
+<body style="margin:0px;scroll:no"  > 
+<div style="float:left">拾取模式设置:   
+   <select id="selMode" onchange="selModeChanged()">
+       <option value="0">漫游不拾取</option>
+       <option value="1">点选</option>
+       <option value="2">框选</option>
+       <option value="3">点选+框选</option>
+   </select>   
+   <input type="checkbox" id="CtrlSel" />Ctrl多选      
+   <input type="button" value="清除选择" onclick="initialize()"/>
+</div>
+<p id="aaaa" > </p>        
+<div>
+    <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object><!-- object里的style="height: 600px; width: 800px " 必须有，否则无法全页面显示-->
+</div>
+</body>
+
+<script type="text/javascript">
+
+   
+     window.onload = function () {
+         initialize();
+     }
+
+	function initialize() {
+        //初始化三维控件
+        initAxControl();
+
+        //设置选择对象类型
+        __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectFeatureLayer;  
+
+        // 加载场景
+        loadFdb("community.FDB");
+
+        __g.interactMode = gviInteractMode.gviInteractSelect;
+        __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick | gviMouseSelectMode.gviMouseSelectMove;
+    }
+
+    var __nMoveSelCount = 0;
+    var __nClickSelCount = 0;
+	
+    function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+        switch(eventSender){
+            case gviMouseSelectMode.gviMouseSelectClick:
+                document.title = "Click:" + (__nClickSelCount++);
+                break;
+			case gviMouseSelectMode.gviMouseSelectMove:
+			    document.getElementById("aaaa").innerText = "Move: " + (__nMoveSelCount++);
+			    break;
+		}
+    }
+
+
+ 
+     
+</script>
+</html>

@@ -1,0 +1,277 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>CalculateTopOnTerrain</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+
+<body style="margin:0px;scroll:no" >
+    <div style="float:left">
+        <button onclick="startBufferAnalysis()">缓冲区分析</button>
+    </div>
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object>
+    </div>  
+</body>
+
+<script type="text/javascript">
+
+     window.onload = function () {
+         initialize();
+     }
+
+    function initialize() {
+        //初始化三维控件
+        initAxControl();
+
+        //注册地形        
+        var tmpTedPath = getSamplesRelatePath("") + "\\terrain\\terrain.ted";
+        __g.terrain.registerTerrain(tmpTedPath, "");
+        __g.terrain.flyTo(0);
+    }
+
+    //缓冲区分析
+    function startBufferAnalysis() {
+        __g.interactMode = gviInteractMode.gviInteractSelect;
+        __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick | gviMouseSelectMode.gviMouseSelectMove;
+        __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectTerrain;
+    }
+
+    var _FirstClick = true;
+    var _StartPoint;
+    var _EndPoint;
+    var _StartRenderPoint;
+    var _RenderPolygon;
+    var _EndRenderPoint;
+    var _TableLabel;
+    var _TopPoint;
+    var _EndRenderPoint;
+
+    function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+        if (pickResult == null)
+            return;
+        if (pickResult.type == gviObjectType.gviObjectTerrain) {
+            if (eventSender == gviMouseSelectMode.gviMouseSelectClick) {
+                if (_FirstClick) {
+                    Clear();
+
+                    _StartPoint = intersectPoint;
+
+                    if (_StartRenderPoint != null) {
+                        _StartRenderPoint.setFdeGeometry(_StartPoint);
+                    }
+                    else {
+                        _StartRenderPoint = __g.objectManager.createRenderPoint(_StartPoint, null, __rootId);
+                    }
+                    _StartRenderPoint.visibleMask = gviViewportMask.gviViewAllNormalView;
+                }
+                else {
+                    var startPoint = _StartRenderPoint.getFdeGeometry();
+                    var distance = Math.sqrt((startPoint.x - intersectPoint.x) * (startPoint.x - intersectPoint.x) + (startPoint.y - intersectPoint.y) * (startPoint.y - intersectPoint.y));
+                    if (distance <= 0) { return; }
+
+                    DrawBufferPolygon(distance);
+
+                    GetTopValue(_RenderPolygon.getFdeGeometry());
+                }
+                _FirstClick = !_FirstClick;
+            }
+            else if (eventSender == gviMouseSelectMode.gviMouseSelectMove && !_FirstClick) {
+                var startPoint = _StartRenderPoint.getFdeGeometry();
+                var distance = Math.sqrt((startPoint.x - intersectPoint.x) * (startPoint.x - intersectPoint.x) + (startPoint.y - intersectPoint.y) * (startPoint.y - intersectPoint.y));
+                if (distance <= 0) { return; }
+
+                DrawBufferPolygon(distance);
+            }
+        }
+    }
+
+    function DrawBufferPolygon(distance) {
+        var bufferPolygon = GetBufferPolygon(distance);
+
+        if (_RenderPolygon != null) {
+            _RenderPolygon.setFdeGeometry(bufferPolygon);
+        }
+        else {
+            var _SurfaceSymbol = __g.new_SurfaceSymbol;
+            _SurfaceSymbol.color = 0x550000FF;
+            _RenderPolygon = __g.objectManager.createRenderPolygon(bufferPolygon, _SurfaceSymbol, __rootId);
+            _RenderPolygon.minVisiblePixels = 3;
+            _RenderPolygon.heightStyle = gviHeightStyle.gviHeightOnTerrain;
+        }
+
+        _RenderPolygon.visibleMask = gviViewportMask.gviViewAllNormalView;
+
+        return _RenderPolygon;
+    }
+
+    function GetBufferPolygon(distance) {
+        var startPoint = _StartRenderPoint.getFdeGeometry();
+        if (startPoint == null) { return null; }
+
+        var bufferPolygon = startPoint.buffer2D(distance, gviBufferStyle.gviBufferCapround);
+
+        return bufferPolygon;
+    }
+
+    function Clear() {
+        if (_StartRenderPoint) { _StartRenderPoint.visibleMask = gviViewportMask.gviViewNone; }
+        if (_EndRenderPoint) { _EndRenderPoint.visibleMask = gviViewportMask.gviViewNone; }
+        if (_RenderPolygon) { _RenderPolygon.visibleMask = gviViewportMask.gviViewNone; }
+        if (_TableLabel) { _TableLabel.visibleMask = gviViewportMask.gviViewNone; }
+    }
+
+
+
+     function GetTopValue(calcPolygon)
+        {
+            var polygon = calcPolygon.clone2(gviVertexAttribute.gviVertexAttributeNone);
+            var envelope = polygon.envelope;
+
+            // 采样点数量 可根据精度修改
+            var pickCount = 10000;
+
+            // 高程计算模式
+            var mode = gviGetElevationType.gviGetElevationFromDatabase;
+
+            // 最高点高程值和位置
+            var topValue = 0;
+            var topPointX;
+            var topPointY;
+
+            var step = Math.sqrt(envelope.width * envelope.height / pickCount);
+            var xStart = envelope.minX;
+            var yStart = envelope.minY;
+            var hasTopPoint = false;
+
+            while (xStart <= envelope.maxX)
+            {
+                yStart = envelope.minY;
+                while (yStart <= envelope.maxY)
+                {
+                    var elevatation = __g.terrain.getElevation(xStart, yStart, mode);
+                    var point = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeNone);
+                    var vector = __g.new_Vector3;
+                    vector.set(xStart, yStart, 0);
+                    point.position = vector;
+                    var pointOnSurface = (polygon.isPointOnSurface(point));
+                    if (topValue < elevatation && pointOnSurface)
+                    {
+                        topValue = elevatation;
+                        topPointX = xStart;
+                        topPointY = yStart;
+                        hasTopPoint = true;
+                    }
+                    yStart += step;
+                }
+                xStart += step;
+            }
+
+            //MessageBox.Show(string.Format("最高点高度：{0}。坐标为X:{1} Y:{2} Z:{3}：", topValue, topPointX, topPointY, topValue));
+
+            if (hasTopPoint)
+            {
+                DrawTableLabel(topPointX, topPointY, topValue);
+
+                DrawTopPoint(topPointX, topPointY, topValue);
+            }
+
+            return topValue;
+        }
+
+        /// <summary>
+        /// 绘制标签
+        /// </summary>
+        /// <param name="x">标签X坐标</param>
+        /// <param name="y">标签Y坐标</param>
+        /// <param name="z">标签Z坐标</param>
+        function DrawTableLabel(x, y, z)
+        {
+            var rowCount = 3, columnCount = 2;
+            var objManager = __g.objectManager;
+
+            if (_TableLabel == null)
+            {
+                _TableLabel = objManager.createTableLabel(rowCount, columnCount, __rootId);
+
+                _TableLabel.titleText = "最高点";
+
+                _TableLabel.setRecord(0, 0, "x:");
+                _TableLabel.setRecord(1, 0, "y:");
+                _TableLabel.setRecord(2, 0, "z:");
+
+                _TableLabel.borderColor = 4285098345;
+                _TableLabel.borderWidth = 2;
+                _TableLabel.tableBackgroundColor = 2531320032;
+
+                // 内容标题样式
+                var columeCapitalTextAttribute = __g.new_TextAttribute;
+                columeCapitalTextAttribute.textColor = 4278190080;
+                columeCapitalTextAttribute.outlineColor = 4294967295;
+                columeCapitalTextAttribute.font = "Calibri";
+                columeCapitalTextAttribute.textSize = 15;
+                columeCapitalTextAttribute.bold = true;
+                columeCapitalTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineCenter;
+                _TableLabel.setColumnTextAttribute(0, columeCapitalTextAttribute);
+
+                // 内容值样式
+                var columeValueTextAttribute = __g.new_TextAttribute;
+                columeValueTextAttribute.textColor = 4278190080;
+                columeValueTextAttribute.outlineColor = 16777215;
+                columeValueTextAttribute.font = "Calibri";
+                columeValueTextAttribute.textSize = 13;
+                columeValueTextAttribute.bold = true;
+                columeValueTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineLeft;
+                _TableLabel.setColumnTextAttribute(1, columeValueTextAttribute);
+
+                // 标题样式
+                _TableLabel.titleBackgroundColor = 2531320032;
+                var titleTextAttribute = __g.new_TextAttribute;
+                titleTextAttribute.textColor = 4278190080;
+                titleTextAttribute.outlineColor = 4294967295;
+                titleTextAttribute.font = "宋体";
+                titleTextAttribute.textSize = 15;
+                titleTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineCenter;
+                titleTextAttribute.bold = true;
+                titleTextAttribute.backgroundColor = 2531320032;
+                _TableLabel.titleTextAttribute = titleTextAttribute;
+            }
+
+            var poi = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+            poi.setCoords(x, y, z, 0, 0);
+            _TableLabel.position = poi;
+
+            _TableLabel.setRecord(0, 1, x);
+            _TableLabel.setRecord(1, 1, y);
+            _TableLabel.setRecord(2, 1, z);
+
+            _TableLabel.visibleMask = gviViewportMask.gviViewAllNormalView;
+        }
+
+         function DrawTopPoint(x, y, z)
+        {
+            if (_TopPoint == null)
+            {
+                _TopPoint = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+            }
+
+            _TopPoint.setCoords(x, y, z, 0, 0);
+
+            if (_EndRenderPoint == null)
+            {
+                _EndRenderPoint = __g.objectManager.createRenderPoint(_TopPoint, null, __rootId);
+                _EndRenderPoint.maxVisibleDistance = 100000000;
+                _EndRenderPoint.minVisiblePixels = 1;
+            }
+            else
+            {
+                _EndRenderPoint.setFdeGeometry(_TopPoint);
+            }
+
+            _EndRenderPoint.visibleMask = gviViewportMask.gviViewAllNormalView;
+        }
+
+</script>
+</html>

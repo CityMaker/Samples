@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>CameraTour</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+
+</head>
+<body>
+    <div style="height: 50px;">
+        <select id="ePoints" onchange="changePoint()">
+        </select>
+        <input id="CreateRoute" type="button" onclick="CreateTour()" value="CreateTour" />
+        duration<input id="eDuration" type="text" value="5" style="width: 40px" />(s)&nbsp;&nbsp;
+        mode<select id="eMode"><option>Smooth</option><option>Bounce</option><option>Linear</option>
+        </select>
+        <input id="AddPoint" type="button" onclick="AddPoint()" value="AddPoint" />
+        <input id="DelPoint" type="button" onclick="DelPoint()" value="DelPoint" />
+        <input id="ReplacePoint" type="button" onclick="ReplacePoint()" value="ReplacePoint" />
+        <input id="AutoRepeat" type="checkbox" onchange="AutoRepeat()" />AutoRepeat
+        <input id="PlayRoute" type="button" onclick="PlayTour()" value="PlayTour" />
+        <input id="PauseRoute" type="button" onclick="PauseTour()" value="PauseTour" />
+        <input id="StopRoute" type="button" onclick="StopTour()" value="StopTour" /><br />
+        <input id="ImportFromXML" type="button" onclick="ImportFromXML()" value="ImportFromXML" />
+        <input id="ExportAsXML" type="button" onclick="ExportAsXML()" value="ExportAsXML" />
+        <input id="ExportAsVideo" type="button" onclick="ExportAsVideo()" value="ExportAsVideo" />
+        <input id="ExportAsFramePictures" type="button" onclick="ExportAsFramePictures()" value="ExportAsFramePictures" />
+        节点位置信息：<input id="point" type="text" readonly="readonly" size="100"/>
+    </div>
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+        </object>
+    </div>
+</body>
+
+<script type="text/javascript">
+    var __cameraTour = null;
+
+    window.onload = function () {
+        initialize();
+    }
+
+    function initialize() {
+        //初始化三维控件
+        initAxControl();
+
+        // 加载场景
+        loadFdb("SDKDEMO.FDB");
+
+        
+        
+    }
+     
+    function getModeEnum(modestring) {
+        switch (modestring) {
+            case "Bounce":
+                return gviCameraTourMode.gviCameraTourBounce;
+            case "Smooth":
+                return gviCameraTourMode.gviCameraTourSmooth;
+            case "Linear":
+                return gviCameraTourMode.gviCameraTourLinear;
+        }
+        return gviCameraTourMode.gviCameraTourSmooth;
+    }
+    
+    /*
+     *  创建动画路径	
+     */
+    function CreateTour() {
+        if (__cameraTour) {
+            __g.objectManager.deleteObject(__cameraTour.guid);
+            __cameraTour = null;
+        }
+        __cameraTour = __g.objectManager.createCameraTour(__rootId);
+        
+        // 清除界面
+		var points = $("ePoints");
+        var length = points.options.length;
+        for (var i = 0; i < length; ++i) {
+            points.options.remove(0);
+        }
+        $("point").value = "";
+    }
+
+    /*
+    *  添加节点
+    */
+    function AddPoint() {
+        var ci = __g.camera.getCamera();
+        var duration = $("eDuration").value;
+        var mode = $("eMode");
+        __cameraTour.addWaypoint(ci.position, ci.angle, duration, getModeEnum(mode.options[mode.selectedIndex].value));
+        
+        var points = $("ePoints");
+        var varItem = new Option(__cameraTour.waypointsNumber - 1, ci.position.x + "," + ci.position.y + "," + ci.position.z + "," + ci.angle.heading + "," + ci.angle.tilt + "," + ci.angle.roll + "," + duration + "," + mode.options[mode.selectedIndex].value);
+        points.options.add(varItem);
+        points[points.options.length - 1].selected = true;
+        $("point").value = points.options[points.selectedIndex].value;
+    }
+
+    /*
+    *  删除节点
+    */
+    function DelPoint() {
+        var points = $("ePoints");
+        __cameraTour.deleteWaypoint(points.selectedIndex);
+        points.remove(points.selectedIndex);
+        $("point").value = "";
+    }
+
+    /*
+    *  替换节点
+    */
+    function ReplacePoint() {
+        var ci = __g.camera.getCamera();
+        var duration = $("eDuration").value;
+        var index = $("ePoints").selectedIndex;
+        var mode = $("eMode");
+        __cameraTour.modifyWaypoint(index, ci.position, ci.angle, duration, getModeEnum(mode.options[mode.selectedIndex].value));
+        $("ePoints").options[index].value = ci.position.x + "," + ci.position.y + "," + ci.position.z + "," + ci.angle.heading + "," + ci.angle.tilt + "," + ci.angle.roll + "," + duration + "," + mode.options[mode.selectedIndex].value;
+        $("point").value = $("ePoints").options[index].value;
+    }
+
+    /*
+    *  播放动画导航
+    */
+    function PlayTour() {
+        if (__cameraTour) {
+            //__cameraTour.index = $("ePoints").selectedIndex;
+            __cameraTour.play();
+        }
+    }
+
+    /*
+    *  暂停
+    */
+    function PauseTour() {
+        if (__cameraTour)
+            __cameraTour.pause();
+    }
+
+    /*
+    *  停止
+    */
+    function StopTour() {
+        if (__cameraTour)
+            __cameraTour.stop();
+    }
+
+    /*
+    *  是否循环
+    */
+    function AutoRepeat() {
+        if (__cameraTour)
+            __cameraTour.autoRepeat = $("AutoRepeat").checked;
+    }
+
+    /*
+    *  切换节点时相机定位至该节点处
+    */
+    function changePoint() {
+        var points = $("ePoints");
+        $("point").value = points.options[points.selectedIndex].value;
+        if (__cameraTour) {
+            
+            var cp = __cameraTour.getWaypoint(points.selectedIndex);
+            __g.camera.setCamera(cp.position, cp.angle, gviSetCameraFlags.gviSetCameraNoFlags);
+        }
+    }
+
+    /*
+    *  从XML创建动画导航
+    */
+    function ImportFromXML() {
+        var tourPath = getSamplesRelatePath("/xml/CameraTour_1.xml");
+        if (typeof ActiveXObject !== "undefined") {
+            var doc = new ActiveXObject("Microsoft.XMLDOM");
+            doc.load(tourPath);
+            var xml = doc.xml;
+            if (__cameraTour) {
+                __g.objectManager.deleteObject(__cameraTour.guid);
+                __cameraTour = null;
+            }
+            __cameraTour = __g.objectManager.createCameraTour();
+            __cameraTour.fromXml(xml);
+            var points = $("ePoints");
+            points.length = 0;
+            for (var i = 0; i < __cameraTour.waypointsNumber; i++) {
+                
+                var cp = __cameraTour.getWaypoint(i);
+                var varItem = new Option(i, cp.position.x + "," + cp.position.y + "," + cp.position.z + "," + cp.angle.heading + "," + cp.angle.tilt + "," + cp.angle.roll + "," + cp.duration + "," + cp.mode);
+                points.options.add(varItem);
+            }
+        }
+    }
+
+    /*
+    *  导出为XML
+    */
+    function ExportAsXML() {
+        if (__cameraTour) {
+            var xmlstring = __cameraTour.asXml();
+			if (typeof ActiveXObject !== "undefined"){
+				var fso = new ActiveXObject("Scripting.FileSystemObject");
+				var f = fso.CreateTextFile("C:\\temp.xml", true);
+				f.write(xmlstring);
+				f.Close();
+				alert("导出成功：C:\\temp.xml");
+			}
+        }		
+    }
+
+    /*
+    *  导出为视频
+    */
+    function ExportAsVideo() {
+        if (__cameraTour && __cameraTour.waypointsNumber > 2) {
+            __cameraTour.exportVideo("C:\\temp.avi", 25);
+            alert("导出成功：C:\\temp.avi");
+        }
+    }
+
+    /*
+    *  导出为帧图
+    */
+    function ExportAsFramePictures() {
+        if (__cameraTour && __cameraTour.waypointsNumber > 2) {
+            __cameraTour.exportVideo("C:\\temp.bmp", 25);
+            alert("导出成功：C:\\temp.bmp");
+        }
+    }
+</script>
+</html>

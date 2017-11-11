@@ -1,0 +1,642 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+     <title>ParticleEffect</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>
+                粒子类型
+            </td>
+            <td>
+                <select id="lz">
+                    <option>粒子火</option>
+                    <option>粒子烟</option>
+                </select>
+            </td>
+            <td>
+                <input type="button" value="属性" onclick="btnProperty_Click()" />
+            </td>
+            <td>
+                <input type="button" value="定位" onclick="btnLocate()" />
+            </td>
+            <td>
+                运动物体
+            </td>
+            <td style="color: Gray">
+                <input type="button" value="播放" onclick="btnPlay()" />
+            </td>
+            <td style="color: Gray">
+                <input type="button" value="暂停" onclick="btnPause()" />
+            </td>
+            <td style="color: Gray">
+                 <input type="button" value="停止" onclick="btnStop()" />
+            </td>
+            <td>
+                骨骼动画
+            </td>
+            <td style="color: Gray">
+                <input type="button" value="播放" onclick="btnSkinnedMeshPlay()" />
+            </td>
+            <td style="color: Gray">
+                 <input type="button" value="暂停" onclick="btnSkinnedMeshPause()" />
+            </td>
+            <td style="color: Gray">
+                <input type="button" value="停止" onclick="btnSkinnedMeshStop()" />
+            </td>
+        </tr>
+    </table>
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+        </object>
+    </div>
+</body>
+     <script type="text/javascript">
+         var __g = document.getElementById("renderControl");
+         
+         var __fcMap = {};
+         var __fcGeoMap = {};
+
+         var position = __g.new_Vector3;
+         var point = null;
+         var angle = __g.new_EulerAngle;
+
+         var fire = null;
+         var smoke = null;
+         var motionPath = null;
+         var renderModelPoint = null;
+         var water = null;
+         var skinMesh = null;
+
+         var v3 = __g.new_Vector3;
+         var scale = __g.new_Vector3;
+
+         var m = null;
+         var strTbody;
+
+         var fireX = 230.470701075769, fireY = 194.420220940001, fireZ = 0;
+         var smokeX = 238.742303818727, smokeY = 175.634296068382, smokeZ = 0;
+         var waterX = 242, waterY = 180, waterZ = 0;
+
+         var firstX = 263.872404083615, firstY = 148.647242545841, firstZ = 0, firstH = 60, firstP = 0, firstR = -0, firstSX = 1, firstSY = 1, firstSZ = 1, firtWhen = 0;
+         var secondX = 303.863713512692, secondY = 174.113186858212, secondZ = 0, secondH = 60, secondP = 0, secondR = 0, secondSX = 1, secondSY = 1, secondSZ = 1, secondWhen = 12;
+         var thirdX = 329.976366250544, thirdY = 191.226407219874, thirdZ = -0.000000, thirdH = 60, thirdP = 0, thirdR = 0, thirdSX = 1, thirdSY = 1, thirdSZ = 1, thirdWhen = 21;
+         var fourthX = 373.749709200332, fourthY = 219.748979658718, fourthZ = -0.000000, fourthH = 60, fourthP = 0, fourthR = 0, fourthSX = 1, fourthSY = 1, fourthSZ = 1, fourthWhen = 30;
+
+         var gugeX = 236.121223768856, gugeY = 182.851418447895, gugeZ = 0.05;
+
+		 window.onload = function () {
+			 initialize();
+		 }
+
+         function initialize() {
+             //初始化三维控件
+             initAxControl();
+
+             // 加载FDB场景
+             loadFdb("community.fdb");
+
+			 point = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+			 point.spatialCRS = __fds.spatialReference;
+
+             position.set(fireX, fireY, fireZ);
+             angle.heading = 0;
+             angle.tilt = -10;
+             __g.camera.lookAt(position, 8, angle);
+
+             
+             LoadWater();
+             LoadFire();
+             LoadSmoke();
+             LoadMotionPath();
+             LoadModel();
+             LoadXFile();
+             BindPath();
+         }
+         /// <summary>
+         /// 加载火特效
+         /// </summary>
+         function LoadFire() {
+             fire = __g.objectManager.createParticleEffect(__rootId);
+             SetFire();
+             fire.start(-1);
+             v3.set(fireX, fireY, fireZ);
+             point.position = v3;
+             fire.setCircleEmitter(point, 0);
+         }
+         function SetFire() {
+             fire.particleBillboardType = gviParticleBillboardType.gviParticleBillboardOrientedMoveDirection;
+             fire.setTextureTileRange(8,8,0,6);
+             fire.emissionMinRate = 60;
+             fire.emissionMaxRate = 110;
+             fire.emissionMinAngle = 0;
+             fire.emissionMaxAngle = 3.14 * 0.5;
+
+             fire.emissionMinMoveSpeed = 0;
+             fire.emissionMaxMoveSpeed = 1;
+             fire.emissionMinRotationSpeed = -1;
+
+
+             fire.emissionMaxRotationSpeed = 1;
+             fire.particleMinLifeTime = 1.7;
+             fire.particleMaxLifeTime = 1.5;
+
+             fire.emissionMinParticleSize = 0.75;
+             fire.emissionMinParticleSize = 0.9;
+
+             fire.emissionMinScaleSpeed = 0.05;
+             fire.emissionMaxScaleSpeed = 0.08;
+
+             fire.particleBirthColor = colorFromARGB(255, 255, 194, 51);
+             fire.particleDeathColor = colorFromARGB(0, 255, 76, 51);
+             fire.verticalAcceleration = -2.5;
+             fire.damping = -0.5;
+             fire.windAcceleration = 0.2;
+             fire.windDirection = 0;
+             fire.imageName = getSamplesRelatePath("/png/Partial.png"); 
+
+         }
+         /// <summary>
+         /// 水的粒子特效
+         /// </summary>
+         function LoadWater() {
+             water = __g.objectManager.createParticleEffect(__rootId);
+             setWater();
+             water.start(-1);
+             v3.set(waterX, waterY, waterZ);
+             point.position = v3;
+             water.setPointEmitter(point);
+         }
+         function setWater() {
+             water.particleBillboardType = gviParticleBillboardType.gviParticleBillboardOrientedMoveDirection;
+             water.emissionMinRate = 1600;
+             water.emissionMaxRate = 1300;
+             water.emissionMinMoveSpeed = 25;
+             water.emissionMaxMoveSpeed = 30;
+             water.emissionMinAngle = 0;
+             water.emissionMaxAngle = 0.025 * (Math.PI);
+             water.emissionMinParticleSize = 0.2;
+             water.emissionMaxParticleSize = 0.25;
+             water.emissionMinScaleSpeed = 0;
+             water.emissionMaxScaleSpeed = 0;
+             water.particleBirthColor = colorFromARGB(255, 255, 255, 255);
+             water.particleDeathColor = colorFromARGB(0, 255, 255, 255);
+             water.particleMinLifeTime = 4.5;
+             water.particleMaxLifeTime = 5.5;
+             water.particleAspectRatio = 0.3;
+             water.verticalAcceleration = 5;
+             water.damping = 0.5;
+             water.windAcceleration = 0.1;
+             water.windDirection = 0;
+             water.emissionMinRotationSpeed = 0;
+             water.emissionMaxRotationSpeed = 0;
+             angle.set(90, 45, 0);
+             water.emissionDirectionEulerAngle = angle;
+             water.imageName = getSamplesRelatePath("/png/water.png"); 
+         }
+
+         /// <summary>
+         /// 加载烟特效
+         /// </summary>
+         function LoadSmoke() {
+             smoke = __g.objectManager.createParticleEffect(__rootId);
+             setsmoke();
+             smoke.start(-1);
+             v3.set(smokeX, smokeY, smokeZ);
+             point.position = v3;
+             smoke.setCircleEmitter(point, 0);
+         }
+         function setsmoke() {
+
+             smoke.particleBillboardType = 0;  // gviParticleBillboardOrientedCamera 要朝着相机
+             smoke.setTextureTileRange(8,8,63,63);  // 58,58位置的图有问题
+             smoke.emissionMinRate = 20;
+             smoke.emissionMaxRate = 30;
+             smoke.emissionMinAngle = 0;
+             smoke.emissionMaxAngle = 3.14 * 2.0;   // 改成一个圆
+             smoke.emissionMinMoveSpeed = 0;
+             smoke.emissionMaxMoveSpeed = 1;
+             smoke.emissionMinRotationSpeed = -1;
+             smoke.emissionMaxRotationSpeed = 1;
+
+             smoke.particleMinLifeTime = 10;
+             smoke.particleMaxLifeTime = 12;
+             smoke.emissionMinParticleSize = 0.75;
+             smoke.emissionMinParticleSize = 0.9;
+
+             smoke.emissionMinScaleSpeed = 1.5;
+             smoke.emissionMaxScaleSpeed = 1.85;
+             smoke.particleBirthColor = colorFromARGB(255, 255, 255, 255);
+             smoke.particleDeathColor = colorFromARGB(0, 255, 255, 255);
+             smoke.verticalAcceleration = -2;
+             smoke.damping = 0;
+             smoke.windAcceleration = 0;
+             smoke.windDirection = 0;
+             smoke.imageName = getSamplesRelatePath("/png/Partial.png"); 
+         }
+         /// <summary>
+         /// 加载MotionPath
+         /// </summary>
+         function LoadMotionPath() {
+             motionPath = __g.objectManager.createMotionPath(__rootId);
+             //为MotionPath添加第一个点
+             position.set(firstX, firstY, firstZ);
+             angle.heading = firstH;
+             angle.tilt = firstP;
+             scale.set(firstSX, firstSY, firstSZ);
+             motionPath.addWaypoint(position, angle, scale, firtWhen);
+             //为MotionPath添加第二个点
+             position.set(secondX, secondY, secondZ);
+             angle.heading = secondH;
+             angle.tilt = secondP;
+             scale.set(secondSX, secondSY, secondSZ);
+             motionPath.addWaypoint(position, angle, scale, secondWhen);
+             //为MotionPath添加第三个点
+             position.set(thirdX, thirdY, thirdZ);
+             angle.heading = thirdH;
+             angle.tilt = thirdP;
+             scale.set(thirdSX, thirdSY, thirdSZ);
+             motionPath.addWaypoint(position, angle, scale, thirdWhen);
+             //为MotionPath添加第四个点
+             position.set(fourthX, fourthY, fourthZ);
+             angle.heading = fourthH;
+             angle.tilt = fourthP;
+             scale.set(fourthSX, fourthSY, fourthSZ);
+             motionPath.addWaypoint(position, angle, scale, fourthWhen);
+         }
+
+         /// <summary>
+         /// 加载模型
+         /// </summary>
+         function LoadModel() {
+             var modelName = getSamplesRelatePath("/osg/Vehicles/XiaoFangChe/xiaoFangChe3.OSG"); 
+             var geoFactory = __g.geometryFactory;
+             var modelPoint = geoFactory.createGeometry(gviGeometryType.gviGeometryModelPoint, gviVertexAttribute.gviVertexAttributeZ);
+             modelPoint.modelName = modelName;
+             modelPoint.setCoords(firstX, firstY, firstZ, 0, 0);
+             renderModelPoint = __g.objectManager.createRenderModelPoint(modelPoint, null, __rootId);
+         }
+
+         /// <summary>
+         /// 加载骨骼动画
+         /// </summary>
+         function LoadXFile() {
+             var fileName = getSamplesRelatePath("/x/Character/QiYeYuanGong.X"); 
+             var matrix = __g.new_Matrix;
+             matrix.makeIdentity();
+             v3.set(gugeX, gugeY, gugeZ);
+             matrix.setTranslate(v3);
+             var geoFactory = __g.geometryFactory;
+             var modelPoint = geoFactory.createGeometry(gviGeometryType.gviGeometryModelPoint, gviVertexAttribute.gviVertexAttributeZ);
+             modelPoint.fromMatrix(matrix);
+             modelPoint.modelName = fileName;
+
+             if (skinMesh == null) {
+                 skinMesh = __g.objectManager.createSkinnedMesh(modelPoint, __rootId);
+                 if (skinMesh == null) {
+                     alert("骨骼动画创建失败！");
+                     return;
+                 }
+                 skinMesh.duration = 1;
+                 skinMesh.Loop = true;                 
+                 skinMesh.play();
+                 skinMesh.maxVisibleDistance = 1000;
+             }
+         }
+
+         /// <summary>
+         /// 绑定运动路径 
+         /// </summary>
+         function BindPath() {
+             if (renderModelPoint != null && motionPath != null && water != null && skinMesh!=null) {
+                 v3.set(0, 0, 0);
+                 renderModelPoint.bind(motionPath, v3, 0, 0, 0);
+                 v3.set(0, 0, 2.5);
+                 water.bind(motionPath, v3, 0, 0, 0);
+                 v3.set(-10, -7, 0);
+                 skinMesh.bind(motionPath, v3, 0, 0, 0);
+             }
+         }
+
+         /// <summary>
+         /// 打开属性面板
+         /// </summary>
+         /// <param name="sender"></param>
+         /// <param name="e"></param>
+         function btnProperty_Click() {
+             var index = $("lz").selectedIndex;
+             if (index == 0) {
+                 strTbody = ["<table class='featureInfo'><tbody>"];
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "火的属性" + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "imageName" + "</td>");
+                 strTbody.push("<td>" + fire.imageName + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMaxParticleSize" + "</td>");
+                 strTbody.push("<td>" + fire.emissionMaxParticleSize + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMaxMoveSpeed " + "</td>");
+                 strTbody.push("<td>" + fire.emissionMaxMoveSpeed + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMinMoveSpeed" + "</td>");
+                 strTbody.push("<td>" + fire.emissionMinMoveSpeed + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMinRate" + "</td>");
+                 strTbody.push("<td>" + fire.emissionMinRate + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMaxRate" + "</td>");
+                 strTbody.push("<td>" + fire.emissionMaxRate + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "ParticleMaxLifeTime" + "</td>");
+                 strTbody.push("<td>" + fire.particleMaxLifeTime + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "ParticleMinLifeTime" + "</td>");
+                 strTbody.push("<td>" + fire.particleMinLifeTime + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "ParticleBillboardType" + "</td>");
+                 strTbody.push("<td>" + fire.particleBillboardType + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "WindDirection" + "</td>");
+                 strTbody.push("<td>" + fire.windDirection + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "WindAcceleration" + "</td>");
+                 strTbody.push("<td>" + fire.windAcceleration + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMinScaleSpeed" + "</td>");
+                 strTbody.push("<td>" + fire.emissionMinScaleSpeed + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMaxScaleSpeed" + "</td>");
+                 strTbody.push("<td>" + fire.emissionMaxScaleSpeed + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMaxAngle" + "</td>");
+                 strTbody.push("<td>" + fire.emissionMaxAngle + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMinAngle" + "</td>");
+                 strTbody.push("<td>" + fire.emissionMinAngle + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMinParticleSize" + "</td>");
+                 strTbody.push("<td>" + fire.emissionMinParticleSize + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMaxParticleSize" + "</td>");
+                 strTbody.push("<td>" + fire.emissionMaxParticleSize + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMinRotationSpeed" + "</td>");
+                 strTbody.push("<td>" + fire.emissionMinRotationSpeed + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMaxRotationSpeed" + "</td>");
+                 strTbody.push("<td>" + fire.emissionMaxRotationSpeed + "</td>");
+                 strTbody.push("</tr>");
+                 strTbody.push("</tbody></table>");
+                 var tFile = "dialogLeft:" + 300 + "px; dialogTop:" + 300 + "px; dialogHeight:400px; dialogWidth:600px";
+                 var retValue = window.showModalDialog("Property.html", window, tFile);
+             }
+             else {
+                 strTbody = ["<table class='featureInfo'><tbody>"];
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "烟的属性" + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "imageName" + "</td>");
+                 strTbody.push("<td>" + smoke.imageName + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMaxParticleSize" + "</td>");
+                 strTbody.push("<td>" + smoke.emissionMaxParticleSize + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMaxMoveSpeed " + "</td>");
+                 strTbody.push("<td>" + smoke.emissionMaxMoveSpeed + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMinMoveSpeed" + "</td>");
+                 strTbody.push("<td>" + smoke.emissionMinMoveSpeed + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMinRate" + "</td>");
+                 strTbody.push("<td>" + smoke.emissionMinRate + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMaxRate" + "</td>");
+                 strTbody.push("<td>" + smoke.emissionMaxRate + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "ParticleMaxLifeTime" + "</td>");
+                 strTbody.push("<td>" + smoke.particleMaxLifeTime + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "ParticleMinLifeTime" + "</td>");
+                 strTbody.push("<td>" + smoke.particleMinLifeTime + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "ParticleBillboardType" + "</td>");
+                 strTbody.push("<td>" + smoke.particleBillboardType + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "WindDirection" + "</td>");
+                 strTbody.push("<td>" + smoke.windDirection + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "WindAcceleration" + "</td>");
+                 strTbody.push("<td>" + smoke.windAcceleration + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMinScaleSpeed" + "</td>");
+                 strTbody.push("<td>" + smoke.emissionMinScaleSpeed + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMaxScaleSpeed" + "</td>");
+                 strTbody.push("<td>" + smoke.emissionMaxScaleSpeed + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMaxAngle" + "</td>");
+                 strTbody.push("<td>" + smoke.emissionMaxAngle + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMinAngle" + "</td>");
+                 strTbody.push("<td>" + smoke.emissionMinAngle + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMinParticleSize" + "</td>");
+                 strTbody.push("<td>" + smoke.emissionMinParticleSize + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMaxParticleSize" + "</td>");
+                 strTbody.push("<td>" + smoke.emissionMaxParticleSize + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMinRotationSpeed" + "</td>");
+                 strTbody.push("<td>" + smoke.emissionMinRotationSpeed + "</td>");
+                 strTbody.push("</tr>");
+
+                 strTbody.push("<tr>");
+                 strTbody.push("<td>" + "EmissionMaxRotationSpeed" + "</td>");
+                 strTbody.push("<td>" + smoke.emissionMaxRotationSpeed + "</td>");
+                 strTbody.push("</tr>");
+                 strTbody.push("</tbody></table>");
+                 var tFile = "dialogLeft:" + 300 + "px; dialogTop:" + 300 + "px; dialogHeight:400px; dialogWidth:600px";
+                 var retValue = window.showModalDialog("Property.html", window, tFile);
+             }
+
+         }
+
+         /// <summary>
+         /// 定位
+         /// </summary>
+         /// <param name="sender"></param>
+         /// <param name="e"></param>
+         function btnLocate() {
+             var index = $("lz").selectedIndex;
+             if (index == 0) {
+                 position.set(fireX, fireY, fireZ);
+                 angle.heading = 0;
+                 angle.tilt = -10;
+                 __g.camera.lookAt(position, 8, angle);
+             }
+             else {
+                 var env = smoke.envelope;
+                 position.set((env.maxX + env.minX) / 2, (env.maxY + env.minY) / 2, (env.maxZ + env.minZ) / 2);
+                 angle.heading = 0;
+                 angle.tilt = -10;
+                 __g.camera.lookAt(position, 30, angle);
+             }
+         }
+
+         /// <summary>
+         /// 播放
+         /// </summary>
+         /// <param name="sender"></param>
+         /// <param name="e"></param>
+         function btnPlay() {
+         
+             if (motionPath != null) {
+                 
+                 position.set(246.42130135782065, 135.54315354302258, 17.016099817027751);
+                 angle.heading = 57.987642426086211;
+                 angle.tilt = -21.661413151038918;
+                 __g.camera.setCamera(position, angle, gviSetCameraFlags.gviSetCameraNoFlags);
+                 motionPath.play();
+             }
+         }
+
+         /// <summary>
+         /// 暂停
+         /// </summary>
+         /// <param name="sender"></param>
+         /// <param name="e"></param>
+         function btnPause() {
+             if (motionPath != null) {
+                 motionPath.pause();
+             }
+         }
+
+         /// <summary>
+         /// 停止
+         /// </summary>
+         /// <param name="sender"></param>
+         /// <param name="e"></param>
+         function btnStop() {
+             if (motionPath != null) {
+                 motionPath.stop();
+             }
+         }
+         /// <summary>
+         /// 骨骼动画播放
+         /// </summary>
+         /// <param name="sender"></param>
+         /// <param name="e"></param>
+         function btnSkinnedMeshPlay() {
+             if (skinMesh != null) {
+                 
+                 __g.camera.flyToObject(skinMesh.guid, gviActionCode.gviActionFlyTo);
+                 skinMesh.loop = true;
+                 skinMesh.play();
+             }
+         }
+         /// <summary>
+         /// 骨骼动画暂停
+         /// </summary>
+         /// <param name="sender"></param>
+         /// <param name="e"></param>
+         function btnSkinnedMeshPause() {
+             if (skinMesh != null) {
+                 skinMesh.pause();
+             }
+         }
+         /// <summary>
+         /// 骨骼动画停止
+         /// </summary>
+         /// <param name="sender"></param>
+         /// <param name="e"></param>
+         function btnSkinnedMeshStop() {
+             if (skinMesh != null) {
+                 skinMesh.loop = false;
+                 skinMesh.stop();
+             }
+         }
+    
+     </script>
+</html>

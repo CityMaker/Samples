@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>MapControl</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="../../cm7.js"></script>
+<script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+<object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+</object>
+</body>
+<script type="text/javascript">
+    window.onload = function () {
+		//初始化三维控件
+		initAxControl();
+
+		// 加载场景
+		loadFdb("SDKDEMO.FDB");
+
+		addOverlay();
+	
+    }
+	
+    //获取每帧的回调函数
+	function onFrame(frameIndex, refTime) {
+        fnchanged(); 
+    }
+	
+	//设置鹰眼尺寸和位置，相对三维控件右下角来说的 像素值
+	var minx = 14920, maxx = 15844, maxy = 36118, miny = 35492;
+    var label, label2;
+	var flag;
+    function addOverlay() {
+		var path1 = "", path2 = "";
+		flag = unescape(location.pathname).lastIndexOf("MapControl.html");
+		if (flag > 0) {
+			path1 = unescape(location.pathname).substring(1, flag) + "map.png";
+			path2 = unescape(location.pathname).substring(1, flag) + "move.png";
+		} 
+		
+        label = __g.objectManager.createOverlayLabel(__rootId);
+        label.imageName = path1;
+        label.setWidth(300, 0, 0);
+        label.setHeight(200, 0, 0);
+        label.setX(-150, 1.0, 0);
+        label.setY(100, 0, 0);
+        __g.viewport.logoVisible = false;
+        label2 = __g.objectManager.createOverlayLabel(__rootId);
+        label2.imageName = path2;
+        label2.setWidth(30, 0, 0);
+        label2.setHeight(20, 0, 0);
+        label2.setX(-147, 1.0, 0);
+        label2.setY(11, 0, 0);
+        __g.viewport.logoVisible = false;
+    }
+	
+	// 300,200为鹰眼尺寸
+    function fnchanged() {
+        var camera = __g.camera.getCamera();
+        var pos = camera.position;
+        var ang = camera.angle;
+        label2.rotation = -(ang.heading);
+        if (pos.x > minx && pos.x < maxx && pos.y < maxy && pos.y > miny) {
+            var myx = (300 * (maxx - pos.x) / (maxx - minx));
+            var myy = 200 - (200 * (maxy - pos.y) / (maxy - miny));
+            label2.setX(-(myx), 1.0, 0);
+            label2.setY(myy, 0, 0);
+            label2.text = "";
+        }
+        else {
+            label2.text = "超出范围";
+        }
+    }
+   
+   
+</script>
+</html>

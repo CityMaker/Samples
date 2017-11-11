@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>TerrainVideo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+
+<body style="margin:0px;scroll:no" >
+    <div style="float:left">		
+		<!--<button onclick="selectVideo()">拾取视频</button> -->
+        <button onclick="createPoint()">创建点</button> 
+    </div>
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object>
+    </div>  
+</body>
+
+<script type="text/javascript">
+     var MODE;
+     var cVideo;
+	 
+     window.onload = function () {
+         Initialize();
+     }
+
+	function Initialize() {
+		//初始化三维控件
+	    initAxControl();
+	    __g.new_LicenseServer.setHost("192.168.2.200", 8588, "");
+		__g.camera.flyTime = 1;
+		var tilePath = getSamplesRelatePath("") + "\\sdk.tdb";
+		this.test3DTileLayer = __g.objectManager.create3DTileLayer(tilePath, '', '');
+		var angle = __g.new_EulerAngle;
+		angle.heading = 0;
+		angle.tilt = -90;
+		this.point = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+		this.point.setCoords(15379.18, 35954.36, 29.50, 0, 0);
+		//this.point.spatialCRS = __datasetSpatialCRS;
+		cVideo  = __g.objectManager.createTerrainVideo(this.point, __rootId);
+		cVideo .displayMode = gviTVDisplayMode.gviTVShowAll;
+
+		cVideo .aspectRatio = 1.36777;
+		cVideo .farClip = 200.0;
+		cVideo .fieldOfView = 45.0;
+		cVideo .playbackRate = 1.0;
+		cVideo .playVideoOnStartup = true;
+		cVideo .playLoop = true;
+		cVideo .videoPosition = 0;
+		cVideo .angle = angle;
+		cVideo .videoOpacity = 1.0;
+		cVideo .videoFileName = getSamplesRelatePath("") + "\\video\\ambulance.AVI";
+		__g.camera.flyToObject(cVideo .guid, gviActionCode.gviActionFlyTo);
+	}
+
+	function selectVideo(){
+		__g.interactMode = gviInteractMode.gviInteractSelect;
+		__g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+		__g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectTerrainVideo ;
+
+		MODE = 1;
+		
+	}
+	
+	     function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+	         cVideo .unhighlight();
+	        if (pickResult == null)
+	            return;
+
+	        if (pickResult != null) {
+	            if (MODE == 1) {
+	                if (pickResult.type != gviObjectType.gviObjectTerrainVideo)
+	                    return;
+
+	                var curTv = pickResult.terrainVideo;
+	                curTv.highlight(0xffff0000);
+
+	                __g.interactMode = gviInteractMode.gviInteractNormal;
+	            }
+	            else if (MODE == 2) {
+	                var ps = __g.new_SimplePointSymbol;
+	                ps.size = 20;
+	                ps.fillColor = 0xffff0000;
+	                __g.objectManager.createRenderPoint(intersectPoint, ps, __rootId);
+//	                var ret = cVideo.worldToScreen(intersectPoint, 1);
+//	                if (ret["inScreen"])
+//	                    cVideo .highlight(0xffff0000);
+
+//	                var poiInWorld = cVideo.position;
+//	                if (poiInWorld) {
+//	                    __g.interactMode = 12;
+//	                    var bFocus = __g.camera.setFocus(poiInWorld);
+//	                    if (bFocus)
+//	                        alert("set focus success!");
+//	                }
+
+	                //__g.interactMode = gviInteractMode.gviInteractNormal;
+	            }
+	        }
+	    }
+	
+	
+	function createPoint(){
+		__g.interactMode = gviInteractMode.gviInteractSelect;
+		__g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+		__g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectAll;			
+		MODE = 2;
+	}
+</script>
+</html>

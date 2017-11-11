@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML  .0 Transitional//EN" "http://www.w3.org/TR/xhtml /DTD/xhtml -transitional.dtd">
+<html xmlns="http://www.w3.org/ 999/xhtml">
+<head>
+    <title>FileToRenderGeometry</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+
+</head>
+    
+<body >
+   
+    <div style="text-align:center">
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 700px; width:  1000px" > 
+        </object>
+    </div>
+
+</body>
+
+<script type="text/javascript">
+  
+     window.onload = function () {
+         Initialize();
+
+     }
+     //
+    function Initialize() {
+        initAxControl();
+        var imgPath = getSamplesRelatePath("") + "/osg\\Buildings\\Apartment\\Apartment.osg";
+        var img = __g.resourceFactory.createModelAndImageFromFile(imgPath);
+        var n = img.images.count;
+        var mode = img.model;
+        __g.objectManager.addModel("Apartment", mode);
+            if (img.images != null && n > 0) {
+            var imagenames = new Array();
+            imagenames = img.images.getAllKeys();
+            for (var i = 0; i < n; i++) {
+                var image = img.images.getProperty(imagenames[i])
+                __g.objectManager.addImage(imagenames[i], image);
+            }
+        }
+        var modelPoint = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryModelPoint, gviVertexAttribute.gviVertexAttributeZ);
+        modelPoint.fromMatrix(img.matrix);
+        modelPoint.modelName = "Apartment";
+      //  modelPoint.spatialCRS = __projectSpatialCRS;
+        modelPoint.x = 0.0;
+        modelPoint.y = 0.0;
+        modelPoint.z = 0.0;
+        rmp = __g.objectManager.createRenderModelPoint(modelPoint, null, "");
+         //设置物体不可拾取，以免总是拾取到自身影响交互
+        var angle = __g.new_EulerAngle;
+        angle.set(0, -30, 0);
+        __g.camera.lookAt2(modelPoint, 100, angle);
+
+
+    }
+   
+</script>
+</html>

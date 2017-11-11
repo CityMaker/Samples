@@ -1,0 +1,200 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>ProjectTree</title>
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+
+<body style="margin:0px;scroll:no"  >   
+<div id="tree" style="float:left;">
+</div>    
+<button onclick="Initialize()">open</button>
+<div style="float:left">
+    <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object>
+</div>
+   <div style="float:bottom">
+	   <button onclick="save()">SaveCEP</button>
+	   <button onclick="deleteObj()">DeleteObj</button>
+	   <button onclick="createGroup()">CreateGroup</button>
+   </div>
+</body>
+
+<script type="text/javascript">
+    var needShowOnHtml = true;  //标记变量，指示仅第一遍遍历时需要将逻辑图层树在页面上显示
+    var tree = null;
+
+	var str= [];
+	var guidSel = null;	
+
+     window.onload = function () {
+        //初始化三维控件
+        initAxControl();
+     }    
+	
+    function Initialize() {
+
+        var cepPath = getSamplesRelatePath("") + "/Package_sdk/sdk.cep";
+		__g.project.open(cepPath, false, "");
+		__g.camera.flyTime = 1;
+
+		tree = __g.projectTree;
+        
+		var timestamp = new Date();
+		console.log("--start1--: " + timestamp.toLocaleTimeString() + " " + timestamp.getMilliseconds() );
+		//遍历显示树形结构
+		AppendTreeNode(__rootId);
+		needShowOnHtml = false;
+		document.getElementById('tree').innerHTML = str.join("");
+		
+		timestamp = new Date();
+		console.log("--start2--: " + timestamp.toLocaleTimeString() + " " + timestamp.getMilliseconds() );
+
+		//遍历设置checkbox状态
+		AppendTreeNode(__rootId);
+		
+		timestamp = new Date();
+		console.log("--start3--: " + timestamp.toLocaleTimeString() + " " + timestamp.getMilliseconds() );
+    }    
+	
+	
+
+    function AppendTreeNode(guid){
+        var firstChildGuid = tree.getNextItem(guid, 11);
+		if(firstChildGuid == "00000000-0000-0000-0000-000000000000"){
+			return;
+		}
+		LoopSubNode(firstChildGuid);			
+
+		var brotherGuid = tree.getNextItem(firstChildGuid, 13);
+		while(brotherGuid != "00000000-0000-0000-0000-000000000000"){
+			LoopSubNode(brotherGuid);
+			brotherGuid = tree.getNextItem(brotherGuid, 13);					
+		}	
+		str.push("</ul>");
+    }
+
+	function LoopSubNode(curId){
+		var nodeName = tree.getItemName(curId);
+
+		if(tree.isGroup(curId)){
+			if (needShowOnHtml) {
+				str.push("<li><input type='checkbox' checked='true' onclick='SetVisiable(this)' value='" + curId + "' id='" + curId + "'>" + "<a href='#' onclick='SetCamera(this)' id='" + curId + "'>" + nodeName + "</a></li><ul>");				
+				AppendTreeNode(curId);
+			}
+			else{
+				var v = tree.getVisibility(curId);
+				switch(v){
+					case 0:
+						$(curId).checked = false;
+						break;
+					case 1:
+						$(curId).checked = true;
+						break;
+					case 2:
+						$(curId).indeterminate = true;
+						break;
+				}
+				AppendTreeNode(curId);
+			}
+		}
+		else{
+			if (needShowOnHtml) {
+				str.push("<li><input type='checkbox' checked='true' onclick='SetVisiable(this)' value='" + curId + "' id='" + curId + "'>" + "<a href='#' onclick='SetCamera(this)' id='" + curId + "'>" + nodeName + "</a></li>");
+			}
+			else{
+				var v = tree.getVisibility(curId);
+				switch(v){
+					case 0:
+						$(curId).checked = false;
+						break;
+					case 1:
+						$(curId).checked = true;
+						break;
+					case 2:
+						$(curId).indeterminate = true;
+						break;
+				}			
+			}
+		}		
+	}
+    
+    /*
+     *	定位
+     */
+    function SetCamera(obj) {
+		guidSel = obj.id;
+		if(!guidSel ||tree.isGroup(guidSel))
+			return;
+
+        var robj = __g.objectManager.getObjectById(guidSel);
+		if(robj == undefined)
+			return;
+        switch(robj.type){
+			case gviObjectType.gviObjectFeatureLayer:
+			case gviObjectType.gviObjectTerrainImageLabel:
+				__g.camera.flyToObject(guidSel, gviActionCode.gviActionFlyTo);
+				break;
+			case gviObjectType.gviObjectPresentation:
+				robj.resetPresentation();
+				break;
+			case gviObjectType.gviObjectDynamicObject:
+				robj.play();
+				break;
+		}
+    }
+    
+    /*
+     *	设置可见性
+     */
+    function SetVisiable(obj) { 
+		guidSel = obj.value;
+		if(!guidSel)
+			return;		
+
+		if (obj.checked) {
+			tree.setVisibility(guidSel, 1);
+		}
+		else {
+			tree.setVisibility(guidSel, 0);
+		}
+
+		var robj = __g.objectManager.getObjectById(guidSel);
+		if(robj == undefined)
+			return;
+		switch(robj.type){			
+			case gviObjectType.gviObjectDynamicObject:
+				var mpGuid = robj.getClientData("RenderModelPointGuid");
+				var mp = __g.objectManager.getObjectById(mpGuid);	
+				var plGuid = robj.getClientData("RenderPolylineGuid");
+				var pl = __g.objectManager.getObjectById(plGuid);
+				if(mp == undefined || pl == undefined)
+					return;				
+
+				if (obj.checked) {
+					mp.visibleMask = gviViewportMask.gviViewAllNormalView;
+					pl.visibleMask = gviViewportMask.gviViewAllNormalView;
+				}
+				else{
+					mp.visibleMask = gviViewportMask.gviViewNone;
+					pl.visibleMask = gviViewportMask.gviViewNone;
+				}
+				break;
+		}
+    }
+    
+   function save(){
+		__g.project.save();
+   }
+
+   function deleteObj(){
+		tree.deleteItem(guidSel);
+   }
+
+   function createGroup(){
+		tree.createGroup("新建组", guidSel);
+   }
+     
+</script>
+</html>

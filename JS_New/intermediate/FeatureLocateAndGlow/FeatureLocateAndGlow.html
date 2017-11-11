@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+     <title>FeatureLocateAndGlow</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body >
+    
+    <div align="center">
+        <object id="renderControl" type="application/x-cm-3d8"  style="height: 700px; width: 1000px" >
+	//
+        </object>
+    </div>
+</body>
+     <script type="text/javascript">
+       //  var __g = document.getElementById("renderControl");         
+         var __fcMap = {};
+         var __fcGeoMap = {};
+		 window.onload = function () {
+			 Initialize();
+		 }         
+         function Initialize() {
+             //初始化三维控件
+             initAxControl(); 
+             // 加载FDB场景
+             loadFdb("SDKDEMO.FDB");           
+         
+         __g.interactMode = gviInteractMode.gviInteractSelect;
+         __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectAll;
+         __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;      
+
+         EventCall = {
+             onMouseClickSelect: function (pickResult, intersectPoint, mask, eventSender) {
+                 if (pickResult == null) {
+                     __g.featureManager.unhighlightAll();
+                     return;
+                 }
+                 var pt = pickResult.featureLayer;
+                 var id = pickResult.featureId;
+                 var fc = __fcMap[pt.featureClassId];
+                 RenderGeometryglow(fc, id);
+             }
+         }  //定义map
+         __g.callback = EventCall;
+      }
+         function RenderGeometryglow(curFeatureClass, featureId)
+         {
+             var filterString = "oid=" + featureId;
+             var filter = __g.new_QueryFilter;
+             filter.whereClause = filterString;
+             var cursor = null;
+                 cursor = curFeatureClass.search(filter, true);
+                 if (cursor != null)
+                 {
+                     var fdeRow = null;
+                     if ((fdeRow = cursor.nextRow()) != null)
+                     {
+                         var nPos = fdeRow.fieldIndex("Geometry");
+                         if (nPos != -1 && !fdeRow.IsNull(nPos))
+                         {
+                             var mp = fdeRow.getValue(nPos);  // 从库中读取值
+                             var symbol = __g.new_ModelPointSymbol;
+                             symbol.setResourceDataSet(curFeatureClass.featureDataSet);
+                             var rmp = __g.objectManager.createRenderModelPoint(mp, symbol,"");
+                             if (rmp != null)
+                             {
+                                 // 定位
+                                 __g.camera.flyToObject(rmp.guid, gviActionCode.gviActionJump);
+                                 // 闪烁
+                                 rmp.glow(2000);
+                                 __g.objectManager.delayDelete(rmp.guid, 2000);
+                             }
+                         }
+                     }
+                 }
+
+         }
+     </script>
+</html>

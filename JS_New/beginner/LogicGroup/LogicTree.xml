@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LogicTree Name="数字社区" GUID="41d8554b-c0e6-4bee-af1a-a3b930ae88ef">
+  <PGroups ID="1" Name="数字社区" ParentID="0" Recycle="" Camera="662.688037722185;-77.2029495889814;439.710036726408;345.511469280893;-54.0831955037986;0" CheckState="Indeterminate">
+    <PGroups ID="12" Name="核心社区" ParentID="1" Recycle="" Camera="629.314101405433;-4.51894088219655;331.751701141481;334.62733157501;-54.3696601291071;-1.59027734073176E-15" CheckState="Checked">
+      <PGroup ID="10" Name="住宅区" ParentID="12" Recycle="" Camera="409.598482634146;359.183589177177;159.197672563882;125.144293884881;-39.991688059253;3.18055468146352E-15" CheckState="Checked">just null</PGroup>
+      <PGroup ID="11" Name="服务区" ParentID="12" Recycle="" Camera="263.900592293478;152.741350831844;94.4192613447197;125.144293884881;-39.991688059253;3.18055468146352E-15" CheckState="Checked">just null</PGroup>
+      <PGroup ID="16" Name="商业区" ParentID="12" Recycle="" Camera="" CheckState="Checked">just null</PGroup>
+    </PGroups>
+    <PGroup ID="3" Name="道路" ParentID="1" Recycle="" Camera="221.185860873668;281.733221030251;1.17219848487074;57.1526968154505;0.105190155094854;-1.84124298356599E-14" CheckState="Checked">just null</PGroup>
+    <PGroup ID="4" Name="地面" ParentID="1" Recycle="" Camera="502.065731265529;300.484089261493;513.993351852255;145.601070314225;-83.7004454280641;3.18055468146352E-15" CheckState="Checked">just null</PGroup>
+    <PGroups ID="13" Name="周边区域" ParentID="1" Recycle="" Camera="464.539219530132;271.404791705456;711.648131645527;145.601070314225;-83.7004454280641;3.18055468146352E-15" CheckState="Checked">
+      <PGroup ID="14" Name="公园" ParentID="13" Recycle="" Camera="" CheckState="Checked">just null</PGroup>
+      <PGroup ID="15" Name="运河" ParentID="13" Recycle="" Camera="" CheckState="Checked">just null</PGroup>
+    </PGroups>
+    <PGroups ID="0" Name="回收站" ParentID="1" Recycle="ChuckNode" Camera="" CheckState="Unchecked" />
+  </PGroups>
+</LogicTree>

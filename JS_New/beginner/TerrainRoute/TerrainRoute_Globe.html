@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>TerrainRoute</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util_globe.js"></script>
+</head>
+
+<body style="margin:0px;scroll:no" >
+    <div style="height:50px;">
+        <select id="points" onchange="changePoint()">
+        </select>
+        <input id="CreateRoute" type="button" onclick="CreateRoute()" value="CreateRoute" />
+        speed<input id="speed" type="text" value="100" />
+        <input id="AddPoint" type="button" onclick="AddPoint()" value="AddPoint" />
+        <input id="DelPoint" type="button" onclick="DelPoint()" value="DelPoint" />
+        <input id="ReplacePoint" type="button" onclick="ReplacePoint()" value="ReplacePoint" />
+        <input id="AutoRepeat" type="checkbox" onchange="AutoRepeat()"/>AutoRepeat
+        <input id="PlayRoute" type="button" onclick="PlayRoute()" value="PlayRoute" />
+        <input id="PauseRoute" type="button" onclick="PauseRoute()" value="PauseRoute" />
+        <input id="StopRoute" type="button" onclick="StopRoute()" value="StopRoute" /><br />
+        <input id="point" type="text" readonly="readonly" size="120"/>
+    </div>
+    <div style="float:left">
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object>
+    </div>  
+</body>
+
+<script type="text/javascript">
+    
+    var route=null;
+
+     window.onload = function () {
+         initialize();
+     }
+
+    function initialize() {
+        //初始化三维控件
+        initAxControl();
+
+        // 加载场景
+        loadFdb("SDKDEMO.FDB");
+		
+    }
+     
+
+    /*
+    *  创建动画路径	
+    */
+    function CreateRoute() {
+        if (route) {
+            __g.objectManager.deleteObject(route.guid);
+            route = null;
+        }
+        route = __g.objectManager.createTerrainRoute(__rootId);
+		route.crsWKT = __datasetCRS.asWKT();
+
+        // 清除界面
+        var points = $("points");
+        var length = points.options.length;
+        for (var i = 0; i < length; ++i) {
+            points.options.remove(0);
+        }
+        $("point").value = "";
+    }
+
+    /*
+    *  判断是否先点击过CreateRoute
+    */
+    function checkRoute() {
+        if (route === null) {
+            alert("您还没有CreateRoute");
+            return false;
+        }
+    }
+
+    /*
+    *  添加节点
+    */
+    function AddPoint() {
+        checkRoute();
+        var cameraInfo = __g.camera.getCamera2();
+        var speed = $("speed").value;
+        route.addWaypoint2(cameraInfo.position, cameraInfo.angle, speed);
+        var points = $("points");
+        var varItem = new Option(route.waypointsNumber - 1, cameraInfo.position.x + "," + cameraInfo.position.y + "," + cameraInfo.position.z + "," + cameraInfo.angle.heading + "," + cameraInfo.angle.tilt + "," + cameraInfo.angle.roll + "," + 0 + "," + 0 + "," + speed);
+        points.options.add(varItem);
+        points[points.options.length - 1].selected = true;
+        $("point").value = points.options[points.selectedIndex].value;
+    }
+
+    /*
+    *  删除节点
+    */
+    function DelPoint() {
+        checkRoute();
+        var points = $("points");
+        route.deleteWaypoint(points.selectedIndex);
+        points.remove(points.selectedIndex);
+        $("point").value = "";
+    }
+
+    /*
+    *  替换节点
+    */
+    function ReplacePoint() {
+        checkRoute();
+        var cameraInfo = __g.camera.getCamera2();
+        var speed = $("speed").value;
+        var index = $("points").selectedIndex;
+        route.modifyWaypoint2(index, cameraInfo.position, cameraInfo.angle, speed);
+        $("points").options[index].value = cameraInfo.position.x + "," + cameraInfo.position.y + "," + cameraInfo.position.z + "," + cameraInfo.angle.heading + "," + cameraInfo.angle.tilt + "," + cameraInfo.angle.roll + "," + 0 + "," + 0 + "," + speed;
+        $("point").value = $("points").options[index].value;
+    }
+
+    /*
+    *  播放动画导航
+    */
+    function PlayRoute() {
+        if (route){
+            route.play();
+		}
+    }
+
+    /*
+    *  暂停
+    */
+    function PauseRoute() {
+        if (route)
+            route.pause();
+    }
+
+    /*
+    *  停止
+    */
+    function StopRoute() {
+        if (route)
+            route.stop();
+    }
+
+    /*
+    *  是否循环
+    */
+    function AutoRepeat() {
+        if (route)
+            route.autoRepeat = $("AutoRepeat").checked;
+    }
+
+    /*
+    *  切换节点时相机定位至该节点处
+    */
+    function changePoint() {
+        $("point").value = $("points").options[points.selectedIndex].value;
+        if (route) {
+            
+            var cp = route.getWaypoint2(points.selectedIndex);
+            __g.camera.setCamera2(cp.position, cp.angle, gviSetCameraFlags.gviSetCameraNoFlags);
+        }
+    }
+</script>
+</html>

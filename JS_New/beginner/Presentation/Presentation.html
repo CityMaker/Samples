@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML  .0 Transitional//EN" "http://www.w3.org/TR/xhtml /DTD/xhtml -transitional.dtd">
+<html xmlns="http://www.w3.org/ 999/xhtml">
+<head>
+    <title>Presentation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+   
+</head>
+    
+<body >
+   
+    <div style="text-align:center">
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 700px; width:  1000px" > 
+        </object>
+    </div>
+
+</body>
+
+<script type="text/javascript">
+  
+     window.onload = function () {
+         Initialize();
+    
+     }
+    function Initialize() {
+        initAxControl();
+        loadFdb("SDKDEMO.FDB");
+       
+        __g.new_LicenseServer.setHost("192.168.2.200", 8588, "");
+        var pos = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+        pos.setCoords(15785.94, 35164.53, 138.14, 0, 0);
+       
+        var angle = __g.new_EulerAngle;
+        angle.set(-35, -20, 0);
+        __g.camera.lookAt2(pos, 50, angle);
+        var presentation = __g.objectManager.createPresentation(888);
+        presentation.playMode = gviPresentationPlayMode.gviPresentationPlayAutomatic;
+        presentation.playAlgorithm = gviPresentationPlayAlgorithm.gviPresentationPlayAlgorithmFlyTo;
+        presentation.playSpeedFactor = gviPresentationPlaySpeed.gviPresentationPlayVeryFast;
+        presentation.captionWidth = 360;
+        presentation.captionPosition = gviPresentationCaptionPosition.gviPresentationCaptionPositionBottomCenter;
+        var step1 = presentation.createCaptionStep(gviPresentationStepContinue.gviPresentationStepContinueWait, 1, "show caption", "这个一个演示工具例子!", -1, 0);
+
+        var position1 = __g.new_Position;
+        position1.x = 15042.95;
+        position1.y = 35647.30;
+        position1.altitude = 50;
+        position1.cartesian = false;
+        var position2 = __g.new_Position;
+        position2.x = 15595.45;
+        position2.y = 35753.28;
+        position2.altitude = 50;
+        position2.cartesian = false;
+
+        presentation.createCaptionStep(gviPresentationStepContinue.gviPresentationStepContinueWait, 1, "show caption", "第一次飞行：fly from pos1 to pos2", -1, 1);
+        var step2 = presentation.createLocationStep(gviPresentationStepContinue.gviPresentationStepContinueWait, 1, "fly from pos1 to pos2", position1, 2);
+        var step3 = presentation.createFlightSpeedFactorStep(gviPresentationStepContinue.gviPresentationStepContinueWait, 1, "change FlightSpeed to Fast", gviPresentationStepFlightSpeed.gviPresentationStepFlightFast, 3);
+        presentation.createCaptionStep(gviPresentationStepContinue.gviPresentationStepContinueWait, 1, "show caption", "第二次飞行：fly from pos2 to pos1 FAST", -1, 4);
+        var step4 = presentation.createLocationStep(gviPresentationStepContinue.gviPresentationStepContinueWait, 1, "fly from pos2 to pos1 fast", position2, 5);
+        var step5 = presentation.createFlightSpeedFactorStep(gviPresentationStepContinue.gviPresentationStepContinueWait, 1, "change FlightSpeed to Slow", gviPresentationStepFlightSpeed.gviPresentationStepFlightSlow, 6);
+        presentation.createCaptionStep(gviPresentationStepContinue.gviPresentationStepContinueWait, 1, "show caption", "第三次飞行：fly from pos1 to pos2 SLOW", -1, 7);
+        var step6 = presentation.createLocationStep(gviPresentationStepContinue.gviPresentationStepContinueWait, 1, "fly from pos1 to pos2", position1, 8);
+        var step7 = presentation.createLocationStep(gviPresentationStepContinue.gviPresentationStepContinueWait, 1, "The End!", position2, 9);
+        var step8 = presentation.createClearCaptionStep(gviPresentationStepContinue.gviPresentationStepContinueWait, 1, "clear caption", 10);
+
+        presentation.play(0);      
+    }
+   
+</script>
+</html>

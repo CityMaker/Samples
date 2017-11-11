@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>LicenseServer</title>
+</head>
+
+<body style="margin:0px">   
+<div style="float:left"> 
+	ip:<input type="text" id="ip" size="100"/>  <br />
+	port:<input type="text" id="port" size="100"/> <br />
+	password:<input type="text" id="password" size="100"/> <br />
+    <input type="button" value="connect" onclick="connect()"/>
+</div>  
+<br />
+
+<div style="float:left;display:none">
+    <object id="renderControl" type="application/x-cm-3d8" ></object>
+</div>
+</body>
+
+<script type="text/javascript">
+
+    __g = document.getElementById("renderControl");  
+   
+    
+    function connect() {
+		var ls = __g.new_LicenseServer;
+		document.title = ls.remainingLicenses;
+		
+        var ip = document.getElementById("ip").value;
+		
+		var port = document.getElementById("port").value;
+		if(port.length == 0)
+			port = 0;
+		else
+			port = parseInt(port);
+			
+		var psd = document.getElementById("password").value;
+		
+		ls.setHost(ip, port, psd);
+		document.title = ls.remainingLicenses;
+    }
+
+  
+</script>
+</html>

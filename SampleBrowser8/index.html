@@ -1,0 +1,2365 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>CityMaker Sample Browser 8</title>
+<script src="SpryAssets/SpryTabbedPanels.js" type="text/javascript"></script>
+<link href="SpryAssets/SpryTabbedPanels.css" rel="stylesheet" type="text/css" />
+<link href="style.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+<!--
+table, td, th {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+}
+-->
+</style>
+</head>
+<body topmargin="3" leftmargin="3" marginwidth="3" marginheight="3">
+<div id="TabbedPanels1" class="TabbedPanels">
+  <ul class="TabbedPanelsTabGroup">
+    <li class="TabbedPanelsTab" tabindex="0">初级篇</li>
+    <li class="TabbedPanelsTab" tabindex="0">中级篇</li>
+    <li class="TabbedPanelsTab" tabindex="0">高级篇</li>
+  </ul>
+  <div class="TabbedPanelsContentGroup">
+    <div class="TabbedPanelsContent">
+      <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >HelloWorld</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/HelloWorld.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/HelloWorld.jpg" width="86" height="71" border=0/></a></td>
+          <td>加载一个精美的小场景，实现了一些简单功能，包括设置天空盒，播放相机动画路径，切换全屏，截图。</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IRenderControl、IConnectionInfo、IDataSourceFactory、IDataSource、IFeatureDataSet、IFeatureClass</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('HelloWorld')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('HelloWorld')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/HelloWorld/HelloWorld_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/HelloWorld/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/HelloWorld/HelloWorld.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/HelloWorld/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br /> 	    
+      <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >CatalogTree</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/CatalogTree.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/CatalogTree.jpg" width="86" height="71" border=0/></a></td>
+          <td>打开一个Feature Database数据源DataSource，查看里面的数据集DataSet、要素类FeatureClass，以及要素类的属性字段。</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IRenderControl、IConnectionInfo、IDataSourceFactory、IDataSource、IFeatureDataSet、IFeatureClass、IFieldInfoCollection、IFieldInfo</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('CatalogTree')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('CatalogTree')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/CatalogTree/CatalogTree_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/CatalogTree/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/Catalog/CatalogTree.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/Catalog/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >Terrain</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/Terrain.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/Terrain.jpg" width="86" height="71" border=0/></a></td>
+          <td>加载地形，可以设置地形开关和TED开关。</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+          IRenderControl、ITerrain</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('Terrain')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('Terrain')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/Terrain/Terrain_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/Terrain/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/Terrain/Terrain.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/Terrain/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="4" class="ExampleTitle" >FeatureLayerVisualize</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/FeatureLayerVisualize.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/FeatureLayerVisualize.jpg" width="86" height="71" border=0/></a></td>
+          <td>创建FeatuerLayer：把FeatureClass创建成FeatureLayer进行可视化，包括各种几何类型的FeatureClass，如Point，ModelPoint, Polyline, Polygon。</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IRenderControl、IConnectionInfo、IDataSourceFactory、IDataSource、IFeatureDataSet、IFeatureClass、IFieldInfoCollection、IFieldInfo、IGeometryDefine、IEnvelope、ICamera、IFeatureLayer</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('FeatureLayerVisualize')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('FeatureLayerVisualize')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/FeatureLayerVisualize/FeatureLayerVisualize_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/FeatureLayerVisualize/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/FeatureLayerVisualize/FeatureLayerVisualize.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/FeatureLayerVisualize/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />
+      <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >InteractMode</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/InteractMode.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/InteractMode.jpg" width="86" height="71" border=0/></a></td>
+          <td>切换交互模式，包括飞行、步行、拾取和测量</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IRenderControl、IConnectionInfo、IDataSourceFactory、IDataSource、IFeatureDataSet、IFeatureClass、IGeometryDefine、IEnvelope、IMeasurement 、gviInteractMode</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('InteractMode')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('InteractMode')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/InteractMode/InteractMode_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/InteractMode/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/InteractMode/InteractMode.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/InteractMode/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <!--<br />
+      <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >LogicGroupTree</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/LogicGroupTree.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/LogicGroupTree.jpg" width="86" height="71" border=0/></a></td>
+          <td>介绍了一种灵活的控制要素是否显示的方式，可以用来实现FeatureLayer的逻辑图层树</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+          IQueryDefine、IFdeCursor、IRow、IBinaryBuffer、IFeatureLayer</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('LogicGroupTree')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('LogicGroupTree')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/LogicGroupTree/LogicGroupTree_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/LogicGroupTree/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/LogicGroup/LogicGroup.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/LogicGroup/')">打开所在文件夹</a></td>
+        </tr>
+      </table>-->
+      <br />
+      <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >CameraTour</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/CameraTour.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/CameraTour.jpg" width="86" height="71" border=0/></a></td>
+          <td>通过IObjectManager创建相机路径对象：通过时间控制关键帧的 CameraTour，支持视频和序列帧的输出，支持导出为xml以及从xml导入</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IFeatureLayer、IObjectManager、ICameraTour</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('CameraTour')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('CameraTour')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/CameraTour/CameraTour_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/CameraTour/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/CameraTour/CameraTour.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/CameraTour/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >TerrainRoute</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/TerrainRoute.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/TerrainRoute.jpg" width="86" height="71" border=0/></a></td>
+          <td>通过IObjectManager创建相机路径对象：通过速度控制关键帧的TerrainRoute</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IFeatureLayer、IObjectManager、ITerrainRoute</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('TerrainRoute')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('TerrainRoute')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/TerrainRoute/TerrainRoute_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/TerrainRoute/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/TerrainRoute/TerrainRoute.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/TerrainRoute/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >CoordinateTransform</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/CoordinateTransform.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/CoordinateTransform.jpg" width="86" height="71" border=0/></a></td>
+          <td>坐标转换</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IGeometry::Project</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('CoordinateTransform')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('CoordinateTransform')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/CoordinateTransform/CoordinateTransform_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/CoordinateTransform/')">打开所在文件夹</a></td>
+        </tr>
+		<!--
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/CoordinateTransform/CoordinateTransform.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/CoordinateTransform/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+      </table>
+	  <br />
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >Authorization</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/Authorization.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/Authorization.jpg" width="86" height="71" border=0/></a></td>
+          <td>网络授权验证</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            ILicenseServer::SetHost</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('Authorization')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('Authorization')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/Authorization/Authorization_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/Authorization/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/Authorization/Authorization.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/Authorization/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+	  <br />
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >Temporal</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/Temporal.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/Temporal.jpg" width="86" height="71" border=0/></a></td>
+          <td>时态数据展示</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IObjectClass::HasTemporal、IObjectClass::EnableTemporal、IObjectClass::TemporalManager、ITemporalManager、ITemporalCursor、ITemporalInstanceCursor、ITemporalInstance、ITemporalFilter</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('Temporal')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('Temporal')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/Temporal/Temporal_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/Temporal/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/Temporal/Temporal.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/Temporal/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+	  <br />
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >TemporalOldSummerPalace</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/TemporalOldSummerPalace.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/TemporalOldSummerPalace.jpg" width="86" height="71" border=0/></a></td>
+          <td>时态圆明园，展示圆明园从乾隆年间至今的变化过程。</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IObjectClass::HasTemporal、IObjectClass::EnableTemporal、IObjectClass::TemporalManager、ITemporalManager、ITemporalCursor、ITemporalInstanceCursor、ITemporalInstance、ITemporalFilter</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('TemporalOldSummerPalace')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('TemporalOldSummerPalace')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/TemporalOldSummerPalace/TemporalOldSummerPalace_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/TemporalOldSummerPalace/')">打开所在文件夹</a></td>
+        </tr>
+		<!--
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/TemporalOldSummerPalace/TemporalOldSummerPalace.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/TemporalOldSummerPalace/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+      </table>
+	  <br />
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >Globe</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/Globe.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/Globe.jpg" width="86" height="71" border=0/></a></td>
+          <td>平球切换</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IRenderControl::Reset2</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('Globe')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('Globe')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/Globe/Globe_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/Globe/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/Globe/Globe.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/Globe/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />      
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >PrimitiveGlass</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/PrimitiveGlass.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/PrimitiveGlass.jpg" width="86" height="71" border=0/></a></td>
+          <td>模型为玻璃材质，能反射天空盒</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IResourceManager::GetModel、IResourceManager::UpdateModel、IModel、IDrawGroup、IDrawPrimitive、gviPrimitiveType</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('PrimitiveGlass')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('PrimitiveGlass')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/PrimitiveGlass/PrimitiveGlass_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/PrimitiveGlass/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/PrimitiveGlass/PrimitiveGlass.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/PrimitiveGlass/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+	  <br />
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >DynamicImage</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/DynamicImage.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/DynamicImage.jpg" width="86" height="71" border=0/></a></td>
+          <td>模型使用序列贴图</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IResourceManager::GetImage、IResourceManager::UpdateImage、IImage、IResourceFactory::CreateImageFromFile、IImage::FrameInterval、IImage::ConvertFormat</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('DynamicImage')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('DynamicImage')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/DynamicImage/DynamicImage_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/DynamicImage/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/DynamicImage/DynamicImage.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/DynamicImage/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />   
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >管线流向显示</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/DynamicPipe.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/DynamicPipe.jpg" width="86" height="71" border=0/></a></td>
+          <td>用序列贴图表示管线的流向</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IObjectManager::CreateFeatureLayer、ICamera::SetCamera2</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('DynamicPipe')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('DynamicPipe')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/DynamicPipe/DynamicPipe_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/DynamicPipe/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/DynamicPipe/DynamicPipe.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/DynamicPipe/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >HTMLWindow</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/HTMLWindow.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/HTMLWindow.jpg" width="86" height="71" border=0/></a></td>
+          <td>在三维窗口中内嵌HTML页面</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IHTMLWindow、WindowParam</td>
+        </tr>
+		<!--
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('HTMLWindow')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('HTMLWindow')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/HTMLWindow/HTMLWindow_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/HTMLWindow/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/HTMLWindow/HTMLWindow.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/HTMLWindow/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />      
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >MotionPath</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/MotionPath.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/MotionPath.jpg" width="86" height="71" border=0/></a></td>
+          <td>无人机飞行（.x格式的直升机模型，在球面的地形和场景上，沿着指定的motionpath，上面顶着文字标签飞行）</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IMotionPath、ISkinnedMesh、ITableLabel、OnFrameInvoke</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('MotionPath')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('MotionPath')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/MotionPath/MotionPath_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/MotionPath/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/MotionPath/MotionPath.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/MotionPath/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />   
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >DynamicObject</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/DynamicObject.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/DynamicObject.jpg" width="86" height="71" border=0/></a></td>
+          <td>无人机飞行（.x格式的直升机模型，在球面的地形和场景上，沿着指定的DynamicObject类型的Path，上面顶着文字标签飞行）</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IDynamicObject、ISkinnedMesh、ITableLabel、OnFrameInvoke</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('DynamicObject')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('DynamicObject')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/DynamicObject/DynamicObject_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/DynamicObject/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/DynamicObject/DynamicObject.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/DynamicObject/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />  
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >ImageryLayer</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/ImageryLayer.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/ImageryLayer.jpg" width="86" height="71" border=0/></a></td>
+          <td>加载影像</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IObjectManager::CreateImageryLayer、IObjectManager::OpenRasterSourceDialog</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('ImageryLayer')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('ImageryLayer')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/ImageryLayer/ImageryLayer_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/ImageryLayer/')">打开所在文件夹</a></td>
+        </tr>
+		<!--
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/ImageryLayer/ImageryLayer.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/ImageryLayer/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+      </table>
+      <br />     	  
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >OverlayLabel</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/OverlayLabel.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/OverlayLabel.jpg" width="86" height="71" border=0/></a></td>
+          <td>创建界面标签，演示了一个运用界面标签替换右下角Logo的案例</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IObjectManager::CreateOverlayLabel、IOverlayLabel、IViewport::LogoVisible</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('OverlayLabel')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('OverlayLabel')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/OverlayLabel/OverlayLabel_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/OverlayLabel/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/OverlayLabel/OverlayLabel.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/OverlayLabel/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >Revit</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/Revit.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/Revit.jpg" width="86" height="71" border=0/></a></td>
+          <td>演示对Autodesk Revit Architecture软件数据的支持</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IObjectManager::CreateFeatureLayer、ICamera::SetCamera2</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('Revit')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('Revit')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/Revit/Revit_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/Revit/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/Revit/Revit.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/Revit/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >ProjectTree</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/ProjectTree.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/ProjectTree.jpg" width="86" height="71" border=0/></a></td>
+          <td>加载工程</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IRenderControl::ProjectTree, IRenderControl::Project, IProject::Open/Save/SaveAs/PackResFile</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('ProjectTree')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('ProjectTree')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/ProjectTree/ProjectTree_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/ProjectTree/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/ProjectTree/ProjectTree.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/ProjectTree/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />
+	  <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >Presentation</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/Presentation.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/Presentation.jpg" width="86" height="71" border=0/></a></td>
+          <td>演示工具</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IObjectManager::CreatePresentation、IPresentation、IPresentationStep</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('Presentation')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('Presentation')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/Presentation/Presentation_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/Presentation/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/Presentation/Presentation.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/Presentation/')">打开所在文件夹</a></td>
+        </tr>        
+      </table>
+      <br />
+	  <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >IfcTree</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/IfcTree.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/IfcTree.jpg" width="86" height="71" border=0/></a></td>
+          <td>查看IFC数据的树形结构，可控制显示隐藏及高亮对应分组</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IObjectClass::CustomData、IGeometryRender::RenderGroupField、IFeatureLayer::SetGroupColor、IFeatureLayer::SetGroupVisibleMask</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('IfcTree')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('IfcTree')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/IfcTree/IfcTree_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/IfcTree/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/IfcTree/IfcTree.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/IfcTree/')">打开所在文件夹</a></td>
+        </tr>        
+      </table>
+      <br />      
+	  <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >FileToRenderGeometry</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/FileToRenderGeometry.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/FileToRenderGeometry.jpg" width="86" height="71" border=0/></a></td>
+          <td>由OSG创建RenderModelPoint，贴图和模型都加到内存中</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IObjectManager::AddModel、IObjectManager::AddImage</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('FileToRenderGeometry')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('FileToRenderGeometry')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/FileToRenderGeometry/FileToRenderGeometry_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/FileToRenderGeometry/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/FileToRenderGeometry/FileToRenderGeometry.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/FileToRenderGeometry/')">打开所在文件夹</a></td>
+        </tr>        
+      </table>
+      <br /> 	
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >KmlGroup</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/KmlGroup.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/KmlGroup.jpg" width="86" height="71" border=0/></a></td>
+          <td>KML组对象</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IObjectManager::CreateKmlGroup</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('KmlGroup')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('KmlGroup')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/KmlGroup/KmlGroup_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/KmlGroup/')">打开所在文件夹</a></td>
+        </tr>
+		<!--
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/CoordinateTransform/CoordinateTransform.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/CoordinateTransform/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+      </table>
+	  <br />	
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >MultiForm</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/MultiForm.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/MultiForm.jpg" width="86" height="71" border=0/></a></td>
+          <td>多进程使用三维控件</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IRenderControl::Initialize</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('MultiForm')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('MultiForm')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/MultiForm/MultiForm_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/MultiForm/')">打开所在文件夹</a></td>
+        </tr>
+		<!--
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/MultiForm/MultiForm.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/MultiForm/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+      </table>
+	  <br />
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >TileLayer</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/TileLayer.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/TileLayer.jpg" width="86" height="71" border=0/></a></td>
+          <td>加载瓦片</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IObjectManager::Create3DTileLayer</td>
+        </tr>
+		<!--
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('TileLayer')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('TileLayer')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/TileLayer/TileLayer_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/TileLayer/')">打开所在文件夹</a></td>
+        </tr>
+		-->		
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/TileLayer/TileLayer.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/TileLayer/')">打开所在文件夹</a></td>
+        </tr>		
+      </table>
+	  <br />
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >VersionCheck</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/VersionCheck.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/VersionCheck.jpg" width="86" height="71" border=0/></a></td>
+          <td>插件版本检测</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IRuntimeInfo::InstallDate, InstallPath</td>
+        </tr>
+		<!--
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('VersionCheck')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('VersionCheck')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/VersionCheck/VersionCheck_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/VersionCheck/')">打开所在文件夹</a></td>
+        </tr>
+		-->		
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/VersionCheck/index.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/VersionCheck/')">打开所在文件夹</a></td>
+        </tr>		
+      </table>
+	  <br />
+      <p>&nbsp;</p>
+      <p>&nbsp;</p>
+	  <p>&nbsp;</p>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="TabbedPanelsContent">
+      <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >FeatureSelect</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/FeatureSelect.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/FeatureSelect.jpg" width="86" height="71" border=0/></a></td>
+          <td>鼠标拾取：介绍了通过鼠标进行点选和框选以及如何高亮显示Feature</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IRenderControl、IConnectionInfo、IDataSourceFactory、IDataSource、IFeatureDataSet、IFeatureClass、IFeatureLayer、IFeatureLayerManager</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('FeatureSelect')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('FeatureSelect')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/FeatureSelect/FeatureSelect_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/FeatureSelect/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/FeatureSelect/FeatureSelect.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/FeatureSelect/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />
+	  <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >FeatureLayerSimpleRender</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/FeatureLayerSimpleRender.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/FeatureLayerSimpleRender.jpg" width="86" height="71" border=0/></a></td>
+          <td>要素符号化（中级篇）：介绍了ISimpleTextRender和ISimpleGeometryRender的使用</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IRenderControl、IConnectionInfo、IDataSourceFactory、IDataSource、IFeatureDataSet、IFeatureClass、IFeatureLayer、IFeatureLayerManager、ISimpleTextRender、ITextSymbol、ISimpleGeometryRender、IModelPointSymbol、ISimplePointSymbol、IPicturePointSymbol、ISurfaceSymbol、ICurveSymbol</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('FeatureLayerSimpleRender')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('FeatureLayerSimpleRender')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/FeatureLayerSimpleRender/FeatureLayerSimpleRender_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/FeatureLayerSimpleRender/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/FeatureLayerSimpleRender/FeatureLayerSimpleRender.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/FeatureLayerSimpleRender/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />
+	  <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >CatalogTreeCreateAndDelete</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/CatalogTreeCreateAndDelete.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/CatalogTreeCreateAndDelete.jpg" width="86" height="71" border=0/></a></td>
+          <td>Catalog（中级篇）：如何创建删除数据源DataSource、数据集DataSet、要素类FeatureClass和属性字段</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IConnectionInfo、IDataSourceFactory、IDataSource、IFeatureDataSet、IFeatureClass、IFieldInfoCollection、IFieldInfo、GridIndex、IRenderIndexInfo、IGeometryDefine</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('CatalogTreeCreateAndDelete')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('CatalogTreeCreateAndDelete')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/CatalogTreeCreateAndDelete/CatalogTreeCreateAndDelete_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/CatalogTreeCreateAndDelete/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/CatalogTreeCreateAndDelete/CatalogTreeCreateAndDelete.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/CatalogTreeCreateAndDelete/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />
+	  <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >FeatureClassQuery</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/FeatureClassQuery.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/FeatureClassQuery.jpg" width="86" height="71" border=0/></a></td>
+          <td>要素的属性查询</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IConnectionInfo、IDataSourceFactory、IDataSource、IFeatureDataSet、IFeatureClass、IFieldInfoCollection、IFieldInfo、IRow、IFdeCursor、IQueryFilter</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('FeatureClassQuery')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('FeatureClassQuery')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/FeatureClassQuery/FeatureClassQuery_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/FeatureClassQuery/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/FeatureClassQuery/FeatureClassQuery.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/FeatureClassQuery/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />
+	  <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >FeatureCreateAndDelete</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/FeatureCreateAndDelete.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/FeatureCreateAndDelete.jpg" width="86" height="71" border=0/></a></td>
+          <td>要素编辑之创建和删除：介绍了如何在要素类里创建和删除要素</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IConnectionInfo、IDataSourceFactory、IDataSource、IFeatureDataSet、IFeatureClass、IFieldInfoCollection、IFieldInfo、IRow、IFdeCursor、IQueryFilter、IRowBufferFactory、IRowBuffer</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('FeatureCreateAndDelete')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('FeatureCreateAndDelete')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/FeatureCreateAndDelete/FeatureCreateAndDelete_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/FeatureCreateAndDelete/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/FeatureCreateAndDelete/FeatureCreateAndDelete.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/FeatureCreateAndDelete/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />
+	  <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >FeatureEdit</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/FeatureEdit.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/FeatureEdit.jpg" width="86" height="71" border=0/></a></td>
+          <td>要素编辑之属性编辑：介绍了如何编辑要素的属性，包括普通属性和几何属性</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IConnectionInfo、IDataSourceFactory、IDataSource、IFeatureDataSet、IFeatureClass、IFieldInfoCollection、IFieldInfo、IRow、IFdeCursor、IQueryFilter</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('FeatureEdit')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('FeatureEdit')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/FeatureEdit/FeatureEdit_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/FeatureEdit/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/FeatureEdit/FeatureEdit.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/FeatureEdit/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />
+	  <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >LabelAndRenderGeometry</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/LabelAndRenderGeometry.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/LabelAndRenderGeometry.jpg" width="86" height="71" border=0/></a></td>
+          <td>创建对象（中级篇）：创建文字标签ILabel和RenderGeometry对象</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IRenderControl、IGeometryFactory、ILabel、IModelPoint、IRenderModelPoint、IPoint、IRenderPoint、IPolyline、IRenderPolyline、IPolygon、IRenderPolygon、ISimplePointSymbol、ISurfaceSymbol、ICurveSymbol、ITextSymbol</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('LabelAndRenderGeometry')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('LabelAndRenderGeometry')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/LabelAndRenderGeometry/LabelAndRenderGeometry_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/LabelAndRenderGeometry/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/LabelAndRenderGeometry/LabelAndRenderGeometry.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/LabelAndRenderGeometry/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />
+	  <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >ImportModel</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/ImportModel.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/ImportModel.jpg" width="86" height="71" border=0/></a></td>
+          <td>批量导入模型：包括mdb+osg</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IQueryDefine、IFdeCursor、IRow、IBinaryBuffer、IFeatureLayer、IGeometryFactory、IResourceFactory、IModelClass、IImageClass、IRowBufferCollection、IRowBuffer、IModelPoint、IEnvelope、IModel、IImage</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('ImportModel')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('ImportModel')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/ImportModel/ImportModel_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/ImportModel/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/ImportModel/ImportModel.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/ImportModel/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />
+	  <table width="100%" border="1" >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >CreateGeometry</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/CreateGeometry.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/CreateGeometry.jpg" width="86" height="71" border=0/></a></td>
+          <td>创建几何对象：介绍了如何通过工厂类IGeometryFactory创建各种几何对象</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IGeometryFactory、IPoint、IModelPoint、ICircle、IEllipse、ICirculeArc、IEllipticArc、ILine、ICompoundLine、IPolyline、IPolygon、ITriangle、ITriMesh、IClosedTriMesh、IMultiPoint、IMultiPolyline、IMultiPolygon、IMultiTriMesh</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('CreateGeometry')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('CreateGeometry')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/CreateGeometry/CreateGeometry_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/CreateGeometry/')">打开所在文件夹</a></td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/CreateGeometry/CreateGeometry.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/CreateGeometry/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+	  <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >AttachmentManager</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/AttachmentManager.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/AttachmentManager.jpg" width="86" height="71" border=0/></a></td>
+		  <td>附件管理</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			IObjectClass::EnableAttachment、IObjectClass::DisableAttachment、IAttachmentManager、IAttachment、IAttachmentCollection</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('AttachmentManager')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('AttachmentManager')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/AttachmentManager/AttachmentManager_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/AttachmentManager/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/AttachmentManager/AttachmentManager.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/AttachmentManager/')">打开所在文件夹</a></td>
+        </tr>		
+		-->
+	  </table>
+	  <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >UndoRedo</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/UndoRedo.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/UndoRedo.jpg" width="86" height="71" border=0/></a></td>
+		  <td>撤销重做</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			ICommandManagerFactory、ICommandManager、_ICommandManagerEvents、IUndoRedoResult、gviCommandType</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('UndoRedo')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('UndoRedo')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/UndoRedo/UndoRedo_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/UndoRedo/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/UndoRedo/UndoRedo.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/UndoRedo/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+	  <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >DataImport</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/DataImport.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/DataImport.jpg" width="86" height="71" border=0/></a></td>
+		  <td>数据导入shp,dwg,gdb,las,skp</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			IDataInteropFactory、IDataInterop、ILayerInfoCollection、ILayerInfo</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('DataImport')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('DataImport')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/DataImport/DataImport_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/DataImport/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/DataImport/DataImport.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/DataImport/')">打开所在文件夹</a></td>
+        </tr>	
+		-->		
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >FeatureLocateAndGlow</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/FeatureLocateAndGlow.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/FeatureLocateAndGlow.jpg" width="86" height="71" border=0/></a></td>
+		  <td>模型闪烁效果</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			IModelPointSymbol::SetResourceDataSet、IRenderModelPoint::Glow、IObjectManager::DelayDelete</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('FeatureLocateAndGlow')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('FeatureLocateAndGlow')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/FeatureLocateAndGlow/FeatureLocateAndGlow_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/FeatureLocateAndGlow/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/FeatureLocateAndGlow/FeatureLocateAndGlow.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/FeatureLocateAndGlow/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >ExportManager</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/ExportManager.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/ExportManager.jpg" width="86" height="71" border=0/></a></td>
+		  <td>出图：截屏出图、出高程图、出正射影像图、2.5D出图、正交出图（沿街立面图）</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			IExportManager::ExportImage、IExportManager::ExportDOM、IExportManager::ExportDEM、IExportManager::Export25D、IExportManager::ExportOrthoImage</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('ExportManager')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('ExportManager')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/ExportManager/ExportManager_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/ExportManager/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/ExportManager/ExportManager.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/ExportManager/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />
+      <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >CutFill</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/CutFill.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/CutFill.jpg" width="86" height="71" border=0/></a></td>
+		  <td>挖填方</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			ITerrainAnalyse::CalculateCutFill</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('CutFill')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('CutFill')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/CutFill/CutFill_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/CutFill/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/CutFill/CutFill.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/CutFill/')">打开所在文件夹</a></td>
+        </tr>		
+		-->
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >Flood</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/Flood.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/Flood.jpg" width="86" height="71" border=0/></a></td>
+		  <td>水淹分析</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			ITerrainAnalyse::FindWaterSinkBoundary</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('Flood')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('Flood')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/Flood/Flood_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/Flood/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/Flood/Flood.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/Flood/')">打开所在文件夹</a></td>
+        </tr>		
+		-->
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >RenderParam</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/RenderParam.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/RenderParam.jpg" width="86" height="71" border=0/></a></td>
+		  <td>全局配置参数</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			IRenderControl::SetRenderParam, GetRenderParam</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('RenderParam')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('RenderParam')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/RenderParam/RenderParam_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/RenderParam/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/RenderParam/RenderParam.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/RenderParam/')">打开所在文件夹</a></td>
+        </tr>		
+		-->
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >TerrainHole</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/TerrainHole.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/TerrainHole.jpg" width="86" height="71" border=0/></a></td>
+		  <td>地形挖洞</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			IObjectManager::CreateTerrainHole</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('TerrainHole')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('TerrainHole')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/TerrainHole/TerrainHole_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/TerrainHole/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/TerrainHole/TerrainHole.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/TerrainHole/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >TerrainHole3D</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/DrawTerrainHole.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/DrawTerrainHole.jpg" width="86" height="71" border=0/></a></td>
+		  <td>地形挖洞后，用RenderPolygon补全洞壁</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			IObjectManager::CreateTerrainHole、IObjectManager::CreateRenderPolygon、IObjectManager::CreateRenderMultiPolygon</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('DrawTerrainHole')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('DrawTerrainHole')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/DrawTerrainHole/DrawTerrainHole_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/DrawTerrainHole/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/DrawTerrainHole/DrawTerrainHole.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/DrawTerrainHole/')">打开所在文件夹</a></td>
+        </tr>		
+		-->
+	  </table>
+      <br />	 
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >TerrainModifier</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/TerrainModifier.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/TerrainModifier.jpg" width="86" height="71" border=0/></a></td>
+		  <td>地形编辑</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			IObjectManager::CreateTerrainModifier</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('TerrainModifier')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('TerrainHole')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/TerrainModifier/TerrainModifier_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/TerrainModifier/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/TerrainModifier/TerrainModifier.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/TerrainModifier/')">打开所在文件夹</a></td>
+        </tr>		
+		-->
+	  </table>
+      <br />	  
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >TileHole</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/TileHole.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/TileHole.jpg" width="86" height="71" border=0/></a></td>
+		  <td>瓦片挖洞</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			IObjectManager::CreateTileHole</td>
+		</tr>
+		<tr>
+		<td align="center"><a href="javascript:external.RunExe('TileHole')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('TileHole')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/TileHole/TileHole_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/TileHole/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/TileHole/TileHole.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/TileHole/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >FeaturelayerHole</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/FeaturelayerHole.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/FeaturelayerHole.jpg" width="86" height="71" border=0/></a></td>
+		  <td>FDB挖洞</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			ISpatialFilter, IFeatureClass::Search, IGeometryConvertor::SplitModelPointByPolygon2D</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('FeaturelayerHole')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('FeaturelayerHole')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/FeaturelayerHole/FeaturelayerHole_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/FeaturelayerHole/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/FeaturelayerHole/FeaturelayerHole.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/FeaturelayerHole/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >EmbedWatermark</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/EmbedWatermark.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/EmbedWatermark.jpg" width="86" height="71" border=0/></a></td>
+		  <td>给图片打水印</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IImage::EmbedWatermark</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('EmbedWatermark')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('EmbedWatermark')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/EmbedWatermark/EmbedWatermark_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/EmbedWatermark/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/EmbedWatermark/EmbedWatermark.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/EmbedWatermark/')">打开所在文件夹</a></td>
+        </tr>		
+		-->
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >POILayer</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/POILayer.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/POILayer.jpg" width="86" height="71" border=0/></a></td>
+		  <td>加载POI图层</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IObjectManager::CreateFeatureLayer</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('POILayer')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('POILayer')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/POILayer/POILayer_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/POILayer/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/POILayer/POILayer.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/POILayer/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >动态海水</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/Ocean.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/Ocean.jpg" width="86" height="71" border=0/></a></td>
+		  <td>动态海水</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 ITerrain::SetOceanRegion、ITerrain::EnableOceanEffect、ITerrain::OceanWindDirection、ITerrain::OceanWindSpeed</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('Ocean')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('Ocean')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/Ocean/Ocean_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/Ocean/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/Ocean/Ocean.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/Ocean/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >新步行模式</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/WalkGround.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/WalkGround.jpg" width="86" height="71" border=0/></a></td>
+		  <td>新步行模式</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 gviInteractWalk, gviWalkMode</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('WalkGround')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('WalkGround')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/WalkGround/WalkGround_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/WalkGround/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/WalkGround/WalkGround.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/WalkGround/')">打开所在文件夹</a></td>
+        </tr>		
+		-->
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >瓦片拾取</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/TileLayerSelect.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/TileLayerSelect.jpg" width="86" height="71" border=0/></a></td>
+		  <td>演示了如何拾取瓦片中的小元素，分为属性查询和空间查询两种方式。</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IFeatureClass::GetRow、ISpatialFilter::Search</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('TileLayerSelect')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('TileLayerSelect')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/TileLayerSelect/TileLayerSelect_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/TileLayerSelect/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/TileLayerSelect/TileLayerSelect.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/TileLayerSelect/')">打开所在文件夹</a></td>
+        </tr>		
+		-->
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		<td height="25" colspan="2" class="ExampleTitle" >TerrainVideo</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/TerrainVideo.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/TerrainVideo.jpg" width="86" height="71" border=0/></a></td>
+		  <td>演示了投影到瓦片上的视频效果（也是另一种视域分析技术）。当不设置视频文件时，实现了视域分析的效果。</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IObjectManager::CreateTerrainVideo</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('TerrainVideo')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('TerrainVideo')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/TerrainVideo/TerrainVideo_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/TerrainVideo/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/TerrainVideo/TerrainVideo.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/TerrainVideo/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		<td height="25" colspan="2" class="ExampleTitle" >视域分析</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/Viewshed.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/Viewshed.jpg" width="86" height="71" border=0/></a></td>
+		  <td>演示了另一种视域分析技术。</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IObjectManager::CreateViewshed</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('Viewshed')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('Viewshed')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/Viewshed/Viewshed_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/Viewshed/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/Viewshed/Viewshed.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/Viewshed/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />	  
+	  <table width="100%" border="1" >
+		<tr >
+		<td height="25" colspan="2" class="ExampleTitle" >剖切面</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/ClipPlane.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/ClipPlane.jpg" width="86" height="71" border=0/></a></td>
+		  <td>演示了剖切面效果。</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 InteractMode(gviInteractMode.gviInteractClipPlane)</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('ClipPlane')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('ClipPlane')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/ClipPlane/ClipPlane_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/ClipPlane/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/ClipPlane/ClipPlane_CustomePlane.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/ClipPlane/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		<td height="25" colspan="2" class="ExampleTitle" >热力图</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/HeatMap.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/HeatMap.jpg" width="86" height="71" border=0/></a></td>
+		  <td>演示了热力图与场景和地形叠加的效果。</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IObjectManager::CreateHeatMap</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('HeatMap')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('HeatMap')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/HeatMap/HeatMap_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/HeatMap/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/HeatMap/HeatMap.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/HeatMap/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />          
+      <table width="100%" border="1" >
+		<tr >
+		<td height="25" colspan="2" class="ExampleTitle" >UIImageButton</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/UIImageButton.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/UIImageButton.jpg" width="86" height="71" border=0/></a></td>
+		  <td>使用UI接口画界面。</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IObjectManager::CreateUIImageButton</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('UIImageButton')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('UIImageButton')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/UIImageButton/UIImageButton_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/UIImageButton/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/UIImageButton/UIImageButton.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/UIImageButton/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />    
+      <table width="100%" border="1" >
+		<tr >
+		<td height="25" colspan="2" class="ExampleTitle" >ToolTipShow</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/ToolTipShow.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/ToolTipShow.jpg" width="86" height="71" border=0/></a></td>
+		  <td>配置显示提示信息。目前支持的FeatureLayer类型有：Point, Polyline, Polygon, ModelPoint。</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IToolTipTextRender</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('ToolTipShow')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('ToolTipShow')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/ToolTipShow/ToolTipShow_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/ToolTipShow/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/ToolTipShow/ToolTipShow.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/ToolTipShow/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />  	  
+      <table width="100%" border="1" >
+		<tr >
+		<td height="25" colspan="2" class="ExampleTitle" >CreateFeature</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/CreateFeature.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/CreateFeature.jpg" width="86" height="71" border=0/></a></td>
+		  <td>CreateFeature</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IFeatureManager::CreateFeature</td>
+		</tr>
+		<!--
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('CreateFeature')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('CreateFeature')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/CreateFeature/CreateFeature_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/CreateFeature/')">打开所在文件夹</a></td>
+		</tr>
+		-->
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/CreateFeature/CreateFeature.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/CreateFeature/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />  
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >DomainTree</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/DomainTree.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/DomainTree.jpg" width="86" height="71" border=0/></a></td>
+		  <td>利用Domain分类显示</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			IGeometryRender::RenderGroupField</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('DomainTree')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('DomainTree')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/DomainTree/DomainTree_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/DomainTree/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/DomainTree/DomainTree.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/DomainTree/')">打开所在文件夹</a></td>
+        </tr>	
+		-->		
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >DynamicModelPoint</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/DynamicModelPoint.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/DynamicModelPoint.jpg" width="86" height="71" border=0/></a></td>
+		  <td>动态模型</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			ITransform</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('DynamicModelPoint')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('DynamicModelPoint')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/DynamicModelPoint/DynamicModelPoint_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/DynamicModelPoint/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/DynamicModelPoint/DynamicModelPoint.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/DynamicModelPoint/')">打开所在文件夹</a></td>
+        </tr>		
+		-->
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >LabelSelect</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/LabelSelect.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/LabelSelect.jpg" width="86" height="71" border=0/></a></td>
+		  <td>漫游模式下拾取Label</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			gviSelectLable</td>
+		</tr>
+		<!--
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('LabelSelect')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('LabelSelect')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/LabelSelect/LabelSelect_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/LabelSelect/')">打开所在文件夹</a></td>
+		</tr>
+		-->
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/LabelSelect/LabelSelect.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/LabelSelect/')">打开所在文件夹</a></td>
+        </tr>			
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >Network</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/Network.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/Network.jpg" width="86" height="71" border=0/></a></td>
+		  <td>网络分析：多点间最优路径、两点间最优路径、查找最近设施</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 INetwork、INetworkAttribute、INetworkClosestFacilitySolver、INetworkFieldEvaluator、INetworkEventLocation、INetworkLoader、INetworkLocation、INetworkManager、INetworkRouteSolver、INetworkSource</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('Network')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('Network')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/Network/Network_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/Network/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/Network/Network.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/Network/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >RenderArrow</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/RenderArrow.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/RenderArrow.jpg" width="86" height="71" border=0/></a></td>
+		  <td>创建箭头</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IRenderArrow</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('RenderArrow')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('RenderArrow')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/RenderArrow/RenderArrow_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/RenderArrow/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/RenderArrow/RenderArrow.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/RenderArrow/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />	
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >SpatialQuery</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/SpatialQuery.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/SpatialQuery.jpg" width="86" height="71" border=0/></a></td>
+		  <td>选择polygon，查询ModelPoint</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			ISpatialFilter, ITable::Search, gviSpatialRelEnvelope</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('SpatialQuery')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('SpatialQuery')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/SpatialQuery/SpatialQuery_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/SpatialQuery/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/SpatialQuery/SpatialQuery_Globe.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/SpatialQuery/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >SpatialQuery2</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/SpatialQuery2.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/SpatialQuery2.jpg" width="86" height="71" border=0/></a></td>
+		  <td>画polyline，查询Polyline</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			ISpatialFilter, ITable::Search, gviSpatialRelEnvelope</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('SpatialQuery2')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('SpatialQuery2')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('intermediate/SpatialQuery2/SpatialQuery2_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('intermediate/SpatialQuery2/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/intermediate/SpatialQuery2/SpatialQuery2.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('intermediate/SpatialQuery2/')">打开所在文件夹</a></td>
+        </tr>		
+		-->
+	  </table>
+      <br />	  	  
+      <p>&nbsp;</p>
+      <p>&nbsp;</p>
+	  <p>&nbsp;</p>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="TabbedPanelsContent">
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >ParticleEffect</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/ParticleEffect.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/ParticleEffect.jpg" width="86" height="71" border=0/></a></td>
+		  <td>创建对象（中级篇）：创建粒子系统IParticleEffect以及运动物体IMotionPath</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			IRenderControl、IObjectManager、IParticleEffect、IMotionPath、IMotionable</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('ParticleEffect')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('ParticleEffect')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/ParticleEffect/ParticleEffect_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/ParticleEffect/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/ParticleEffect/ParticleEffect.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/ParticleEffect/')">打开所在文件夹</a></td>
+        </tr>
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >TableLabelSample</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/TableLabelSample.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/TableLabelSample.jpg" width="86" height="71" border=0/></a></td>
+		  <td>创建对象（中级篇）：创建粒子系统ITableLabel以及运动物体IMotionPath</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			IRenderControl、IObjectManager、ITableLabel、IMotionPath、IMotionable</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('TableLabelSample')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('TableLabelSample')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/TableLabelSample/TableLabelSample_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/TableLabelSample/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/TableLabelSample/TableLabelSample.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/TableLabelSample/')">打开所在文件夹</a></td>
+        </tr>
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >MultipleScreen</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/MultipleScreen.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/MultipleScreen.jpg" width="86" height="71" border=0/></a></td>
+		  <td>多视口显示</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			IRenderControl、IViewport、gviViewportMode、IRenderModelPoint</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('MultipleScreen')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('MultipleScreen')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/MultipleScreen/MultipleScreen_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/MultipleScreen/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/MultipleScreen/MultipleScreen.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/MultipleScreen/')">打开所在文件夹</a></td>
+        </tr>
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >StereoDisplay</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/StereoDisplay.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/StereoDisplay.jpg" width="86" height="71" border=0/></a></td>
+		  <td>立体显示</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			IRenderControl、IViewport、gviViewportMode</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('StereoDisplay')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('StereoDisplay')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/StereoDisplay/StereoDisplay_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/StereoDisplay/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/StereoDisplay/StereoDisplay.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/StereoDisplay/')">打开所在文件夹</a></td>
+        </tr>
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >MultiSpatialColumns</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/MultiSpatialColumns.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/MultiSpatialColumns.jpg" width="86" height="71" border=0/></a></td>
+		  <td>多空间列</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			IRenderControl、IConnectionInfo、IDataSourceFactory、IDataSource、IFeatureDataSet、IFeatureClass、IFeatureLayer</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('MultiSpatialColumns')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('MultiSpatialColumns')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/MultiSpatialColumns/MultiSpatialColumns_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/MultiSpatialColumns/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/MultiSpatialColumns/MultiSpatialColumns.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/MultiSpatialColumns/')">打开所在文件夹</a></td>
+        </tr>
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >FeatureLayerValueMapRender</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/FeatureLayerValueMapRender.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/FeatureLayerValueMapRender.jpg" width="86" height="71" border=0/></a></td>
+		  <td>要素符号化（高级篇）：介绍了IValueMapTextRender和IValueMapGeometryRender的使用</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IRenderControl、IConnectionInfo、IDataSourceFactory、IDataSource、IFeatureDataSet、IFeatureClass、IFeatureLayer、IFeatureLayerManager、IValueMapTextRender、ITextRenderScheme、ITextSymbol、ITextAttribute、IUniqueValuesRenderRule、IValueMapGeometryRender、IGeometryRenderScheme、IModelPointSymbol、IRangeRenderRule</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('FeatureLayerValueMapRender')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('FeatureLayerValueMapRender')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/FeatureLayerValueMapRender/FeatureLayerValueMapRender_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/FeatureLayerValueMapRender/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/FeatureLayerValueMapRender/FeatureLayerValueMapRender.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/FeatureLayerValueMapRender/')">打开所在文件夹</a></td>
+        </tr>	
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >GeometryEdit</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/GeometryEdit.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/GeometryEdit.jpg" width="86" height="71" border=0/></a></td>
+		  <td>交互创建和编辑：RenderGeometry和FeatureGeometry</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IRenderControl、GeometryEditor、IGeometryFactory、IModelPoint、IRenderModelPoint、IPoint、IRenderPoint、IPolyline、IRenderPolyline、IPolygon、IRenderPolygon、IGeometryEditorEvents_EditingEventHandler、IGeometryEditorEvents_EditFinishEventHandler</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('GeometryEdit')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('GeometryEdit')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/GeometryEdit/GeometryEdit_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/GeometryEdit/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/GeometryEdit/GeometryEdit.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/GeometryEdit/')">打开所在文件夹</a></td>
+        </tr>
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >GeometryConvert</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/GeometryConvert.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/GeometryConvert.jpg" width="86" height="71" border=0/></a></td>
+		  <td>Geometry相互转换：IGeometryConvert</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IRenderControl、IModelPoint、IBinaryBuffer、IResourceFactory、IModel、IGeometryConvertor、IMultiTriMesh、ITriMesh、IRenderTriMesh、IMultiPolygon、IPolygon、IRenderPolygon、IMultiPoint、IRenderMultiPoint、IRenderControlEvents_RcMouseClickSelectEvent</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('GeometryConvert')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('GeometryConvert')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('advanced/GeometryConvert/GeometryConvert_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/GeometryConvert/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/GeometryConvert/GeometryConvert.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/GeometryConvert/')">打开所在文件夹</a></td>
+        </tr>
+	  </table>
+      <br />
+      <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >GeometryConvert2</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/GeometryConvert2.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/GeometryConvert2.jpg" width="86" height="71" border=0/></a></td>
+		  <td>多边形拉成建筑/体块</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			  IGeometryConvertor::ExtrudePolygonToModel、IGeometryConvertor::ExtrudePolygonToTriMesh</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('GeometryConvert2')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('GeometryConvert2')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('advanced/GeometryConvert2/GeometryConvert2_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/GeometryConvert2/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/GeometryConvert2/GeometryConvert2.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/GeometryConvert2/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+	  </table>
+      <br />   
+      <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >GeometryConvert3</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/GeometryConvert3.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/GeometryConvert3.jpg" width="86" height="71" border=0/></a></td>
+		  <td>切割模型</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			  IGeometryConvertor::CutModelPointByPolygon2D、IGeometryConvertor::SplitModelPointByPolygon2D</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('GeometryConvert3')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('GeometryConvert3')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('advanced/GeometryConvert3/GeometryConvert3_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/GeometryConvert3/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/GeometryConvert3/GeometryConvert3.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/GeometryConvert3/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+	  </table>
+      <br />  	  
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >SightlineAnalysis</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/SightlineAnalysis.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/SightlineAnalysis.jpg" width="86" height="71" border=0/></a></td>
+		  <td>通视分析：IMultiTriMesh::LineSegmentIntersect</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IRenderControl、IPoint、IPolyline、IRenderPolyline、ISpatialFilter、IFdeCursor、IGeometryConvertor、IMultiTriMesh、IRenderControlEvents_RcMouseClickSelectEvent</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('SightlineAnalysis')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('SightlineAnalysis')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/SightlineAnalysis/SightlineAnalysis_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/SightlineAnalysis/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/SightlineAnalysis/SightlineAnalysis.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/SightlineAnalysis/')">打开所在文件夹</a></td>
+        </tr>
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >ShadowAnalysis</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/ShadowAnalysis.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/ShadowAnalysis.jpg" width="86" height="71" border=0/></a></td>
+		  <td>日照分析：IVisualAnalysis</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IHighlightHelper、IVisualAnalysis、IRenderControlEvents_RcMouseClickSelectEvent</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('ShadowAnalysis')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('ShadowAnalysis')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/ShadowAnalysis/ShadowAnalysis_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/ShadowAnalysis/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/ShadowAnalysis/ShadowAnalysis.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/ShadowAnalysis/')">打开所在文件夹</a></td>
+        </tr>
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >ShadowMapApplication</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/ShadowMapApplication.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/ShadowMapApplication.jpg" width="86" height="71" border=0/></a></td>
+		  <td>基于GPU计算的日照模拟</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IVisualAnalysis</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('ShadowMapApplication')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('ShadowMapApplication')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('advanced/ShadowMapApplication/ShadowMapApplication_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/ShadowMapApplication/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/ShadowMapApplication/ShadowMapApplication.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/ShadowMapApplication/')">打开所在文件夹</a></td>
+        </tr>
+	  </table>
+      <br />	  
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >ViewshedAnalysis</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/ViewshedAnalysis.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/ViewshedAnalysis.jpg" width="86" height="71" border=0/></a></td>
+		  <td>视域分析：IVisualAnalysis</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IHighlightHelper、IVisualAnalysis、IRenderControlEvents_RcMouseClickSelectEvent</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('ViewshedAnalysis')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('ViewshedAnalysis')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/ViewshedAnalysis/ViewshedAnalysis_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/ViewshedAnalysis/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/ViewshedAnalysis/ViewshedAnalysis.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/ViewshedAnalysis/')">打开所在文件夹</a></td>
+        </tr>
+	  </table>
+      <br />  
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >DynamicViewshed</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/DynamicViewshed.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/DynamicViewshed.jpg" width="86" height="71" border=0/></a></td>
+          <td>基于GPU计算的视域分析</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            IObjectManager::CreateViewshed, IMotionable</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('DynamicViewshed')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('DynamicViewshed')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/DynamicViewshed/DynamicViewshed_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/DynamicViewshed/')">打开所在文件夹</a></td>
+        </tr>
+		<!--
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/DynamicViewshed/DynamicViewshed.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/DynamicViewshed/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+      </table>
+      <br />        
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >CalculateTopOnTerrain</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/CalculateTopOnTerrain.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/CalculateTopOnTerrain.jpg" width="86" height="71" border=0/></a></td>
+		  <td>求地形上的最高点</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 ITopologicalOperator2D::Buffer2D、gviHeightStyle.gviHeightOnTerrain</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('CalculateTopOnTerrain')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('CalculateTopOnTerrain')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('advanced/CalculateTopOnTerrain/CalculateTopOnTerrain_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/CalculateTopOnTerrain/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/CalculateTopOnTerrain/CalculateTopOnTerrain.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/CalculateTopOnTerrain/')">打开所在文件夹</a></td>
+        </tr>
+	  </table>
+	  <br />  
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >Domain</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/Domain.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/Domain.jpg" width="86" height="71" border=0/></a></td>
+		  <td>域</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IDomain、ICodedValueDomain、IRangeDomain、IFieldInfo::Domain、IFieldDomainInfo</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('Domain')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('Domain')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('advanced/Domain/Domain_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/Domain/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/Domain/Domain.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/Domain/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+	  </table>
+	  <br />  
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >TemporalManager</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/TemporalManager.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/TemporalManager.jpg" width="86" height="71" border=0/></a></td>
+		  <td>时态</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IObjectClass::HasTemporal、HRESULT IObjectClass::EnableTemporal、IObjectClass::DisableTemporal、IObjectClass::TemporalManager、ITemporalManager、ITemporalCursor、ITemporalInstanceCursor、ITemporalInstance、ITemporalFilter</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('TemporalManager')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('TemporalManager')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/TemporalManager/TemporalManager_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/TemporalManager/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/TemporalManager/TemporalManager.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/TemporalManager/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+	  </table>
+	  <br />  
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >DataIndex</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/DataIndex.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/DataIndex.jpg" width="86" height="71" border=0/></a></td>
+		  <td>数据索引，包括数据库索引、空间索引、渲染索引</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IDbIndexInfo、IGridIndexInfo、IRenderIndexInfo</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('DataIndex')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('DataIndex')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/DataIndex/DataIndex_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/DataIndex/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/DataIndex/DataIndex.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/DataIndex/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+	  </table>
+	  <br />  
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >GeometrySymbolScript</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/GeometrySymbolScript.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/GeometrySymbolScript.jpg" width="86" height="71" border=0/></a></td>
+		  <td>使用lua语法的脚本设置几何物体的渲染风格 </td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IGeometrySymbol::Script</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('GeometrySymbolScript')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('GeometrySymbolScript')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('advanced/GeometrySymbolScript/GeometrySymbolScript_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/GeometrySymbolScript/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/GeometrySymbolScript/GeometrySymbolScript.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/GeometrySymbolScript/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+	  </table>
+      <br />         
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >仪表盘</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/仪表盘.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/仪表盘.jpg" width="86" height="71" border=0/></a></td>
+		  <td>动态设置模型位置和文字标签内容 </td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IGeometryFactory::CreateGeometry、IModelPoint::SelfRotate、IObjectManager::CreateLabel</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('DynamicBoard')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('DynamicBoard')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('advanced/DynamicBoard/DynamicBoard_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/DynamicBoard/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/DynamicBoard/DynamicBoard.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/DynamicBoard/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+	  </table>
+      <br /> 
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >MouseSnap</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/MouseSnap.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/MouseSnap.jpg" width="86" height="71" border=0/></a></td>
+		  <td>鼠标的捕捉模式：可以在开启捕捉的情况下做测量，开启捕捉的情况下进行编辑</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IRenderControl::MouseSnapMode、IRenderControl::InteractMode、IRenderControl::MeasurementMode、IObjectEditor</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('MouseSnap')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('MouseSnap')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('advanced/MouseSnap/MouseSnap_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/MouseSnap/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/MouseSnap/MouseSnap.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/MouseSnap/')">打开所在文件夹</a></td>
+        </tr>
+	  </table>
+      <br />    
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >ScreenToWorld</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/ScreenToWorld.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/ScreenToWorld.jpg" width="86" height="71" border=0/></a></td>
+		  <td>三维窗口坐标转“当前”的空间坐标，并在转换过程中可以拾取到指定坐标下的物体</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			  ICamera::ScreenToWorld、_IRenderControlEvents_RcMouseHoverEvent</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('ScreenToWorld')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('ScreenToWorld')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('advanced/ScreenToWorld/ScreenToWorld_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/ScreenToWorld/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/ScreenToWorld/ScreenToWorld.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/ScreenToWorld/')">打开所在文件夹</a></td>
+        </tr>
+	  </table>
+      <br />   
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >DriveModel</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/DriveModel.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/DriveModel.jpg" width="86" height="71" border=0/></a></td>
+		  <td>由polygon驱动模型，并支持修改层数及层高等属性</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			  IParametricModelling::PolygonToBuilding、IObjectManager::AddModel</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('DriveModel')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('DriveModel')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('advanced/DriveModel/DriveModel_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/DriveModel/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/DriveModel/DriveModel.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/DriveModel/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >PropertyLineSearch</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/PropertyLineSearch.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/PropertyLineSearch.jpg" width="86" height="71" border=0/></a></td>
+		  <td>查询在红线内且超高的建筑</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			  ITopologicalOperator2D::Buffer2D、ISpatialFilter</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('PropertyLineSearch')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('PropertyLineSearch')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('advanced/PropertyLineSearch/PropertyLineSearch_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/PropertyLineSearch/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/PropertyLineSearch/PropertyLineSearch.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/PropertyLineSearch/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >TopologicalOperator</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/TopologicalOperator.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/TopologicalOperator.jpg" width="86" height="71" border=0/></a></td>
+		  <td>polygon之间做几何拓扑运算：交、并、差、对称差</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			  ITopologicalOperator2D::Intersection2D、ITopologicalOperator2D::Union2D、ITopologicalOperator2D::Difference2D、ITopologicalOperator2D::SymmetricDifference2D</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('TopologicalOperator')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('TopologicalOperator')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('advanced/TopologicalOperator/TopologicalOperator_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/TopologicalOperator/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/TopologicalOperator/TopologicalOperator.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/TopologicalOperator/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+	  </table>
+	  <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >DriveRoad</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/DriveRoad.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/DriveRoad.jpg" width="86" height="71" border=0/></a></td>
+		  <td>由polyline驱动为道路模型</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			  IResourceFactory::CreateModel、IModel、IDrawGroup、IDrawPrimitive、IDrawMaterial、IObjectManager::AddModel</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('DriveRoad')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('DriveRoad')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('advanced/DriveRoad/DriveRoad_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/DriveRoad/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/DriveRoad/DriveRoad.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/DriveRoad/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+	  </table>
+      <br />
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >EditLabel</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/EditLabel.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/EditLabel.jpg" width="86" height="71" border=0/></a></td>
+          <td>模拟Label跟随鼠标移动效果</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            gviSelectLable</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('EditLabel')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('EditLabel')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/EditLabel/EditLabel_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/EditLabel/')">打开所在文件夹</a></td>
+        </tr>
+		<!--
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/EditLabel/EditLabel.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/EditLabel/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+      </table>
+      <br />	  
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >CustomArrow</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/CustomArrow.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/CustomArrow.jpg" width="86" height="71" border=0/></a></td>
+          <td>6.3复杂算法利用RenderPolygon绘制箭头</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            createRenderPolygon</td>
+        </tr>		
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/CustomArrow/CustomArrow.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/CustomArrow/')">打开所在文件夹</a></td>
+        </tr>
+      </table>
+      <br />	
+	  <table width="100%" border="1"  >
+        <tr >
+          <td height="25" colspan="2" class="ExampleTitle" >EstimateLandslideVolume</td>
+        </tr>
+        <tr>
+          <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/EstimateLandslideVolume.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/EstimateLandslideVolume.jpg" width="86" height="71" border=0/></a></td>
+          <td>求山体滑坡相交区域</td>
+        </tr>
+        <tr>
+          <td>所用接口列表：<br />
+            ITools::EstimateLandslideVolumeTool</td>
+        </tr>
+        <tr>
+          <td align="center"><a href="javascript:external.RunExe('EstimateLandslideVolume')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('EstimateLandslideVolume')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('beginner/EstimateLandslideVolume/EstimateLandslideVolume_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('beginner/EstimateLandslideVolume/')">打开所在文件夹</a></td>
+        </tr>
+		<!--
+        <tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/beginner/EstimateLandslideVolume/EstimateLandslideVolume.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('beginner/EstimateLandslideVolume/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+      </table>
+      <br />	
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >GetSolidProfile</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/GetSolidProfile.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/GetSolidProfile.jpg" width="86" height="71" border=0/></a></td>
+		  <td>用面去切一个体，求剖面 </td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IGeometryConvertor::GetSolidProfile</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('GetSolidProfile')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<!--<a href="javascript:external.ShowOperation('GetSolidProfile')">操作说明</a>&nbsp;&nbsp;&nbsp;--><a href="javascript:external.OpenSolution('advanced/GetSolidProfile/GetSolidProfile_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/GetSolidProfile/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/GetSolidProfile/DigHoleWithZpolygon.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/GetSolidProfile/')">打开所在文件夹</a></td>
+        </tr>
+	  </table>
+      <br />     
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >HighlightHelper</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/HighlightHelper.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/HighlightHelper.jpg" width="86" height="71" border=0/></a></td>
+		  <td>辅助选择工具：IHighlightHelper</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IHighlightHelper、IRenderControlEvents_RcMouseClickSelectEvent</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('HighlightHelper')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('HighlightHelper')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/HighlightHelper/HighlightHelper_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/HighlightHelper/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/HighlightHelper/HighlightHelper.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/HighlightHelper/')">打开所在文件夹</a></td>
+        </tr>
+	  </table>
+	  <br />       
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >HideSelectedArea</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/HideSelectedArea.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/HideSelectedArea.jpg" width="86" height="71" border=0/></a></td>
+		  <td>指定要素指定视口内隐藏，模拟现状隐藏</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IFeatureManager::SetFeatureVisibleMask、IFeatureManager::ResetFeatureVisibleMask</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('HideSelectedArea')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('HideSelectedArea')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/HideSelectedArea/HideSelectedArea_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/HideSelectedArea/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/HideSelectedArea/HideSelectedArea.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/HideSelectedArea/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >MapControl</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/MapControl.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/MapControl.jpg" width="86" height="71" border=0/></a></td>
+		  <td>模拟鹰眼功能</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IOverlayLabel, OnFrame</td>
+		</tr>
+		<!--
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('MapControl')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('MapControl')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/MapControl/MapControl_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/MapControl/')">打开所在文件夹</a></td>
+		</tr>
+		-->
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/MapControl/MapControl.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/MapControl/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >MouseHover</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/MouseHover.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/MouseHover.jpg" width="86" height="71" border=0/></a></td>
+		  <td>鼠标提示</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			IRenderControl、gviMouseSelectMode、gviInteractMode、gviSelectObjectType、RcMouseClickSelectEvent</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('MouseHover')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('MouseHover')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/MouseHover/MouseHover_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/MouseHover/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/MouseHover/MouseHover.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/MouseHover/')">打开所在文件夹</a></td>
+        </tr>		
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >ImageConvert</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/ImageConvert.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/ImageConvert.jpg" width="86" height="71" border=0/></a></td>
+		  <td>IImage对象与C# Image对象的相互转换</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IImage::GetData(), IResourceFactory::CreateImage()</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('ImageConvert')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('ImageConvert')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/ImageConvert/ImageConvert_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/ImageConvert/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/ImageConvert/ImageConvert.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/ImageConvert/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+	  </table>
+      <br />	
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >PolygonToBuilding</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/PolygonToBuilding.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/PolygonToBuilding.jpg" width="86" height="71" border=0/></a></td>
+		  <td>生成带女儿墙的建筑，和不带女儿墙的建筑</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IParametricModelling::PolygonToBuilding()</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('PolygonToBuilding')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('PolygonToBuilding')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/PolygonToBuilding/PolygonToBuilding_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/PolygonToBuilding/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/PolygonToBuilding/PolygonToBuilding.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/PolygonToBuilding/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+	  </table>
+      <br />
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >PolylineToPipeLine</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="3" align="center"><a href="javascript:void(0)" onclick="window.open('images/PolylineToPipeLine.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/PolylineToPipeLine.jpg" width="86" height="71" border=0/></a></td>
+		  <td>由折线生成管子</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IParametricModelling::PolylineToPipeLine()</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('PolylineToPipeLine')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('PolylineToPipeLine')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/PolylineToPipeLine/PolylineToPipeLine_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/PolylineToPipeLine/')">打开所在文件夹</a></td>
+		</tr>
+		<!--
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/PolylineToPipeLine/PolylineToPipeLine.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/PolylineToPipeLine/')">打开所在文件夹</a></td>
+        </tr>
+		-->
+	  </table>
+      <br />	  
+	  <table width="100%" border="1" >
+		<tr >
+		  <td height="25" colspan="2" class="ExampleTitle" >RenderPipeLine</td>
+		</tr>
+		<tr>
+		  <td width="100" rowspan="4" align="center"><a href="javascript:void(0)" onclick="window.open('images/RenderPipeLine.jpg','','WIDTH=800,height=600,TOP=100,left=350')" title="点击显示大图"><img src="images/RenderPipeLine.jpg" width="86" height="71" border=0/></a></td>
+		  <td>管状线，有三种播放模式</td>
+		</tr>
+		<tr>
+		  <td>所用接口列表：<br />
+			 IParametricModelling::RenderPipeLine()</td>
+		</tr>
+		<tr>
+		  <td align="center"><a href="javascript:external.RunExe('RenderPipeLine')">运行可执行文件</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.ShowOperation('RenderPipeLine')">操作说明</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/RenderPipeLine/RenderPipeLine_vs9.sln')">打开解决方案</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolution('advanced/RenderPipeLine/')">打开所在文件夹</a></td>
+		</tr>
+		<tr>
+          <td align="center"><a href="javascript:void(0)" onclick="window.open('../JS_New/advanced/RenderPipeLine/RenderPipeLine.html','','dialogLeft:100px; dialogTop:100px; dialogHeight:600px; dialogWidth:800px; menubar = no; resizable = yes')">运行BS页面</a>&nbsp;&nbsp;&nbsp;<a href="javascript:external.OpenSolutionBS('advanced/RenderPipeLine/')">打开所在文件夹</a></td>
+        </tr>
+	  </table>
+      <br />		  
+      <p>&nbsp;</p>
+      <p>&nbsp;</p>
+	  <p>&nbsp;</p>
+    </div>
+
+
+
+  </div>
+</div>
+<script type="text/javascript">
+<!--
+var TabbedPanels1 = new Spry.Widget.TabbedPanels("TabbedPanels1");
+//-->
+</script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>数据集</title>
+    <link href="css/openDialog.css" rel="Stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        var objwind =window.dialogArguments;
+        var coordSys;
+        function chooseCoordsys()
+        {
+              coordSys =objwind.__g.coordSysDialog.showDialog(0);
+             //  coordSys =objwind.__g.coordSysDialog.value;
+              var txtCoord = document.getElementById("txtCoord");
+              txtCoord.value=coordSys;
+              return coordSys;
+        }
+
+        function OnOK() {
+            if(document.getElementById("txtName")=="")
+            {
+               alert("数据集名称不能为空!");
+               return;
+            }
+           if (document.getElementById("txtCoord") == "")
+            {
+               alert("数据集坐标系不能为空!");
+               return;
+            }
+            var res= new Object;
+            res.fdsName=document.getElementById('txtName').value;
+            res.coordSys=coordSys;
+            
+            window.returnValue = res;
+            window.close();
+        }
+        
+        function OnCancel()
+        {
+            window.returnValue = null;
+            window.close();
+        }
+    </script>
+
+    <style type="text/css">
+        .style2
+        {
+            width: 87px;
+        }
+    </style>
+
+</head>
+<body leftmargin="20" topmargin="20">
+<form id="formFile" enctype="multipart/form-data">
+        <table width="356" border="0" align="center" cellpadding="0" cellspacing="0" class="tableStyle">
+            <tr>
+                <td align="right" bgcolor="#FFFFFF" class="style2">
+                    &nbsp;
+                </td>
+                <td height="20" bgcolor="#FFFFFF">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td align="right" bgcolor="#FFFFFF" class="style2">
+                    名称：
+                </td>
+                <td height="20" bgcolor="#FFFFFF">
+                     <input id="txtName" type="text" style="width: 175px; height: 18px;" />
+                </td>
+            </tr>
+            <tr id="tr1">
+                <td align="right" bgcolor="#FFFFFF" class="style2">
+                    坐标系：
+                </td>
+                <td height="36" bgcolor="#FFFFFF">
+                    <input type="button" id="btnBrowse" value="选择" onclick="chooseCoordsys()" class="btnStyle"/>
+                </td>
+            </tr>
+            <tr id="tr4">
+                <td align="right" bgcolor="#FFFFFF" class="style2">
+                </td>
+                <td height="100" bgcolor="#FFFFFF">
+                      <input id="txtCoord" type="text" style="width: 90%; height: 800;" />
+                </td>
+            </tr>
+            <tr id="tr8">
+                <td height="20" colspan="2" valign="middle" bgcolor="#FFFFFF">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td height="40" colspan="2" align="center" valign="middle" bgcolor="#F2F2F2">
+                    <input type="button" value="确定" onclick="OnOK()" class="btnStyle" />
+                    <input type="button" value="取消" onclick="OnCancel()" class="btnStyle" style="margin-left: 30px" />
+                </td>
+            </tr>
+        </table>
+</form>
+</body>
+</html>

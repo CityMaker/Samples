@@ -1,0 +1,1022 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>CatalogTreeCreateAndDelete</title>
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="TravelXml.js"></script>  
+    
+    <style type="text/css">
+     a {text-decoration:none;}
+     table{border:#666666 1px solid;}
+     tr,td{height:20px;line-height:20px;font-size:14px;color:#666666;text-align:left;}
+     tr,td a{color:#666666}
+     tr,td a:hover{color:#FF0000}
+     #d{position:absolute;font-size:12px;padding:2px;visibility:hidden}
+     #d2{position:absolute;font-size:12px;padding:2px;visibility:hidden}
+    </style>
+</head>
+
+<body style="margin:0px;scroll:no">   
+<div id="d" z-index="0">
+</div>
+
+<div style="float:left"> 
+   <input type="button" value="addDataSource" onclick="AddDataSource()"/>
+   <input type="button" value="createDataSource" onclick="CreateDataSource()"/>
+</div>  
+<br />
+
+<div id="Tree" >
+</div>
+
+<div id="datasoure"></div>
+
+<div style="float:left;visibility:hidden;">
+    <object id="renderControl" type="application/x-cm-3d8" ></object>
+</div>
+</body>
+
+<script type="text/javascript" class="source">
+	 var __g = document.getElementById("renderControl");
+    document.oncontextmenu = function (e) {
+		e = e||window.event;
+        e.returnValue = false;
+    }
+
+    function showmenu(obj) {
+        d.style.visibility = "visible";
+
+        d.style.left = event.clientX;
+        d.style.top = event.clientY;
+
+        if (obj.value == 0) {
+            d.innerHTML = "<table id='dmenu' style='font-size:12px;border:0; cellpadding:1; cellspacing:1; bgcolor:#cecece;'>" 
+                                + "<tr bgcolor=#ececec ><td width='100'><a href='#'onclick='showCreateSetWnd()'>CreateDataSet</a></td></tr>";
+        }
+        else if (obj.value == 1) {
+            var fcName = event.srcElement.parentNode.parentNode.parentNode.firstChild.innerText;
+
+            d.innerHTML = "<table id='dmenu' style='font-size:12px;border:0; cellpadding:1; cellspacing:1; bgcolor:#cecece;'>"
+                                + "<tr bgcolor=#ececec><td width='100'><a href='#'onclick='DelDataSet(this)' value=" + obj.innerText + ">DelDataSet</a></td></tr>" 
+                                + "<tr bgcolor=#ececec><td width='100'><a href='#'onclick='CreateFeatureClass(this)'>CreateFeatureClass</a></td></tr>";
+
+        }
+        else if (obj.value == 2) {
+            d.innerHTML = "<table id='dmenu' style='font-size:12px;border:0; cellpadding:1; cellspacing:1; bgcolor:#cecece;'>"
+                                + "<tr bgcolor=#ececec ><td width='100'><a href='#'onclick='CreateField(this)'>CreateField</a></td></tr>" 
+                                + "<tr bgcolor=#ececec ><td width='100'><a href='#'onclick='deleteFeatureClass(this)' value=" + obj.innerText + ">DeleteFeatureClass</a></td></tr>";
+
+        }
+        else if (obj.value == 3) {
+            var fcName = event.srcElement.parentNode.parentNode.parentNode.firstChild.innerText;
+            var FieldName = event.srcElement.innerText;
+            var temp = [];
+            temp.push(fcName);
+            temp.push(FieldName);
+
+            d.innerHTML = "<table id='dmenu' style='font-size:12px;border:0; cellpadding:1; cellspacing:1; bgcolor:#cecece;'>"
+                                + "<tr bgcolor=#ececec ><td width='100'><a href='#'onclick='ViewField(this)' value=" + obj.innerText + ">ViewField</a></td></tr>"
+                                + "<tr bgcolor=#ececec><td width='100'><a href='#'onclick='ModifyField(this)'value=" + obj.innerText + ">ModifyField</a></td></tr>" 
+                                + "<tr bgcolor=#ececec ><td width='100'><a href='#'onclick='DeleteField(this)'value=" + obj.innerText + ">DeleteField</a></td></tr>";
+        }
+        return false;
+    }
+
+    document.onclick=function() {
+        d.style.visibility = "hidden";
+    }
+
+    var ci;
+    function AddDataSource() {
+        var tFile = "dialogLeft:" + 100 + "px; dialogTop:" + 100 + "px; dialogHeight:200px; dialogWidth:400px";
+        var retValue = window.showModalDialog("DataSource.html", window, tFile);
+        if (retValue) {
+            ci = __g.new_ConnectionInfo;
+            switch (retValue.selType) {
+                case "0":
+                    ci.connectionType = gviConnectionType.gviConnectionFireBird2x;
+                    break;
+                case "1":
+                    ci.connectionType = gviConnectionType.gviConnectionMySql5x;
+                    break;
+                case "2":
+                    ci.connectionType = gviConnectionType.gviConnectionSQLite3;
+                    break;
+            }
+            ci.server = retValue.Server;
+            ci.port = parseInt(retValue.Port);
+            ci.database = retValue.Database;
+            ci.userName = retValue.UserName;
+            ci.password = retValue.Password;
+
+            var ds = __g.dataSourceFactory.openDataSource(ci);
+            var sourceNode = ["<ul><li id='rootnode'>"];
+            if (ci.connectionType == gviConnectionType.gviConnectionMySql5x)
+                sourceNode.push("<a href='#' value=0 oncontextmenu='showmenu(this)'>" + ci.database + "@" + ci.server + "</a>");
+            else
+                sourceNode.push("<a href='#' value=0 oncontextmenu='showmenu(this)' id='node'>" + ci.database + "</a>");
+  
+            var fdsNames = ds.getFeatureDatasetNames();
+            if (fdsNames.length == 0)
+                return;
+            for (var i = 0; i < fdsNames.length; i++) {
+                var setname = fdsNames[i];
+                var dataset = ds.openFeatureDataset(setname);
+                sourceNode.push("<ul><li><a href='#' value=1 oncontextmenu='showmenu(this)'>" + setname + "</a></li>");
+
+                var fcnames = dataset.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+                if (fcnames == null || fcnames.Length == 0)
+                    continue;
+                for (var j = 0; j < fcnames.length; j++) {
+                    var fcname = fcnames[j];
+                    var fc = dataset.openFeatureClass(fcname);
+                    sourceNode.push("<ul><li id='ncclass'><a href='#' value=2 oncontextmenu='showmenu(this)'>" + fcname + "</a></li><ul>");
+                    
+                    // 获取属性字段
+                    var fieldinfos = fc.getFields();
+                    for (var m = 0; m < fieldinfos.count; m++) {
+                        var fieldinfo = fieldinfos.get(m);
+                        if (null == fieldinfo)
+                            continue;
+                        sourceNode.push("<li id='nc'><a href='#' value=3 oncontextmenu='showmenu(this)'>" + fieldinfo.name + "</a></li>");
+                    }
+                    sourceNode.push("</ul></ul>");
+                }
+                sourceNode.push("</ul>");
+            }
+            sourceNode.push("</li></ul>");
+
+            var str = sourceNode.join("");
+            document.getElementById('Tree').innerHTML = str;
+        }
+    }
+
+    var dsFactory = __g.dataSourceFactory;
+    var coorFactory = __g.crsFactory;
+    var sourceNode = new Object;
+    function CreateDataSource() {
+        var tFile = "dialogLeft:" + 100 + "px; dialogTop:" + 100 + "px; dialogHeight:300px; dialogWidth:400px";
+        var retValue = window.showModalDialog("CreateDataSource.html", window, tFile);
+        if (retValue) {
+            var ci = __g.new_ConnectionInfo;
+            switch (retValue.selType) {
+                case "0":
+                    ci.connectionType = gviConnectionType.gviConnectionMySql5x;
+                    break;
+                case "1":
+                    ci.connectionType = gviConnectionType.gviConnectionFireBird2x;
+                    break;
+                case "2":
+                    ci.connectionType = gviConnectionType.gviConnectionSQLite3;
+                    break;
+            }
+
+            ci.server = retValue.Server;
+            ci.port = parseInt(retValue.Port);
+            ci.database = retValue.Database;
+            ci.userName = retValue.UserName;
+            ci.password = retValue.Password;
+            var ds = null;
+            try {
+                if (!dsFactory.hasDataSource(ci)) {
+                    ds = dsFactory.createDataSource(ci, null);
+                    if (ds != null && CreateLogicTreeTable(ds)) {
+                        var sourceNode = null;
+                        if (ci.connectionType == gviConnectionType.gviConnectionMySql5x) {
+                            sourceNode.name = ci.Database + "@" + ci.Server;
+                            sourceNode.con = ci;
+                        }
+                        else {
+                            sourceNode.name = ci.Database;
+                            sourceNode.con = ci;
+                            document.getElementById("datasoure").innerHTML = sourceNode;
+                        }
+                    }
+                }
+                else {
+                    alert("数据源已存在");
+                }
+            }
+            catch (ex) {
+                alert(ex.Message);
+            }
+            finally {
+                if (ds != null) {
+                    ds = null;
+                }
+            }
+        }
+    }
+
+    function CreateField(obj) {
+        //            string fc_name = selectNode.Text;
+        //            string set_name = selectNode.Parent.Text;
+        //            myTreeNode node = (myTreeNode)selectNode.Parent.Parent;
+        //            IConnectionInfo ci = node.con;
+        //            var rootnode=document.getElementById("node");
+        //            var ncclass=document.getElementById("ncclass");
+        //            var fc_name=ncclass.innerText;
+        //            var set_name=ncclass.parentNode.parentNode.firstChild.innerText;
+        //            var ci=rootnode.innerText;
+        //            var ds = null;
+        //            var dset = null;
+        //            var fc = null;
+        //            try
+        //            {
+        //                ds = dsFactory.openDataSource(ci);
+        //                dset = ds.openFeatureDataset(set_name);
+        //                fc = dset.openFeatureClass(fc_name);
+
+        //                var form = new OperateFieldInfoForm(null);
+        //                if (form.ShowDialog() == DialogResult.OK)
+        //                {
+        //                    IFieldInfoCollection fieldinfos = fc.GetFields();
+        //                    IFieldInfo newFieldInfo = form.newFieldInfo;
+
+        //                    for (int i = 0; i < fieldinfos.Count; i++)
+        //                    {
+        //                        IFieldInfo fieldinfo = fieldinfos.Get(i);
+        //                        if (null == fieldinfo)
+        //                            continue;
+        //                        if (newFieldInfo.Name == fieldinfo.Name)
+        //                        {
+        //                            MessageBox.Show("已有同名字段，添加失败");
+        //                            return;
+        //                        }
+        //                    }
+
+        //                    fc.LockType = gviLockType.gviLockExclusiveSchema;
+        //                    fc.AddField(newFieldInfo);
+        //                    fc.LockType = gviLockType.gviLockSharedSchema;
+
+        //                    // 往树上挂节点
+        //                    TreeNode fieldNode = new TreeNode(newFieldInfo.Name, 1, 1);
+        //                    selectNode.Nodes.Add(fieldNode);
+        //                    fieldNode.ContextMenuStrip = this.contextMenuStrip4;
+        //                }               
+        //            }
+        //            catch (COMException comEx)
+        //            {
+        //                System.Diagnostics.Trace.WriteLine(comEx.Message);
+        //                MessageBox.Show("添加失败");
+        //            }
+        //            catch (System.Exception ex)
+        //            {
+        //                System.Diagnostics.Trace.WriteLine(ex.Message);
+        //                MessageBox.Show("添加失败");
+        //            }
+        //            finally
+        //            {
+        //                fc.LockType = gviLockType.gviLockSharedSchema;
+        //                if (fc != null)
+        //                {
+        //                    Marshal.ReleaseComObject(fc);
+        //                    fc = null;
+        //                }
+        //                if (dset != null)
+        //                {
+        //                    Marshal.ReleaseComObject(dset);
+        //                    dset = null;
+        //                }
+        //                if (ds != null)
+        //                {
+        //                    Marshal.ReleaseComObject(ds);
+        //                    ds = null;
+        //                }
+        //            }
+    }
+
+    function deleteFeatureClass(obj) {
+        var rootnode = document.getElementById("node");
+        var ncclass = document.getElementById("ncclass");
+        var set_name = ncclass.parentNode.parentNode.firstChild.innerText;
+        var ds = null;
+        var dset = null;
+        try {
+            var dsFactory = __g.dataSourceFactory;
+            ds = dsFactory.openDataSource(ci);
+            dset = ds.openFeatureDataset(set_name);
+
+            if (confirm("该操作无法恢复，请确定是否删除要素类？")) {
+                dset.deleteByName(ncclass.innerText);
+
+                alert("删除成功");
+            }
+        }
+
+        catch (ex) {
+            if (ex.source == "物理数据源不存在") {
+                alert(ex.Source);
+            }
+            else
+                alert("删除失败");
+        }
+        finally {
+            if (dset != null) {
+                dset = null;
+            }
+            if (ds != null) {
+                ds = null;
+            }
+        }
+    }
+    /// <summary>
+    /// 创建普通表
+    /// </summary>
+    /// <param name="ds"></param>
+    /// <returns></returns>
+    function CreateLogicTreeTable(ds) {
+        var fields = __g.new_FieldInfoCollection;
+        var field = __g.new_FieldInfo;
+        try {
+            if (ds != null) {
+                field.name = "id";
+                field.fieldType = gviFieldType.gviFieldFID;
+                field.nullable = false;
+                fields.add(field);
+
+                field = __f.new_FieldInfo;
+                field.name = "groupid";
+                field.fieldType = gviFieldType.gviFieldString;
+                field.length = 255;
+                field.nullable = false;
+                fields.add(field);
+
+
+                field = __f.new_FieldInfo;
+                field.name = "name";
+                field.fieldType = gviFieldType.gviFieldString;
+                field.length = 255;
+                field.nullable = false;
+                fields.add(field);
+
+
+                field = __f.new_FieldInfo;
+                field.name = "founder";
+                field.fieldType = gviFieldType.gviFieldString;
+                field.length = 255;
+                fields.add(field);
+
+
+                field = __f.new_FieldInfo;
+                field.name = "content";
+                field.fieldType = gviFieldType.gviFieldBlob;
+                field.nullable = false;
+                fields.add(field);
+                ds.createTable("cm_logictree", "id", fields);
+
+                fields.clear();
+                field = __f.new_FieldInfo;
+                field.name = "id";
+                field.fieldType = gviFieldType.gviFieldFID;
+                field.nullable = false;
+                fields.add(field);
+
+                field = __f.new_FieldInfo
+                field.name = "groupuid";
+                field.fieldType = gviFieldType.gviFieldString;
+                field.length = 255;
+                field.nullable = false;
+                fields.add(field);
+
+                field = __f.new_FieldInfo
+                field.name = "DataSet";
+                field.fieldType = gviFieldType.gviFieldString;
+                field.length = 255;
+                field.nullable = false;
+                fields.add(field);
+                ds.createTable("cm_group", "id", fields);
+                return true;
+            }
+            else
+                return false;
+        }
+        catch (comEx) {
+            System.Diagnostics.Trace.WriteLine(comEx.Message);
+            return false;
+        }
+        finally {
+            field = null;
+            fields = null;
+        }
+    }
+
+
+    var title = "";
+    var fieldTbody = "";
+    function ViewField(obj) {
+        try {
+
+            var nc = document.getElementById("nc");
+            obj = obj.value;
+            var objparent = nc.parentNode.parentNode.firstChild.innerText;
+            var ds = __g.dataSourceFactory.openDataSource(ci);
+            var fdsNames = ds.getFeatureDatasetNames();
+            if (fdsNames.length == 0)
+                return;
+            var dataset = ds.openFeatureDataset(fdsNames[0]);
+            var fcnames = dataset.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+            if (fcnames == null || fcnames.Length == 0)
+                return;
+
+            var fc = dataset.openFeatureClass(objparent);
+            var fieldinfos = fc.getFields();
+
+            showOperateBtn = false;
+
+            title = "要素类：'" + objparent + "' 字段名为：'" + obj + "' 的字段定义";
+            fieldTbody = ["<table class='featureInfo'><tbody>"];
+            fieldTbody.push("<tr>");
+            fieldTbody.push("<td>属性名</td>");
+            fieldTbody.push("<td>属性值</td>");
+            fieldTbody.push("</tr>");
+
+            for (var i = 0; i < fieldinfos.count; i++) {
+                var fieldinfo = fieldinfos.get(i);
+                if (null == fieldinfo)
+                    continue;
+                if (obj == fieldinfo.name) {
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Name</td>");
+                    fieldTbody.push("<td>" + fieldinfo.name + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>FieldType</td>");
+                    fieldTbody.push("<td>" + fieldinfo.fieldType + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>IsSystemField</td>");
+                    fieldTbody.push("<td>" + fieldinfo.isSystemField + "</td>");
+                    fieldTbody.push("</tr>");
+
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Alias</td>");
+                    fieldTbody.push("<td>" + fieldinfo.alias + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>DefaultValue</td>");
+                    fieldTbody.push("<td>" + fieldinfo.defaultValue + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Editable</td>");
+                    fieldTbody.push("<td>" + fieldinfo.editable + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Length</td>");
+                    fieldTbody.push("<td>" + fieldinfo.length + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Nullable</td>");
+                    fieldTbody.push("<td>" + fieldinfo.nullable + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>RegisteredRenderIndex</td>");
+                    fieldTbody.push("<td>" + fieldinfo.registeredRenderIndex + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Precision</td>");
+                    fieldTbody.push("<td>" + fieldinfo.precision + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Scale</td>");
+                    fieldTbody.push("<td>" + fieldinfo.scale + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>DomainFixed</td>");
+                    fieldTbody.push("<td>" + fieldinfo.domainFixed + "</td>");
+                    fieldTbody.push("</tr>");
+                }
+            }
+            fieldTbody.push("</tbody></table>");
+            var tFile = "dialogLeft:" + 100 + "px; dialogTop:" + 100 + "px; dialogHeight:250px; dialogWidth:300px";
+            var retValue = window.showModalDialog("FeatureProperty.html", window, tFile);
+        }
+        catch (e) {
+        }
+    }
+
+    function DeleteField(obj) {
+        var nc = document.getElementById("nc");
+        var rootnode = document.getElementById("node");
+        var fieldInfo_name = obj.value;
+        var fc_name = nc.parentNode.parentNode.firstChild.innerText;
+        var set_name = nc.parentNode.parentNode.parentNode.firstChild.innerText;
+        var node = rootnode.innerText;
+        var ds = null;
+        var dset = null;
+        var fc = null;
+        try {
+            ds = dsFactory.openDataSource(ci);
+            dset = ds.openFeatureDataset(set_name);
+            fc = dset.openFeatureClass(fc_name);
+
+            if (fieldInfo_name == "oid") {
+                alert("此字段不支持删除");
+            }
+            else if (confirm("该操作无法恢复，请确定是否删除字段？")) {
+                fc.deleteField(fieldInfo_name);
+                // 从树上删除节点
+                nc.parentNode.removeChild(nc);
+                alert("删除成功");
+            }
+        }
+        catch (ex) {
+            alert("删除失败");
+        }
+        finally {
+            fc.lockType = gviLockType.gviLockSharedSchema;
+            if (fc != null) {
+                fc = null;
+            }
+            if (dset != null) {
+                dset = null;
+            }
+            if (ds != null) {
+                ds = null;
+            }
+        }
+    }
+    var objparent;
+    var set_name;
+    var fieldinfo;
+    function ModifyField(obj) {
+        try {
+            var nc = document.getElementById("nc");
+            obj = obj.value;
+            objparent = nc.parentNode.parentNode.firstChild.innerText;
+            var ds = __g.dataSourceFactory.openDataSource(ci);
+            var fdsNames = ds.getFeatureDatasetNames();
+            if (fdsNames.length == 0)
+                return;
+            var dataset = ds.openFeatureDataset(fdsNames[0]);
+            set_name = fdsNames[0];
+            var fcnames = dataset.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+            if (fcnames == null || fcnames.Length == 0)
+                return;
+
+            var fc = dataset.openFeatureClass(objparent);
+            var fieldinfos = fc.getFields();
+
+            // 获取fieldinfo对象
+            var fieldinfos = fc.getFields();
+
+            title = "要素类：'" + objparent + "' 字段名为：'" + obj + "' 的字段定义";
+            fieldTbody = ["<from><table class='featureInfo'><tbody>"];
+            fieldTbody.push("<tr>");
+            fieldTbody.push("<td>属性名</td>");
+            fieldTbody.push("<td>属性值</td>");
+            fieldTbody.push("</tr>");
+
+            for (var i = 0; i < fieldinfos.count; i++) {
+                fieldinfo = fieldinfos.get(i);
+                if (null == fieldinfo)
+                    continue;
+                if (obj == fieldinfo.name) {
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Name</td>");
+                    fieldTbody.push("<td><input type='text' id='name' value='" + fieldinfo.name + "'/></td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>FieldType</td>");
+                    fieldTbody.push("<td><input type='text'id='fieldtype' value='" + fieldinfo.fieldType + "'/></td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>IsSystemField</td>");
+                    fieldTbody.push("<td><input type='text'id='isSystemfield' value='" + fieldinfo.isSystemField + "'/></td>");
+                    fieldTbody.push("</tr>");
+
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Alias</td>");
+                    fieldTbody.push("<td><input type='text'id='alias' value='" + fieldinfo.alias + "'/></td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>DefaultValue</td>");
+                    fieldTbody.push("<td><input type='text'id='defaultvalue' value='" + fieldinfo.defaultValue + "'/></td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Editable</td>");
+                    fieldTbody.push("<td><input type='text'id='editable' value='" + fieldinfo.editable + "'/></td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Length</td>");
+                    fieldTbody.push("<td><input type='text'id='length' value='" + fieldinfo.length + "'/></td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Nullable</td>");
+                    fieldTbody.push("<td><input type='text' id='nullable' value='" + fieldinfo.nullable + "'/></td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>RegisteredRenderIndex</td>");
+                    fieldTbody.push("<td><input type='text'id='registeredrenderindex' value='" + fieldinfo.registeredRenderIndex + "'/></td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Precision</td>");
+                    fieldTbody.push("<td><input type='text'id='precision' value='" + fieldinfo.precision + "'/></td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Scale</td>");
+                    fieldTbody.push("<td><input type='text'id='scale' value='" + fieldinfo.scale + "'/></td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>DomainFixed</td>");
+                    fieldTbody.push("<td><input type='text'id='domainfixed' value='" + fieldinfo.domainFixed + "'/></td>");
+                    fieldTbody.push("</tr>");
+
+                }
+            }
+            fieldTbody.push("</tbody></table></from>");
+            var tFile = "dialogLeft:" + 100 + "px; dialogTop:" + 100 + "px; dialogHeight:400px; dialogWidth:400px";
+            var retValue = window.showModalDialog("ModifyField.html", window, tFile);
+
+        }
+        catch (ex) {
+        }
+    }
+
+    function showCreateSetWnd() {
+        var tFile = "dialogLeft:" + 100 + "px; dialogTop:" + 100 + "px; dialogHeight:300px; dialogWidth:400px";
+        var retValue = window.showModalDialog("DataSet.html", window, tFile);
+        alert(retValue.fdsName + "---" + retValue.coordSys);
+        if (retValue) {
+            CreateDataSet(retValue.fdsName, retValue.coordSys);
+        }
+
+    }
+    function CreateDataSet(fdsName, strcoorSys) {
+        var ds = __g.dataSourceFactory.openDataSource(ci);
+        var coorSys = __g.crsFactory.createFromWKT(strcoorSys);
+        var dset = ds.createFeatureDataset(fdsName, coorSys);
+
+        //开起事务:往普通表里插入记录
+        ds.startEditing();
+        var saveEditing = false;
+        if (CreateLCRecordOfFDS(ds, dset.name))
+            saveEditing = true;
+        else
+            saveEditing = false;
+        ds.stopEditing(saveEditing);
+        // 如果事务失败，则回退创建dataset动作
+        if (saveEditing == false) {
+            ds.deleteFeatureDataset(dset.name);
+            alert("创建失败");
+            return;
+        }
+    }
+
+
+    function DelDataSet(obj) {
+        var ds = __g.dataSourceFactory.openDataSource(ci);
+        var dataset = ds.openFeatureDataset(obj.value);
+
+        try {
+
+            if (confirm("该操作无法恢复，请确定是否删除数据集")) {
+                var fcnames = dataset.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+                if (fcnames == null || fcnames.Length == 0)
+                    return;
+
+                //                for (var j = 0; j < fcnames.length; j++) {
+                //                    dataset.deleteByName(fcnames[j]);
+                //                }
+                ds.deleteFeatureDataset(obj.value);
+            }
+
+        }
+        catch (e) {
+        }
+    }
+
+
+    function DeleteLogicTree(ds, fdsName) {
+        var t2 = null;
+        var filter2 = null;
+        var cursor2 = null;
+        var t1 = null;
+        var filter1 = null;
+        var cursor1 = null;
+        try {
+            t2 = ds.openTable("cm_group");
+            filter2 = __g.new_QueryFilter;
+            filter2.whereClause = "DataSet='" + fdsName + "'";
+            cursor2 = t2.update(filter2);
+            cursor2.nextRow();
+            cursor2.deleteRow();
+            if (GetQueryResults("founder='" + fdsName + "'", "cm_logictree", ds)) {
+                t1 = ds.openTable("cm_logictree");
+                filter1 = __g.new_QueryFilter;
+                filter1.whereClause = "founder='" + fdsName + "'";
+                cursor1 = t1.update(filter1);
+                cursor1.nextRow();
+                cursor1.deleteRow();
+            }
+        }
+        catch (e) {
+
+        }
+
+    }
+
+    /*  
+    function CreateFeatureClass(obj)
+    {
+    FeatureClassForm fcForm = new FeatureClassForm();
+    if (fcForm.ShowDialog() != DialogResult.OK)
+    return;
+
+    IDataSource ds = null;
+    IFeatureDataSet dset = null;
+    IFeatureClass fc = null;
+    try
+    {
+    myTreeNode node = (myTreeNode)selectNode.Parent;
+    IConnectionInfo ci = node.con;
+    ds = dsFactory.OpenDataSource(ci);
+    dset = ds.OpenFeatureDataset(selectNode.Text);
+
+    // 定义字段
+    IFieldInfoCollection fields = new FieldInfoCollection();
+    IFieldInfo field = new FieldInfo();
+    field.Name = "Name";
+    field.FieldType = gviFieldType.gviFieldString;
+    field.Length = 255;
+    fields.Add(field);
+
+    field = new FieldInfo();
+    field.Name = "Groupid";
+    field.FieldType = gviFieldType.gviFieldInt32;
+    field.RegisteredRenderIndex = true;  //为支持逻辑图层树控制图层显示，需要注册渲染索引
+    fields.Add(field);
+
+    field = new FieldInfo();
+    field.Name = "Geometry";
+    field.FieldType = gviFieldType.gviFieldGeometry;
+    field.GeometryDef = new GeometryDef();
+    field.GeometryDef.GeometryColumnType = gviGeometryColumnType.gviGeometryColumnModelPoint;  //模型
+    field.RegisteredRenderIndex = true;  //为支持空间列在RenderControl中显示出来，必须注册渲染索引
+    fields.Add(field);
+
+    fc = dset.CreateFeatureClass(fcForm.FeatureClassName, fields);
+
+    //创建空间索引
+    IGridIndexInfo index = new GridIndexInfo();
+    //index.Name = fc.GuidString; //Name属性以去掉
+    index.L1 = 500;
+    index.L2 = 2000;
+    index.L3 = 10000;
+    index.GeoColumnName = "Geometry";
+    fc.AddSpatialIndex(index as IIndexInfo);
+
+    IRenderIndexInfo rInfo = new RenderIndexInfo();
+    rInfo.GeoColumnName = "Geometry";
+    rInfo.L1 = 500;
+    fc.AddRenderIndex(rInfo);
+
+    // 往树上挂节点
+    TreeNode fcNode = new TreeNode(fcForm.FeatureClassName, 1, 1);
+    fcNode.ContextMenuStrip = this.contextMenuStrip3;
+    selectNode.Nodes.Add(fcNode);
+    TreeNode fieldNode = new TreeNode("oid", 1, 1);
+    fieldNode.ContextMenuStrip = this.contextMenuStrip4;
+    fcNode.Nodes.Add(fieldNode);
+    fieldNode = new TreeNode("Name", 1, 1);
+    fieldNode.ContextMenuStrip = this.contextMenuStrip4;
+    fcNode.Nodes.Add(fieldNode);
+    fieldNode = new TreeNode("Groupid", 1, 1);
+    fieldNode.ContextMenuStrip = this.contextMenuStrip4;
+    fcNode.Nodes.Add(fieldNode);
+    fieldNode = new TreeNode("Geometry", 1, 1);
+    fieldNode.ContextMenuStrip = this.contextMenuStrip4;
+    fcNode.Nodes.Add(fieldNode);
+    }
+    catch (COMException ex)
+    {
+    System.Diagnostics.Trace.WriteLine(ex.Message);
+    }
+    finally
+    {
+    if (ds != null)
+    {
+    Marshal.ReleaseComObject(ds);
+    ds = null;
+    }
+    if (dset != null)
+    {
+    Marshal.ReleaseComObject(dset);
+    dset = null;
+    }
+    if (fc != null)
+    {
+    Marshal.ReleaseComObject(fc);
+    fc = null;
+    }
+    }
+    }
+
+    function  GetQueryResults(whereclause,  tablename,  ds)
+    {
+    var table = null;
+    var filter = null;
+    var cursor = null;
+    try
+    {
+    table = ds.openTable(tablename);
+    filter = __g.new_QueryFilter();
+    if (whereclause == null)
+    filter.whereClause = "1=1";
+    else
+    filter.whereClause = whereclause;
+    cursor = table.search(filter, true);
+    if (cursor.nextRow() != null)
+    return true;
+    else
+    return false;
+    }
+    catch(e)
+    {
+        
+    }
+    }
+     
+    function newGuid()
+    {
+    var guid="";
+    for(var i=1;i<=32;i++){
+    var n=Math.floor(Math.random()*16.0).toString(16);
+    guid+=n;
+    if((i==8)||(i==12)||(i==16)||(i==20))
+    {
+    guid+="-";
+    }
+    }
+    return guid;
+    }
+        
+    function CreateLCRecordOfFDS(ds, fdsname) {
+    var table = null;
+    var cursor = null;
+    try
+    {
+    var lcguid = newGuid();
+    var lcbuf = CreateLogicTree("LogicTree", lcguid);
+                
+    if (!GetQueryResults("groupid= '"+lcguid+"'", "cm_logictree", ds))
+    {
+    table = ds.openTable("cm_logictree");
+    cursor = table.insert();
+    var rbf = __g.rowBufferFactory;
+    var rb = rbf.createRowBuffer(table.getFields());
+    rb.setValue(1, lcguid);  //groupid
+    rb.setValue(2, fdsname);  //name
+    rb.setValue(3, fdsname);  //founder
+    var bb = __g.new_BinaryBuffer;
+    bb.fromByteArray(lcbuf);
+    rb.setValue(4, bb);   //content
+    cursor.insertRow(rb);
+    }
+    table = ds.openTable("cm_group");
+    cursor = table.insert();
+    var rbf1 = __g.new_RowBufferFactory;
+    var rb1 = rbf1.createRowBuffer(table.getFields());
+    rb1.setValue(1, lcguid);  //groupuid
+    rb1.setValue(2, fdsname);  //DataSet
+    cursor.insertRow(rb1);
+    return true;
+    }
+    catch (e)
+    {
+    return false;
+    }
+    }
+
+    function CreateLogicTree(name,  guid)
+    {
+    var doc=new ActiveXObject("Microsoft.XMLDOM");
+    var p= doc.createProcessingInstruction("xml","version=\"1.0\" encoding=\"utf-8\"");
+    doc.appendChild(p);
+          
+    var root=doc.createElement("LogicTree");
+    root.setAttribute("Name",name);
+    root.setAttribute("GUID",guid);
+    doc.appendChild(root);
+          
+    var childnode1=doc.createElement("PGroups");
+    childnode1.setAttribute("ID","0");
+    childnode1.setAttribute("Name",name);
+    childnode1.setAttribute("ParentID","0");
+    childnode1.setAttribute("Recycle","");
+    childnode1.setAttribute("Camera","");
+    childnode1.setAttribute("CheckState","Indeterminate");
+          
+    root.appendChild(childnode1);
+          
+    childnode1=doc.createElement("PGroups");
+    childnode1.setAttribute("ID","1");
+    childnode1.setAttribute("Name","回收站");
+    childnode1.setAttribute("ParentID","0");
+    childnode1.setAttribute("Recycle","回收站");
+    childnode1.setAttribute("Camera","");
+    childnode1.setAttribute("CheckState","Unchecked");
+    root.appendChild(childnode1);
+          
+    return doc;
+
+    }
+   
+    function CreateLogicTreeTable(ds)
+    {
+    var fields = __g.new_FieldInfoCollection;
+    var field = __g.new_FieldInfo;
+    try
+    {
+    if (ds != null)
+    {
+    field.name = "id";
+    field.gieldType = gviFieldType.gviFieldFID;
+    field.nullable = false;
+    fields.pushBack(field);
+
+    field = __g.new_FieldInfo;
+    field.name = "groupid";
+    field.gieldType = gviFieldType.gviFieldString;
+    field.length = 255;
+    field.nullable = false;
+    fields.pushBack(field);
+
+    field = __g.new_FieldInfo;
+    field.name = "name";
+    field.fieldType = gviFieldType.gviFieldString;
+    field.length = 255;
+    field.nullable = false;
+    fields.pushBack(field);
+
+    field = __g.new_FieldInfo;
+    field.name = "founder";
+    field.fieldType = gviFieldType.gviFieldString;
+    field.length = 255;
+    fields.pushBack(field);
+
+    field = __g.new_FieldInfo;
+    field.name = "content";
+    field.fieldType = gviFieldType.gviFieldBlob;
+    field.nullable = false;
+    fields.pushBack(field);
+    ds.createTable("cm_logictree", "id", fields);
+
+    fields.clear();
+    field = __g.new_FieldInfo;
+    field.name = "id";
+    field.fieldType = gviFieldType.gviFieldFID;
+    field.nullable = false;
+    fields.pushBack(field);
+
+    field = __g.new_FieldInfo;
+    field.name = "groupuid";
+    field.fieldType = gviFieldType.gviFieldString;
+    field.length = 255;
+    field.nullable = false;
+    fields.pushBack(field);
+
+    field = __g.new_FieldInfo;
+    field.name = "DataSet";
+    field.fieldType = gviFieldType.gviFieldString;
+    field.length = 255;
+    field.nullable = false;
+    fields.pushBack(field);
+    ds.createTable("cm_group", "id", fields);
+    return true;
+    }
+    else
+    return false;
+    }
+    catch (e)
+    {
+             
+    }
+
+    } 
+    */
+</script>
+</html>

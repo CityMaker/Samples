@@ -1,0 +1,184 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML  .0 Transitional//EN" "http://www.w3.org/TR/xhtml /DTD/xhtml -transitional.dtd">
+<html xmlns="http://www.w3.org/ 999/xhtml">
+<head>
+    <title>MotionPath</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util_globe.js"></script>
+   
+</head>
+    
+<body >
+
+    <div style="text-align:center">
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 700px; width:  1000px" > 
+        </object>
+    </div>
+
+</body>
+
+<script type="text/javascript">
+  
+     window.onload = function () {
+        Initialize();    
+     }
+
+    function Initialize() {
+        initAxControl();
+
+        //设定MotionPath坐标
+        var point = new Array(35);
+        point[0] = new Array(15384.7024087616, 35131.321444227, 8.56212952360511, 334.147298174865, 47.2858006668619,0);
+        point[1] = new Array(15358.9848395989, 35184.3961482748, 68.9434051224962, 322.878451267507, 5.4945296163915,5);
+        point[2] = new Array(15117.6561442622, 35503.2405613988, 107.408610460348, 329.837113187421, -0.596030715855662,10);
+        point[3] = new Array(15001.3187628281, 35703.4263483214, 104.999928515404, 335.400512917896, 0.00014203125175527,15);
+        point[4] = new Array(14991.8881211756, 35724.025143392, 104.999984675087, 3.15002246755381, 2.02173093945873,20);
+        point[5] = new Array(14992.9777857456, 35743.8250861545, 105.699990477413, 16.2622733895333, -8.39991394171723,25);
+        point[6] = new Array(14999.6159760674, 35766.5815391434, 102.199593518861, 41.8768406921881, 5.99421342843088,30);
+        point[7] = new Array(15017.4143376409, 35786.4342750461, 104.999259745702, 50.8941271121665, -3.35972840019849E-05,35);
+        point[8] = new Array(15314.2677174563, 36027.7310007957, 104.999035423622, 49.1830103873878, 0.00141690802838923,40);
+        point[9] = new Array(15343.6707107989, 36053.126202527, 104.999996214174, 65.4644257892104, 8.03423262141223E-07,45);
+        point[10] = new Array(15383.1247490907, 36071.1360361353, 104.999996822327, 77.2422224242566, 5.27323298626925E-06,50);
+        point[11] = new Array(15537.7284646783, 36106.1413471473, 105.000011411496, 92.4109789208492, -11.5052286803634,55);
+        point[12] = new Array(15562.2710867066, 36105.107995398, 100, 104.664999351653, 0,60);
+        point[13] = new Array(15585.6467320165, 36098.9907696363, 100, 122.67293239884, -1.85129067631351E-09,65);
+        point[14] = new Array(15609.9094582082, 36083.4305576411, 99.9999999990687, 140.447433486158, 3.77748676783085E-09,70);
+        point[15] = new Array(15627.9000148284, 36061.6470172577, 100.000000000931, 151.906378529808, 0,75);
+        point[16] = new Array(15746.738349591, 35839.0229477508, 100.000000000931, 159.967641238897, 10.8412662176966,80);
+        point[17] = new Array(15756.0397159787, 35813.5124909166, 105.200029959902, 178.853649755145, -0.461645771604523,85);
+        point[18] = new Array(15756.53635715, 35788.6931600552, 105.00001032650, 202.612605805689, -10.2060381127899,90);
+        point[19] = new Array(15745.8580390548, 35763.0560482442, 100.000004312024, 223.199925720893, -1.43617565129261E-06,95);
+        point[20] = new Array(15722.9163980866, 35738.6256185045, 100.000003471971, 237.469326977557, -7.44431048360639E-07,100);
+        point[21] = new Array(15497.6195200096, 35594.9260569042, 100, 255.356738111749, 1.80887127498863E-09, 105);
+        point[22] = new Array(15469.0782313538, 35587.4685908843, 100.000000000931, 287.996212151319, -1.83129600372922E-09,110);
+        point[23] = new Array(15441.3654527041, 35596.4709930244, 100, 311.176555091733, -1.5858887536524E-09,115);
+        point[24] = new Array(15416.0397751077, 35618.6236492308, 99.9999999990687, 296.276678788261, 6.91753715234555,120);
+        point[25] = new Array(15379.086323847, 35636.8684708933, 105.000002537854, 283.643895824178, 0.0448820572992474,125);
+        point[26] = new Array(15341.8475963676, 35645.9076721679, 105.030020197853, 248.970834240343, 15.6819116767962,130);
+        point[27] = new Array(15310.9595011402, 35634.0327996981, 114.320518113673, 237.453666054831, -15.7842310538018,135);
+        point[28] = new Array(15283.1650151013, 35616.2941436735, 105.000009003095, 238.341343379983, -1.93061738684719E-05,140)
+        point[29] = new Array(15159.263910105, 35539.8947137669, 104.999959954992, 204.405612042671, -11.3304165213713,145);
+        point[30] = new Array(15148.9533216452, 35517.1710642145, 100, 191.210582499104, 2.02022931716783E-09,150);
+        point[31] = new Array(15143.8181379891, 35491.2616084412, 100.000000000931, 155.12628061797, -3.43612782671698E-09,155);
+        point[32] = new Array(15156.8820753599, 35463.0839286232, 99.9999999990687, 147.012177103223, 2.80889862865843,160);
+        point[33] = new Array(15212.3550338282, 35377.6233051836, 104.998921129853, 144.579580372775, -18.766004269399,165);
+        point[34] = new Array(15382.9329659015, 35137.7779092665, 6, 144.579580372775, -18.766004269399,170);
+              
+        //注册地形  
+        var tmpTedPath = getSamplesRelatePath("") + "\\terrain\\SingaporeGlobeTerrain.ted";
+        __g.terrain.registerTerrain(tmpTedPath, "");
+		var errorCode = __g.getLastError();
+		if(errorCode != 0)
+			alert(errorCode);			
+		 loadFdb("SDKDEMO.FDB");
+        wkt = __g.getTerrainCrsWKT(tmpTedPath, "");
+        var modePoint = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryModelPoint, gviVertexAttribute.gviVertexAttributeZ);
+        modePoint.modelName = getSamplesRelatePath("") + "\\x\\Vehicles\\wrj.X";
+        modePoint.setCoords(point[0][0], point[0][1], point[0][2], point[0][3], point[0][4]);
+        modePoint.spatialCRS = __datasetCRS;
+           // 画出运动路径
+        var line = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPolyline, gviVertexAttribute.gviVertexAttributeZ);
+        line.spatialCRS = __datasetCRS;
+        var position = __g.new_Vector3;
+         // 运动路径定位点
+        var pathpoint = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+        pathpoint.spatialCRS = __datasetCRS;
+        var motionPath = __g.objectManager.createMotionPath(__rootId);
+        motionPath.crsWKT = __datasetCRS.asWKT();
+        var angle = __g.new_EulerAngle;
+            angle.heading = 0;
+            angle.tilt = -20;
+        var scale = __g.new_Vector3;
+           scale.set(1, 1, 1); 
+        for (var i = 0; i < 35; i++) {
+               var x=point[i][0];
+               var y=point[i][1];
+               var z = point[i][2];
+               var heading = point[i][3];
+               var tilt = point[i][4];
+               var when = point[i][5];
+               position.set(x, y, z);
+               pathpoint.position = position;
+
+               if (line.pointCount == 0) {
+                   line.startPoint = pathpoint;
+               }
+               else
+               angle.set(heading, tilt, 0);
+               line.addPointAfter(i - 1, pathpoint);
+              motionPath.addWaypoint2(pathpoint, angle, scale, when);
+              __g.objectManager.createRenderPoint(pathpoint, null, "");
+        }
+         var cur = __g.new_CurveSymbol;
+         cur.color = colorFromARGB(255, 255, 0, 255);
+         cur.width = -3;
+         var rline = __g.objectManager.createRenderPolyline(line, cur, __rootId);
+         var matrix = __g.new_Matrix;
+         matrix.makeIdentity();
+         matrix.setTranslate(line.getPoint(0).position);
+         modePoint.fromMatrix(matrix);
+         motionPlane = __g.objectManager.createSkinnedMesh(modePoint, __rootId);
+         motionPlane.loop = true;
+         motionPlane.play();
+         motionPlane.maxVisibleDistance = 1000;
+         motionPlane.viewingDistance = 100;
+        // position.set(0, 0, 0);
+         motionPlane.bind(motionPath, scale, 0, 0, 0);
+        __g.camera.flyTime = 1;
+        __g.camera.flyToObject(motionPlane.guid, gviActionCode.gviActionFollowBehindAndAbove);
+        var dynamicTableLabel = __g.objectManager.createTableLabel(3, 2, __rootId);
+        dynamicTableLabel.titleText = "直升机当前位置";
+        dynamicTableLabel.position = line.getPoint(0);
+            dynamicTableLabel.setRecord(0, 0, "X:");
+            dynamicTableLabel.setRecord(0, 1, line.getPoint(0).x);
+            dynamicTableLabel.setRecord(1, 0, "Y:");
+            dynamicTableLabel.setRecord(1, 1, line.getPoint(0).y);
+            dynamicTableLabel.setRecord(2, 0, "Z:");
+            dynamicTableLabel.setRecord(2, 1, line.getPoint(0).z);
+           
+            dynamicTableLabel.borderColor = colorFromARGB(255, 255, 255, 255);
+            dynamicTableLabel.borderWidth = 2;
+            dynamicTableLabel.tableBackgroundColor = colorFromARGB(200, 255, 255, 165);
+            dynamicTableLabel.titleBackgroundColor = colorFromARGB(180, 122, 122, 122);
+            // 第一列文本样式
+        var headerTextAttribute = __g.new_TextAttribute;
+            headerTextAttribute.textColor = colorFromARGB(120, 127, 64, 0);
+            headerTextAttribute.outlineColor = 0xff000000;
+            headerTextAttribute.font = "细黑";
+            headerTextAttribute.bold = true;
+            headerTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineLeft;
+            dynamicTableLabel.setColumnTextAttribute(0, headerTextAttribute);
+            // 第二列文本样式
+        var contentTextAttribute = __g.new_TextAttribute;
+            contentTextAttribute.textColor = 0xffff10ff;
+            contentTextAttribute.outlineColor = colorFromARGB(125, 255, 127, 64);
+            contentTextAttribute.font = "黑体";
+            contentTextAttribute.bold = false;
+            contentTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineLeft;
+            dynamicTableLabel.setColumnTextAttribute(1, contentTextAttribute);
+            // 标题文本样式
+        var capitalTextAttribute = __g.new_TextAttribute;
+            capitalTextAttribute.textColor = 0xffffffff;
+            capitalTextAttribute.outlineColor = 4279834905;
+            capitalTextAttribute.font = "华文新魏";
+            capitalTextAttribute.textSize = 14;
+            capitalTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineCenter;
+            capitalTextAttribute.bold = true;
+            dynamicTableLabel.titleTextAttribute = capitalTextAttribute;
+            // 绑定到运动路径
+            position.set(0, 0, 2);
+            dynamicTableLabel.bind(motionPath, position, 0, 0, 0);
+            function setxyz() {
+                if (dynamicTableLabel != null && motionPlane != null) {
+                    dynamicTableLabel.setRecord(0, 1, motionPlane.modelPoint.position.x.toString());
+                    dynamicTableLabel.setRecord(1, 1, motionPlane.modelPoint.position.y.toString());
+                    dynamicTableLabel.setRecord(2, 1, motionPlane.modelPoint.position.z.toString());
+                }
+            }
+            window.setInterval(setxyz, 500);
+            motionPath.play();
+    }
+   
+</script>
+</html>

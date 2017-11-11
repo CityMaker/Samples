@@ -1,0 +1,260 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>HTMLWindow</title>
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+
+<body style="margin:0px;scroll:no">   
+<button onClick="initialize()" >click Me, Get Focus, Hide HtmlWindow</button>
+<select id="eWeather" onchange="changeWeather()">
+  <option>晴天</option>
+  <option>小雨</option>
+  <option>中雨</option>
+  <option>大雨</option>
+  <option>小雪</option>
+  <option>中雪</option>
+  <option>大雪</option>
+</select>
+<div>
+    <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object><!-- object里的style="height: 600px; width: 800px " 必须有，否则无法全页面显示-->
+</div>
+</body>
+
+<script type="text/javascript">
+
+    var wp;  //IWindowParam对象
+	var i = location.href.lastIndexOf('/');
+	var str = location.href.substring(0, i+1);
+
+	window.onload = function() {
+	    initialize();
+	}
+
+	function initialize() {
+        //初始化三维控件
+        initAxControl();
+
+        //设置选择对象类型
+        __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectFeatureLayer;  
+    	__g.interactMode = gviInteractMode.gviInteractSelect;
+        __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+
+        // 加载场景
+        loadFdb("SDKDEMO.FDB");
+
+        wp = __g.htmlWindow.createWindowParam();
+		wp.filePath = str + "Introdution.html";
+		wp.sizeX = 630;
+		wp.sizeY = 370;
+		wp.hastitle = false;
+		wp.position = gviHTMLWindowPosition.gviWinPosCenterDesktop;
+		wp.round = 50;
+		wp.hideOnClick = true;
+		wp.winId = 0;
+		wp.transparence = 200;
+		//__g.htmlWindow.setWindowParam(wp);
+	}
+
+	var currentFC = null;
+	var fid;
+	var groupCount;
+	var primitiveCount;
+	var imageCount;
+	var triangleCount;
+    function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+        if (pickResult == null)
+            return;
+        __g.featureManager.unhighlightAll();
+        if (pickResult != null) {
+            if (pickResult.type == gviObjectType.gviObjectFeatureLayer) {
+                fid = pickResult.featureId;
+                var fl = pickResult.featureLayer;
+                for (var fcGuid in __fcGeoMap) {
+                    if (fcGuid == fl.featureClassId) {
+						currentFC = __fcMap[fcGuid];
+                        __g.featureManager.highlightFeature(currentFC, fid, 0xffff0000);
+						
+						var fdeRow = currentFC.getRow(fid);			
+						var nPos = fdeRow.fieldIndex("Geometry");
+						var v = fdeRow.getValue(nPos);
+						
+						var model = currentFC.featureDataSet.getModel(v.modelName);
+						groupCount = model.groupCount;
+						primitiveCount = model.getGroup(0).primitiveCount;
+						imageCount = model.getImageNames().length;
+						triangleCount = GetTotalTriangleCount(model);   
+
+						// 显示方式一：
+						//__g.htmlWindow.showPopupWindow(str + "HTMLWindowSample.html?id=" + fid, 200, 200, true, gviHTMLWindowPosition.gviWinPosCenterParent, -1);
+
+						// 显示方式二：
+						wp = __g.htmlWindow.createWindowParam();
+						wp.filePath = str + "PropertyWindow.html?id=" + fid;
+						wp.sizeX = 200;
+						wp.sizeY = 200;
+						wp.hastitle = false;
+						wp.position = gviHTMLWindowPosition.gviWinPosMousePosition;
+						wp.round = -1;
+						wp.hideOnClick = true;
+						wp.winId = 2;
+						wp.minButtonVisible = true;
+						wp.closeButtonEnabled = true;
+						wp.transparence = 200;
+						wp.isPopupWindow = true;
+						__g.htmlWindow.setWindowParam(wp);
+						
+						// 创建htmlwindown显示控制面板
+						wp = __g.htmlWindow.createWindowParam();
+						wp.filePath = str + "ControlWindow.html";
+						wp.sizeX = 198;
+						wp.sizeY = 180;
+						wp.offsetX = 10;
+						wp.hastitle = false;
+						wp.position = gviHTMLWindowPosition.gviWinPosParentRightTop;
+						wp.round = 50;
+						wp.hideOnClick = true;
+						wp.winId = 1;
+						wp.minButtonVisible = true;
+						wp.closeButtonEnabled = true;
+						wp.transparence = 200;
+						wp.isPopupWindow = true;
+						//__g.htmlWindow.setWindowParam(wp);
+						__g.htmlWindow.showPopupWindowEx(intersectPoint, wp, true);
+                    }
+                }
+            }
+        }
+    }
+
+	function GetTotalTriangleCount(model)
+	{
+		var count = 0;
+		for(var i=0; i<model.groupCount; i++){
+			var group = model.getGroup(i);
+			for(var j=0; j<group.primitiveCount; j++){
+				var drawPrimitive = group.getPrimitive(j);
+				if(drawPrimitive.primitiveMode != gviPrimitiveMode.gviPrimitiveModeTriangleList)
+					continue;
+				if(!drawPrimitive.indexArray || drawPrimitive.indexArray.length == 0)
+				{
+					count += drawPrimitive.vertexArray.length / 9;
+				}
+				else
+				{
+					count += drawPrimitive.indexArray.length / 3;
+				} 
+			}
+		}
+		return count;
+	}
+
+	// 回调函数
+	var __fnSetPop;
+
+	// 获取主页面text值，以供弹出页面获取	    
+	function changeWeather() {
+        var index = $("eWeather").selectedIndex;
+        var skyboxObj = __g.objectManager.getSkyBox(0);
+        skyboxObj.weather = index;
+		__fnSetPop(index);
+    }
+
+	// 设置主页面Select值
+	function setSelectValue(val)
+	{
+		$("eWeather").selectedIndex = val;
+		var skyboxObj = __g.objectManager.getSkyBox(0);
+        skyboxObj.weather = val;
+	}
+
+	function setFocus()
+	{
+		__g.htmlWindow.hideWindow(1);
+		__g.htmlWindow.hideWindow(2);
+	}
+
+	 
+	////////////////////////////////
+	//    弹出窗口回调以下函数    //
+	////////////////////////////////
+	function fnCallByHtmWindow_glow(){
+		if(currentFC != null)
+		{			
+			var fdeRow = currentFC.getRow(fid);			
+			var nPos = fdeRow.fieldIndex("Geometry");
+			var v = fdeRow.getValue(nPos);
+			var symbol = __g.new_ModelPointSymbol;
+            symbol.setResourceDataSet(currentFC.featureDataSet);
+            var rmp = __g.objectManager.createRenderModelPoint(v, symbol, __rootId);
+            if (rmp != null)
+            {
+                 // 定位
+                 __g.camera.flyToObject(rmp.guid, gviActionCode.gviActionJump);
+                 // 闪烁
+                 rmp.glow(2000);
+                 __g.objectManager.delayDelete(rmp.guid, 2000);
+             }
+		}
+	}
+
+	var ca;
+	var pos
+	var ang;
+	function fnCallByHtmWindow_Qian(){
+		ca = __g.camera.getCamera2();
+		pos = ca.position;
+		ang = ca.angle;
+		var y = pos.y + 200;
+		pos.y = y;
+		__g.camera.setCamera2(pos, ang, gviSetCameraFlags.gviSetCameraNoFlags);
+	}
+
+	function fnCallByHtmWindow_Hou(){
+		ca = __g.camera.getCamera2();
+		pos = ca.position;
+		ang = ca.angle;
+		var y = pos.y - 200;
+		pos.y = y;
+		__g.camera.setCamera2(pos, ang, gviSetCameraFlags.gviSetCameraNoFlags);
+	}
+
+	function fnCallByHtmWindow_Left(){
+		ca = __g.camera.getCamera2();
+		pos = ca.position;
+		ang = ca.angle;
+		var x = pos.x - 200;
+		pos.x = x;
+		__g.camera.setCamera2(pos, ang, gviSetCameraFlags.gviSetCameraNoFlags);
+	}
+
+	function fnCallByHtmWindow_Right(){
+		ca = __g.camera.getCamera2();
+		pos = ca.position;
+		ang = ca.angle;
+		var x = pos.x + 200;
+		pos.x = x;
+		__g.camera.setCamera2(pos, ang, gviSetCameraFlags.gviSetCameraNoFlags);
+	}
+
+	function fnCallByHtmWindow_Up(){
+		ca = __g.camera.getCamera2();
+		pos = ca.position;
+		ang = ca.angle;
+		var z = pos.z + 50;
+		pos.z = z;
+		__g.camera.setCamera2(pos, ang, gviSetCameraFlags.gviSetCameraNoFlags);
+	}
+
+	function fnCallByHtmWindow_Down(){
+		ca = __g.camera.getCamera2();
+		pos = ca.position;
+		ang = ca.angle;
+		var z = pos.z - 50;
+		pos.z = z;
+		__g.camera.setCamera2(pos, ang, gviSetCameraFlags.gviSetCameraNoFlags);
+	}
+</script>
+</html>

@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>PolygonToModelPoint</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="../../cm7.js"></script>
+<script type="text/javascript" src="../../cm7_sample_util.js"></script>
+<style type="text/css">
+<!--
+body,td,th {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+}
+-->
+</style></head>
+<body>
+<div>
+  <input type="checkbox" id="converttype" value="进入选择模式" onclick="onconverttype ()"/>
+  进入选择模式</div>
+<div>
+  <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+  </object>
+</div>
+</body>
+<script type="text/javascript">
+
+    var _featureClass = null; 
+    
+     window.onload = function () {
+         initialize();
+     }
+
+    function initialize() {
+
+        //初始化三维控件
+        initAxControl();
+
+        // 加载FDB场景
+        var c = __g.new_ConnectionInfo;
+        c.connectionType = gviConnectionType.gviConnectionFireBird2x;
+        c.database = getSamplesRelatePath("") + "/polygon.FDB";
+
+        try {
+            var ds = __g.dataSourceFactory.openDataSource(c);
+            var fdsNames = ds.getFeatureDatasetNames();
+            if (fdsNames.length == 0)
+                return;
+            __fds = ds.openFeatureDataset(fdsNames[0]);
+            var fcNames = __fds.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+            if (fcNames.length == 0)
+                return;
+
+            _featureClass = __fds.openFeatureClass(fcNames[0]);
+
+            geoName = "Geometry";
+            _featureLayerModelPoint = __g.objectManager.createFeatureLayer(_featureClass, geoName, null, null, __rootId);
+            var fieldinfos = _featureClass.getFields();
+            var fieldinfo = fieldinfos.get(fieldinfos.indexOf("Geometry"));
+            var geometryDef = fieldinfo.geometryDef;
+            var env = geometryDef.envelope;
+
+            var pos = __g.new_Vector3;
+            var ang = __g.new_EulerAngle;
+            pos.set((env.maxX + env.minX) / 2, (env.maxY + env.minY) / 2, (env.maxZ + env.minZ) / 2);
+            ang.heading = 0;
+            ang.tilt = -20;
+            __g.camera.lookAt(pos, 600, ang);
+        }
+        catch (e) {
+            exceptionHandler(e);
+        }
+
+		attachMouse();
+    }
+
+    /*
+    *	绑定RenderControl拾取事件
+    */
+    function attachMouse() {
+        
+    }
+
+
+    //进入选择模式 选择转换物体
+    function onconverttype() {
+        var converttype = $("converttype");
+        if (converttype.checked == true) {
+            __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectFeatureLayer; /*--设置选择对象类型 */
+            __g.interactMode = gviInteractMode.gviInteractSelect;
+            __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+        } else {
+            __g.interactMode = gviInteractMode.gviInteractNormal;
+            __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectNone;
+            __g.featureManager.unhighlightAll();
+        }
+    }
+
+    function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+        if (pickResult == null)
+            return;
+        var converttype = $("converttype");
+        if (converttype.checked == true)
+            __g.featureManager.unhighlightAll();
+
+        if (pickResult != null) {
+            if (pickResult.type == gviObjectType.gviObjectFeatureLayer) {
+                var fid = pickResult.featureId;
+                __g.featureManager.highlightFeature(_featureClass, fid, 0xffff0000);
+
+                //////////////////////////////////////////////////////////////////////////
+                //
+                //  GeometryConvert的代码添加在这里
+                // 
+                //////////////////////////////////////////////////////////////////////////
+                var rowGC = _featureClass.getRow(fid);
+                var nPose = rowGC.fieldIndex("Geometry");
+                if (nPose == -1) {
+                    alert("不存在Geometry列");
+                    return;
+                }
+
+                // 获取polygon
+                var polygonGC = null;
+                if (rowGC != null) {
+                    nPose = rowGC.fieldIndex("Geometry");
+                    var geo = rowGC.getValue(nPose);
+                    if (geo.geometryType == gviGeometryType.gviGeometryPolygon)
+                        polygonGC = geo;
+                }
+
+                document.title = "拾取成功";
+
+                
+                var gc = __g.geometryConvertor;
+                var mp = gc.polygonToModelPoint(polygonGC);
+                __g.objectManager.addModel("ttt", mp["model"]);
+                mp["modelPoint"].modelName = "ttt";
+                __g.objectManager.createRenderModelPoint(mp["modelPoint"], null, __rootId);
+                
+            }
+        }
+    }
+
+</script>
+</html>

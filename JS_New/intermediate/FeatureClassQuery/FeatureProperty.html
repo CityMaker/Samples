@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<style type="text/css">
+    table.featureInfo td, table.featureInfo th
+    {
+        border: 1px solid #ddd;
+        border-collapse: collapse;
+        margin: 0;
+        padding: 0;
+        font-size: 90%;
+    }
+</style>
+
+<script type="text/javascript">
+    var objwind;
+    function InitTable() {
+        objwind = window.dialogArguments;
+        document.title = objwind.title;  
+        var strTbody = objwind.fieldTbody;
+        var obj = $("tableDiv");
+        obj.innerHTML = strTbody.join("");
+    }
+
+    function closeWind() {
+     window.close();
+    }
+
+    /* 暂未用到 
+    var currentActiveRow;
+    function changeActiveRow(obj) {
+        if (currentActiveRow) currentActiveRow.style.background = "#ffffff";
+        currentActiveRow = obj;
+        currentActiveRow.style.background = "#33CCFF";
+    }  
+    */  
+</script>
+
+<body onload="InitTable()" onunload="closeWind()">
+    <div id="tableDiv">
+    </div>
+</body>
+</html>

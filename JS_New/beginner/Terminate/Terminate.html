@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Hello World</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="../../cm7.js"></script>
+<script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+<button onclick="exit()"> 退出三维控件</button>
+
+&nbsp;<br />
+<object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+</object>
+</body>
+<script type="text/javascript">
+
+
+    function init(){
+        //初始化三维控件
+        initAxControl();       
+
+        // 加载场景
+        loadFdb("SDKDEMO.FDB");
+
+      
+    }
+
+    window.onload = init;
+
+    
+    /*
+    *	全屏
+    */
+    function exit() {
+        __g.terminate();
+    }
+
+</script>
+</html>

@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script type="text/javascript">
+        function intil() {
+            objwind = window.dialogArguments;
+            var strTbody = objwind.fieldTbody;
+            var obj = document.getElementById("tree");
+            obj.innerHTML = strTbody.join("");
+        }
+        function closeWind() {
+            window.close();
+        }
+
+        function btnok() {
+            var name = document.getElementById("name").value;
+            var fieldtype = document.getElementById("fieldtype").value;
+            var isSystemfield = document.getElementById("isSystemfield").value;
+            var alias = document.getElementById("alias").value;
+            var defaultvalue = document.getElementById("defaultvalue").value;
+            var editable = document.getElementById("editable").value;
+            var length = document.getElementById("length").value;
+            var nullable = document.getElementById("nullable").value;
+            var registeredrenderindex = document.getElementById("registeredrenderindex").value;
+            var precision = document.getElementById("precision").value;
+            var scale = document.getElementById("scale").value;
+            var domainfixed = document.getElementById("domainfixed").value;
+           
+            var ci = objwind.ci;
+            var objparent = objwind.objparent;
+            var set_name = objwind.set_name;
+            var fieldinfo = objwind.fieldinfo;
+
+            fieldinfo.name = name;
+            fieldinfo.fieldType = fieldtype
+            fieldinfo.isSystemField = isSystemfield
+            fieldinfo.alias = alias
+            fieldinfo.defaultValue = defaultvalue
+            fieldinfo.editable = editable
+            fieldinfo.length = length
+            fieldinfo.nullable = nullable
+            fieldinfo.registeredRenderIndex = registeredrenderindex
+            fieldinfo.precision = precision
+            fieldinfo.scale = scale
+            fieldinfo.domainFixed = domainfixed
+
+
+            try {
+                var ds = objwind.__g.dataSourceFactory.openDataSource(ci);
+                var dset = ds.openFeatureDataset(set_name);
+                var fc = dset.openFeatureClass(objparent);
+
+                fc.modifyField(fieldinfo);
+                alert("修改成功");
+            } 
+             catch(e){
+               alert("修改失败！");
+           }
+            finally {
+                if (fieldinfo != null) {
+                    fieldinfo = null;
+                }
+               if (fc != null) {
+                   fc = null;
+               }
+               if (dset != null) {
+                   dset = null;
+               }
+               if (ds != null) {
+                   ds = null;
+               }
+           }        
+        }
+      
+    </script>
+</head>
+<body onload=" intil()" onunload="closeWind()">
+     <div id="tree">
+     </div>
+       <input type="button" value="保存" onclick="btnok()"/>
+       <input type="button" value="取消" onclick="closeWind()"/>
+</body>
+</html>

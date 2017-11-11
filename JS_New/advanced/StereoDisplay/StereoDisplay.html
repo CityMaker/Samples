@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>StereoDisplay</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+    <div>
+        请选择显示类型：<select id="ViewportMode" onchange="ViewportMode_clock()">
+            <option>ViewportSinglePerspective</option>
+            <option>ViewportStereoAnaglyph</option>
+            <option>ViewportStereoQuadbuffer</option>
+            <!--<option>ViewportL1R1S</option>-->
+        </select>
+            </div>
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+        </object>
+    </div>
+</body>
+
+<script type="text/javascript">
+    
+    
+    var __fcMap = {};
+    var __fcGeoMap = {};
+     window.onload = function () {
+         initialize();
+     }
+
+    function initialize() {
+        //初始化三维控件
+        initAxControl();
+
+        // 加载FDB场景
+        loadFdb("community.FDB");
+    }
+     
+    
+    /*
+    *  切换显示方式
+    */
+    function ViewportMode_clock() {
+  
+        var viewportMode = $("ViewportMode").selectedIndex;
+       
+        switch (viewportMode) {
+            case 0:
+                {
+                    __g.viewport.viewportMode = gviViewportMode.gviViewportSinglePerspective;
+                }
+                break;
+            case 1:
+                {
+                    __g.viewport.viewportMode = gviViewportMode.gviViewportStereoAnaglyph;
+                }
+                break;
+            case 2:
+                {
+                    __g.viewport.viewportMode = gviViewportMode.gviViewportStereoQuadbuffer;
+                }
+                break;
+        }
+    }
+</script>
+
+</html>

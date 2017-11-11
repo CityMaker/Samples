@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>TileLayer</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+
+<body style="margin:0px;scroll:no" >
+    <div style="float:left">		
+        <button onclick="loadTile()">加载瓦片</button><input id="layer" type="text" size="100"/>     
+    </div>
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object>
+    </div>  
+</body>
+
+<script type="text/javascript">
+    
+     window.onload = function () {
+         initialize();
+     }
+
+	function initialize() {
+		//初始化三维控件
+        initAxControl(); 
+
+		
+
+		var tmpTilePath = getSamplesRelatePath("")+"\\sdk.tdb";
+        var layer = __g.objectManager.create3DTileLayer(tmpTilePath, "", "");
+        if (layer != null)
+             __g.camera.flyToObject(layer.guid, gviActionCode.gviActionFlyTo);		
+	}
+
+	function loadTile(){
+		//加载瓦片     
+		var layer = __g.objectManager.create3DTileLayer($("layer").value, "", "");
+        if (layer != null)
+             __g.camera.flyToObject(layer.guid, gviActionCode.gviActionFlyTo);
+	}
+</script>
+</html>

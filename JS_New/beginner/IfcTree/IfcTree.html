@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML  .0 Transitional//EN" "http://www.w3.org/TR/xhtml /DTD/xhtml -transitional.dtd">
+<html xmlns="http://www.w3.org/ 999/xhtml">
+<head>
+    <title>IfcTree</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+   
+</head>
+    
+<body >
+   
+    <div style="text-align:center">
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 700px; width:  1000px" > 
+        </object>
+    </div>
+
+</body>
+
+<script type="text/javascript">
+  
+     window.onload = function () {
+         Initialize();
+    
+     }
+
+
+    function Initialize() {
+        initAxControl();
+         __g.new_LicenseServer.setHost("192.168.2.200", 8588, "");
+        var tm_data = __g.new_ConnectionInfo;
+            tm_data.connectionType = 3;
+            tm_data.database = getSamplesRelatePath("/IFC.FDB");
+            tm_data.userName = "";
+            tm_data.password = "";
+            var ds = __g.dataSourceFactory.openDataSource(tm_data);
+            var setnames = ds.getFeatureDatasetNames();
+            if (setnames.length == 0)
+                return;
+            var dataset = ds.openFeatureDataset(setnames[0]);
+            var fcnames = dataset.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+            if (fcnames.length == 0)
+                return;
+            var fc = dataset.openFeatureClass(fcnames[0]);
+            var fieldinfos = fc.getFields();
+            for (var i = 0; i < fieldinfos.count; i++) {
+                var fieldinfo = fieldinfos.get(i);
+                if (fieldinfo == null)
+                    continue;
+                var geometryDef = fieldinfo.geometryDef;
+                if (geometryDef == null)
+                    continue;
+                var geoRender = __g.new_SimpleGeometryRender;
+                geoRender.renderGroupField = "ParentObjectId";
+                this.layer = __g.objectManager.createFeatureLayer(fc, fieldinfo.name, null, geoRender, "");
+                var env = geometryDef.envelope;
+                if (env == null || (env.maxX == 0.0 && env.maxY == 0.0 && env.maxZ == 0.0 &&
+                        env.minX == 0.0 && env.minY == 0.0 && env.minZ == 0.0))
+                    continue;
+                var angle = __g.new_EulerAngle;
+                angle.set(0, -20, 0);
+                __g.camera.lookAt(env.center, 100, angle);
+                var cusData = fc.customData;
+                var key = cusData.getAllKeys();
+                var pkey = cusData.getProperty(key[0]);
+                this.testLabel = __g.objectManager.createTableLabel(1, 1, __rootId);
+                this.testLabel.titleText = pkey;
+				var pointFL = __g.geometryFactory.createPoint(1);
+				pointFL.spatialCRS = dataset.spatialReference;
+				pointFL.position = env.center;
+                this.testLabel.position = pointFL;
+            }
+      }
+   
+</script>
+</html>

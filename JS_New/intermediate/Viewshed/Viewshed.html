@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Viewshed</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+
+<body style="margin:0px;scroll:no" >
+    <div style="float:left">		
+		<button onclick="selectVideo()">拾取视频</button> 
+        <button onclick="createPoint()">创建点</button> 
+    </div>
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object>
+    </div>  
+</body>
+
+<script type="text/javascript">
+     var MODE;
+	 var tv;
+	      window.onload = function () {
+         Initialize();
+     }
+	function Initialize() {
+		//初始化三维控件
+        initAxControl(); 
+       __g.camera.flyTime = 1;
+		var tmpTilePath = getSamplesRelatePath("")+"\\sdk.tdb";
+        var layer = __g.objectManager.create3DTileLayer(tmpTilePath, "", "");
+        if (layer != null)
+             __g.camera.flyToObject(layer.guid, gviActionCode.gviActionFlyTo);	
+		var pos = __g.geometryFactory.createPoint(1);
+		pos.x = 15589.33894854414;
+		pos.y = 35759.935503719636;
+		pos.z = 15.200002948321121;
+		tv = __g.objectManager.createViewshed(pos, __rootId);	
+
+		var ang = __g.new_EulerAngle;
+		ang.set(5.1029946848555179, -89.999887850022333, 0);
+		tv.angle = ang;
+		tv.displayMode = gviTVDisplayMode.gviTVShowLinesAndPicture;
+		__g.camera.flyToObject(tv.guid, 0);	
+	}
+	function selectVideo(){
+		__g.interactMode = gviInteractMode.gviInteractSelect;
+		__g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+		__g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectAll;
+		MODE = 1;
+	}
+
+	function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+		tv.unhighlight();
+		if (pickResult == null)
+            return;
+        if (pickResult != null) {
+			if(MODE == 1){
+				if (pickResult.type != gviObjectType.gviObjectViewshed)
+					return;					
+				var curTv = pickResult.viewshed;
+				curTv.highlight(0xffff0000);				
+				__g.interactMode = gviInteractMode.gviInteractNormal;
+			}
+			else if(MODE == 2){
+				var ps = __g.new_SimplePointSymbol;
+				ps.size = 20;
+				ps.fillColor = 0xffff0000;
+				__g.objectManager.createRenderPoint(intersectPoint, ps, __rootId);
+				var ret = tv.worldToScreen(intersectPoint, 0);
+				if(ret.inScreen)
+					tv.highlight(0xffff0000);				
+				__g.interactMode = gviInteractMode.gviInteractNormal;
+			}
+		}
+    }
+	
+	function createPoint(){
+		__g.interactMode = gviInteractMode.gviInteractSelect;
+		__g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+		__g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectAll;
+		MODE = 2;		
+	}
+</script>
+</html>

@@ -1,0 +1,355 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>GeometryConvert</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="../../cm7.js"></script>
+<script type="text/javascript" src="../../cm7_sample_util.js"></script>
+<style type="text/css">
+<!--
+body,td,th {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+}
+-->
+</style></head>
+<body>
+<div>
+  <input type="checkbox" id="converttype1" value="MultiTriMesh" />
+  MultiTriMesh
+  <input type="checkbox" id="converttype2" value="投影Polygon"/>
+  投影Polygon
+  <input type="checkbox" id="converttype3" value="切割Polygon"/>
+  切割Polygon
+  <input type="checkbox" id="converttype4" value="MultiPoint"/>
+  MultiPoint </div>
+<div>
+  <input type="checkbox" id="converttype" value="进入选择模式 选择转换物体" onclick="onconverttype ()"/>
+  进入选择模式 选择转换物体</div>
+<div>
+  <input type="checkbox" id="hidden1" value="隐藏界面上MTriMesh" onclick="cbHideRenderTMesh_CheckedChanged()"/>
+  隐藏界面上MTriMesh
+  <input type="checkbox" id="hidden2" value="隐藏界面上投影Polygon" onclick="cbHideRenderPolygon_CheckedChanged()"/>
+  隐藏界面上投影Polygon
+  <input type="checkbox" id="hidden3" value="隐藏界面上切割Polygon" onclick="cbHideRenderPolygon2_CheckedChanged()"/>
+  隐藏界面上切割Polygon
+  <input type="checkbox" id="hidden4" value="隐藏界面上MultiPoint" onclick="cbHideRenderMultiPoint_CheckedChanged()"/>
+  隐藏界面上MultiPoint </div>
+<div>
+  <input type="checkbox" id="hidden" value="显示模型层" onclick="onhidden()";/>
+  隐藏模型层</div>
+<div>
+  <input type="button"  value="删除界面上MTriMesh" onclick="btnDelRenderTMesh_Click()"/>
+  <input type="button"  value="删除界面上投影Polygon" onclick="btnDelRenderPolygon_Click()"/>
+  <input type="button"  value="删除界面上切割Polygon" onclick="btnDelRenderPolygon2_Click()"/>
+  <input type="button"  value="删除界面上MultiPoint" onclick="btnDelRenderMultiPoint_Click ()"/>
+</div>
+<div>
+  <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+  </object>
+</div>
+</body>
+<script type="text/javascript">
+
+    var _featureClass = null;  //“建筑”要素类
+    var _featureLayerModelPoint = null;  //“建筑”图层
+    var fidList = [];  //存储拾取的Feature的FID
+    var rTMeshList = [];
+    var rPolygonList = [];  //投影Polygon
+    var rPolygonList2 = [];  //切割Polygon
+    var rPointList = [];
+
+
+     window.onload = function () {
+         initialize();
+     }
+
+
+    function initialize() {
+
+        //初始化三维控件
+        initAxControl();
+
+        // 加载FDB场景
+        var c = __g.new_ConnectionInfo;
+        c.connectionType = gviConnectionType.gviConnectionFireBird2x;
+        c.database = getSamplesRelatePath("") + "/community.FDB";
+
+        try {
+            var ds = __g.dataSourceFactory.openDataSource(c);
+            var fdsNames = ds.getFeatureDatasetNames();
+            if (fdsNames.length == 0)
+                return;
+            __fds = ds.openFeatureDataset(fdsNames[0]);
+            var fcNames = __fds.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+            if (fcNames.length == 0)
+                return;
+
+            // 仅仅加载“建筑”要素类
+            _featureClass = __fds.openFeatureClass("建筑");
+
+            // 用名为"Geometry"的空间列创建模型FeautureLayer
+            geoName = "Geometry";
+            _featureLayerModelPoint = __g.objectManager.createFeatureLayer(_featureClass, geoName, null, null, __rootId);
+            var fieldinfos = _featureClass.getFields();
+            var fieldinfo = fieldinfos.get(fieldinfos.indexOf("Geometry"));
+            var geometryDef = fieldinfo.geometryDef;
+            var env = geometryDef.envelope;
+
+            var pos = __g.new_Vector3;
+            var ang = __g.new_EulerAngle;
+            pos.set((env.maxX + env.minX) / 2, (env.maxY + env.minY) / 2, (env.maxZ + env.minZ) / 2);
+            ang.heading = 0;
+            ang.tilt = -20;
+            __g.camera.lookAt(pos, 600, ang);
+        }
+        catch (e) {
+            exceptionHandler(e);
+        }
+
+		attachMouse();
+    }
+
+
+    //图层的隐藏
+    function onhidden() {
+        var hidden = $("hidden");
+        if (hidden.checked == true) {
+            _featureLayerModelPoint.visibleMask = gviViewportMask.gviViewNone
+        } else {
+            _featureLayerModelPoint.visibleMask = gviViewportMask.gviViewAllNormalView;
+        }
+    }
+
+    /*
+    *	绑定RenderControl拾取事件
+    */
+    function attachMouse() {
+        
+    }
+
+
+    //进入选择模式 选择转换物体
+    function onconverttype() {
+        var converttype = $("converttype");
+        if (converttype.checked == true) {
+            __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectFeatureLayer; /*--设置选择对象类型 */
+            __g.interactMode = gviInteractMode.gviInteractSelect;
+            __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+        } else {
+            __g.interactMode = gviInteractMode.gviInteractNormal;
+            __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectNone;
+            __g.featureManager.unhighlightAll();
+        }
+    }
+
+    function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+        var converttype1 = $("converttype1");
+        var converttype2 = $("converttype2");
+        var converttype3 = $("converttype3");
+        var converttype4 = $("converttype4");
+        if (pickResult == null)
+            return;
+        var converttype = $("converttype");
+        if (converttype.checked == true)
+            __g.featureManager.unhighlightAll();
+
+        if (pickResult != null) {
+            if (pickResult.type == gviObjectType.gviObjectFeatureLayer) {
+                var fid = pickResult.featureId;
+                __g.featureManager.highlightFeature(_featureClass, fid, 0xffff0000);
+
+                //////////////////////////////////////////////////////////////////////////
+                //
+                //  GeometryConvert的代码添加在这里
+                // 
+                //////////////////////////////////////////////////////////////////////////
+                fidList.splice(0, fidList.length);
+                fidList.push(fid);
+                var rowGC = _featureClass.getRow(fidList[0]);
+                var nPose = rowGC.fieldIndex("Geometry");
+                if (nPose == -1) {
+                    alert("不存在Geometry列");
+                    return;
+                }
+
+                // 获取ModelPoint
+                var modelPointGC = null;
+                if (rowGC != null) {
+                    nPose = rowGC.fieldIndex("Geometry");
+                    var geo = rowGC.getValue(nPose);
+                    if (geo.geometryType == gviGeometryType.gviGeometryModelPoint)
+                        modelPointGC = geo;
+                }
+
+                document.title = "拾取成功";
+
+                // 获取Model
+                var modelName = modelPointGC.modelName;
+                var modelGC = _featureClass.featureDataSet.getModel(modelName);
+                // 1、获取MultiTriMesh
+
+                var gc = __g.geometryConvertor;
+                var multiTM = gc.modelPointToTriMesh(modelGC, modelPointGC, false);
+                document.title = "ModelToTriMesh完成";
+
+                if (converttype1.checked == true) {
+                    // 创建RenderTriMesh在三维上显示
+                    var count = multiTM.geometryCount;
+                    for (var i = 0; i < count; i++) {
+                        var tm = multiTM.getGeometry(i);
+                        var rtm = __g.objectManager.createRenderTriMesh(tm, null, __rootId);
+
+                        //随机颜色填充TriMesh
+                        var ss = __g.new_SurfaceSymbol;
+                        ss.color = getRandColor();
+                        rtm.symbol = ss;
+                        rTMeshList.push(rtm);
+                    }
+                }
+
+                if (converttype2.checked == true) {
+                    // 2、获取投影MultiPolygon
+                    
+                    var multiPolygon = gc.projectTriMeshToPolygon(multiTM, 1.0);
+                    document.title = "MultiTriMeshToFootprint完成。面积:" + multiPolygon.getArea();
+
+                    // 创建RenderPolygon在三维上显示
+                    for (var i = 0; i < multiPolygon.geometryCount; i++) {
+                        var polygon = multiPolygon.getGeometry(i);
+                        var rpolygon = __g.objectManager.createRenderPolygon(polygon, null, __rootId);
+                        rPolygonList.push(rpolygon);
+                    }
+                }
+
+                if (converttype3.checked == true) {
+                    // 3、获取切割MultiPolygon
+                    var heightSpec = 0.0;
+                    var heightIntersect = intersectPoint.z;
+                    fidList.splice(0, fidList.length);
+                    fidList.push(fid);
+                    var box = _featureClass.getFeaturesEnvelope(fidList, "Geometry");
+                    heightSpec = Math.abs(heightIntersect - box.minZ);
+                    // 注意：CutTriMeshToPolygon方法的第三个参数为空间分辨率，应该选择合适值。
+                    // 值过大会导致结果不精确，值过小会导致转换时间过长。使用时应设置大小合适的值来平衡精度和效率问题。
+                    var multiPolygon2 = gc.cutTriMeshToPolygon(multiTM, heightSpec, 0.5);
+                    document.title = "MultiTriMeshToFootprint2完成。面积:" + multiPolygon2.getArea();
+
+                    // 创建RenderPolygon在三维上显示
+                    for (var i = 0; i < multiPolygon2.geometryCount; i++) {
+                        var polygon2 = multiPolygon2.getGeometry(i);
+                        var rpolygon2 = __g.objectManager.createRenderPolygon(polygon2, null, __rootId);
+                        rPolygonList2.push(rpolygon2);
+                    }
+                }
+
+                if (converttype4.checked == true) {
+                    // 4、获取MultiPoint
+                    var multiPoint = gc.multiTriMeshToMultiPoint(multiTM, 3.0);
+                    document.title = "MultiTriMeshToMultiPoint完成。MultiPoint个数为：" + multiPoint.geometryCount;
+
+                    //创建RenderPoint在三维上显示
+                    var rpoint = __g.objectManager.createRenderMultiPoint(multiPoint, null, __rootId);
+                    rPointList.push(rpoint);
+                }
+            }
+        }
+    }
+
+    function cbHideRenderTMesh_CheckedChanged() {
+        var hidden1 = $("hidden1");
+        for (var i = 0; i < rTMeshList.length; i++) {
+            if (hidden1.checked == true) {
+                rTMeshList[i].visibleMask = gviViewportMask.gviViewNone;
+            } else {
+                rTMeshList[i].visibleMask = gviViewportMask.gviViewAllNormalView;
+            }
+        }
+    }
+
+    function cbHideRenderPolygon_CheckedChanged() {
+        var hidden2 = $("hidden2");
+        for (var i = 0; i < rPolygonList.length; i++) {
+            if (hidden2.checked == true) {
+                rPolygonList[i].visibleMask = gviViewportMask.gviViewNone;
+            } else {
+                rPolygonList[i].visibleMask = gviViewportMask.gviViewAllNormalView;
+            }
+        }
+    }
+
+    function cbHideRenderPolygon2_CheckedChanged() {
+        var hidden3 = $("hidden3");
+        for (var i = 0; i < rPolygonList2.length; i++) {
+            if (hidden3.checked == true) {
+                rPolygonList2[i].visibleMask = gviViewportMask.gviViewNone;
+            } else {
+                rPolygonList2[i].visibleMask = gviViewportMask.gviViewAllNormalView;
+            }
+        }
+    }
+
+    function cbHideRenderMultiPoint_CheckedChanged() {
+        var hidden4 = $("hidden4");
+        for (var i = 0; i < rPointList.length; i++) {
+            if (hidden4.checked == true) {
+                rPointList[i].visibleMask = gviViewportMask.gviViewNone;
+            } else {
+                rPointList[i].visibleMask = gviViewportMask.gviViewAllNormalView;
+            }
+        }
+    } 
+    
+    function btnDelRenderTMesh_Click() {
+        __g.featureManager.unhighlightAll();
+        if (rTMeshList.length > 0) {
+            for (var i = 0; i < rTMeshList.length; i++) {
+                __g.objectManager.deleteObject(rTMeshList[i].guid);
+            }
+            rTMeshList = []
+            alert("清空完成");
+        }
+        else
+            alert("无要清空对象");
+    }
+
+    function btnDelRenderPolygon_Click() {
+        __g.featureManager.unhighlightAll();
+        if (rPolygonList.length > 0) {
+            for (var i = 0; i < rPolygonList.length; i++) {
+                __g.objectManager.deleteObject(rPolygonList[i].guid);
+            }
+            rPolygonList = []
+            alert("清空完成");
+        }
+        else
+            alert("无要清空对象");
+    }
+
+    function btnDelRenderPolygon2_Click() {
+        __g.featureManager.unhighlightAll();
+        if (rPolygonList2.length > 0) {
+            for (var i = 0; i < rPolygonList2.length; i++) {
+                __g.objectManager.deleteObject(rPolygonList2[i].guid);
+            }
+            rPolygonList2 = []
+            alert("清空完成");
+        }
+        else
+            alert("无要清空对象");
+    }
+
+    function btnDelRenderMultiPoint_Click() {
+        __g.featureManager.unhighlightAll();
+        if (rPointList.length > 0) {
+            for (var i = 0; i < rPointList.length; i++) {
+                __g.objectManager.deleteObject(rPointList[i].guid);
+            }
+            rPointList = []
+            alert("清空完成");
+        }
+        else
+            alert("无要清空对象");
+    }
+</script>
+</html>

@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+     <title>Ocean</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>   
+<div  align="center">     
+	设定海面风向:<input type="text" id="oceanWindDirection" size="6"/>设定海面风速:<input type="text" id="oceanWindSpeed" size="6"/>开启海水特效:<input type="checkbox" id="oceanEffect" />    
+<input id="Button1" type="button" value="SetOceanRegion" onclick="SetOceanRegion()" /> <input id="Button2" type="button" value="DeleteOceanRegion"  onclick="DeleteOceanRegion()"/>
+</div>  
+    <div align="center">
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 700px; width: 1000px">
+        </object>
+    </div>
+</body>
+     <script type="text/javascript">
+         var __g = document.getElementById("renderControl");         
+         var __fcMap = {};
+         var __fcGeoMap = {};         
+		 window.onload = function () {
+			 Initialize();
+		 }
+		 function Initialize() {
+		     //初始化三维控件
+		     initAxControl();
+		     var tmpTedPath = getSamplesRelatePath("") + "\\terrain\\terrain.ted";
+		     __g.terrain.registerTerrain(tmpTedPath, "");
+		     this.datasetCRS = __g.crsFactory.createFromWKT(__g.getTerrainCrsWKT(tmpTedPath, ""));
+		     __g.terrain.flyTo(gviTerrainActionCode.gviFlyToTerrain);
+		
+		     this.currentGeometry = null;
+		     this.currentRenderGeometry = null;
+		     __g.interactMode = gviInteractMode.gviInteractEdit;
+		 } 
+             function onObjectEditing(geometry) {
+		         this.currentGeometry = geometry;
+		     }
+		     function onObjectEditFinish() {
+		         var multiPolygon = currentRenderGeometry.getFdeGeometry();
+		         multiPolygon = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryMultiPolygon, gviVertexAttribute.gviVertexAttributeZ);
+		         var polygon = currentRenderGeometry.getFdeGeometry();
+		         multiPolygon.addPolygon(polygon);
+		         __g.terrain.setOceanRegion(multiPolygon);
+		         __g.terrain.enableOceanEffect = parseInt(document.getElementById("oceanEffect").value);
+		         __g.terrain.oceanWindDirection = parseInt(document.getElementById("oceanWindDirection").value);
+		         __g.terrain.oceanWindSpeed = parseInt(document.getElementById("oceanWindSpeed").value);
+		         currentRenderGeometry.visibleMask = gviViewportMask.gviViewNone;
+		         currentRenderGeometry.viewingDistance = 2000;
+		         __g.camera.flyToObject(currentRenderGeometry.guid, gviActionCode.gviActionFollowAbove);
+		        // __g.interactMode = gviInteractMode.gviInteractNormal;
+		      }
+		      
+           function SetOceanRegion() {
+		      
+		         var surfaceSymbol = __g.new_SurfaceSymbol;
+		         surfaceSymbol.color = 0x550000FF;
+		         this.currentGeometry = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPolygon, gviVertexAttribute.gviVertexAttributeZ);
+		         this.currentGeometry.spatialCRS = this.datasetCRS;
+		         this.currentRenderGeometry = __g.objectManager.createRenderPolygon(this.currentGeometry, surfaceSymbol, '');
+		         this.currentRenderGeometry.heightStyle = gviHeightStyle.gviHeightOnTerrain;
+		         __g.objectEditor.startEditRenderGeometry(this.currentRenderGeometry, gviGeoEditType.gviGeoEditCreator);
+		     }
+		     function DeleteOceanRegion() {
+		         __g.terrain.setOceanRegion(null);
+		         if (this.currentRenderGeometry != null) {
+		             __g.objectManager.deleteObject(currentRenderGeometry.guid);
+		             this.currentRenderGeometry = null;
+		         }
+		     }
+         
+     </script>
+</html>

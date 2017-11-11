@@ -1,0 +1,308 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>SightlineAnalysis</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+    <style type="text/css">
+        *{ margin:0px;}
+        p{ font-size:12px;}
+        #lbl{ color:Red; font-size:12px;}
+        input {font-size:12px;}
+        #zb{ float: left;}
+       #zhedangwu{float: left; border:1px solid;}
+       #oj{ float: right;}
+    </style>
+</head>
+<body>
+   <div>
+       <input type="button" value="绘线" id="btn_createLine" onclick="btn_createLine_Click()" />
+       <input type="button" value="通视分析" id="btn_analyse" onclick="btn_Analize_Click()"/>
+   </div>
+   <div id="zb">
+   <p id="lbl"></p>
+   <p>观察点：<input type="button" value="飞入观察点" id="btnFlyToSourcePoint" onclick="btnFlyToSourcePoint_Click()"/></p>
+   <p id="startX" style="color:Gray;">X：</p>
+   <p id="startY" style="color:Gray;">Y：</p>
+   <p id="startZ" style="color:Gray;">Z：</p>
+   <p>目标点：<input type="button" value="飞入目标点" id="btnFlyToTargetPoint" onclick="btnFlyToTargetPoint_Click()" /></p>
+   <p id="endX" style="color:Gray;">X：</p>
+   <p id="endY" style="color:Gray;">Y：</p>
+   <p id="endZ" style="color:Gray;">Z：</p>
+   </div>
+   <div id="zhedangwu"></div>
+    <div id="oj">
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+        </object>
+    </div>
+</body>
+ <script type="text/javascript">
+     var __g = document.getElementById("renderControl");
+     var lbl = document.getElementById("lbl");
+     var startXX = null;
+     var startYY = null;
+     var startZZ = null;
+     var endXX = null;
+     var endYY = null;
+     var endZZ = null;
+     var startX = $("startX");
+     var startY = $("startY");
+     var startZ = $("startZ");
+     var endX = $("endX");
+     var endY = $("endY");
+     var endZ = $("endZ");
+     var btnFlyToSourcePoint = $("btnFlyToSourcePoint");
+     var btnFlyToTargetPoint = $("btnFlyToTargetPoint");
+     var btn_createLine = $("btn_createLine");
+     var btn_analyse = $("btn_analyse");
+     var zhedangwu = document.getElementById("zhedangwu");
+
+     var __fcMap = {};
+     var __fcGeoMap = {};
+     var fcMap = null;  //IFeatureClass, List<string> 存储dataset里featureclass及对应的空间列名
+     var flagx = false;
+     var polyline = null;
+     var renderPolyline = null;
+     var geoFactory = null;
+     var rowMap = {};
+     var intersectPoint = __g.new_Vector3;
+
+     window.onload = function () {
+         initialize();
+     }
+
+     function initialize() {
+         //初始化三维控件
+         initAxControl();
+
+         // 加载FDB场景
+         loadFdb("community.FDB");
+
+         __g.interactMode = gviInteractMode.gviInteractSelect;
+         __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectAll;
+         __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+     }
+
+     /// <summary>
+     /// 开始绘制线段
+     /// </summary>
+     /// <param name="sender"></param>
+     /// <param name="e"></param>
+     function btn_createLine_Click() {
+
+         lbl.innerHTML = "请在三维窗口中点两个点构造一条线";
+         __g.featureManager.unhighlightAll();
+         flagx = true;
+         if (renderPolyline != null) {
+             __g.objectManager.deleteObject(renderPolyline.guid);
+             renderPolyline = null;
+         }
+         if (polyline != null) {
+             polyline = null;
+         }
+         if (geoFactory == null) {
+             geoFactory = __g.geometryFactory;
+         }
+         if (polyline == null) {
+             polyline = geoFactory.createGeometry(gviGeometryType.gviGeometryPolyline, gviVertexAttribute.gviVertexAttributeZ);
+         }
+     }
+
+     /// <summary>
+     /// 鼠标点击 拾取线段点
+     /// </summary>
+     /// <param name="PickResult"></param>
+     /// <param name="IntersectPoint"></param>
+     /// <param name="Mask"></param>
+     /// <param name="EventSender"></param>
+     function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+         if (intersectPoint == null)
+             return;
+
+         if (renderPolyline == null) {
+             renderPolyline = __g.objectManager.createRenderPolyline(polyline, null, __rootId);
+         }
+
+         if (polyline.pointCount < 2) {
+             var fde_point = geoFactory.createGeometry(gviGeometryType.gviGeometryPoint,
+                           gviVertexAttribute.gviVertexAttributeZ);
+             fde_point.setCoords(intersectPoint.x, intersectPoint.y, intersectPoint.z, 0, 0);
+             polyline.appendPoint(fde_point);
+         }
+         if (polyline.pointCount == 2) {
+             __g.interactMode = gviInteractMode.gviInteractNormal;
+             __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectNone;
+             __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+
+             var p = polyline.startPoint;
+             startXX = p.x.toString();
+             startYY = p.y.toString();
+             startZZ = p.z.toString();
+             startX.innerHTML = "X:" + p.x.toString();
+             startY.innerHTML = "Y:" + p.y.toString();
+             startZ.innerHTML = "Z:" + p.z.toString();
+             p = polyline.endPoint;
+             endXX = p.x.toString();
+             endYY = p.y.toString();
+             endZZ = p.z.toString();
+             endX.innerHTML = "X:" + p.x.toString();
+             endY.innerHTML = "Y:" + p.y.toString();
+             endZ.innerHTML = "Z:" + p.z.toString();
+             flagx = false;
+             lbl.innerHTML = "线构造成功!请点击“通视分析”按钮";
+             btnFlyToSourcePoint.enabled = true;
+             btnFlyToTargetPoint.enabled = true;
+         }
+         renderPolyline.setFdeGeometry(polyline);
+     }
+
+     // 通视分析核心功能
+     function btn_Analize_Click() {
+         if (polyline != null) {
+             btn_analyse.enabled = false;
+             btn_createLine.enabled = false;
+             btnFlyToSourcePoint.enabled = false;
+             btnFlyToTargetPoint.enabled = false;
+
+             var cursor = null;
+             try {
+                 __g.featureManager.unhighlightAll();
+                 var row = null;
+                 var index = 0;
+                 document.title = "开始粗查询";
+                 for (var f in __fcMap) {
+                     var fc = __fcMap[f];
+                     var filter = __g.new_SpatialFilter;
+                     filter.geometry = polyline;
+                     filter.spatialRel = gviSpatialRel.gviSpatialRelEnvelope;
+                     filter.geometryField = "Geometry";
+                     cursor = fc.search(filter, false);
+                     document.title = "开始细查询";
+                     while ((row = cursor.nextRow()) != null) {
+                         index = index + 1;
+                         var geometryIndex = -1;
+                         geometryIndex = row.fieldIndex("Geometry");
+                         if (geometryIndex != -1) {
+                             var modelPoint = row.getValue(geometryIndex);
+                             var model = fc.featureDataSet.getModel(modelPoint.modelName);
+                             var gc = __g.geometryConvertor;
+                             document.title = "正在计算第" + index + "个IMultiTriMesh是否与线相交";
+                             var triMesh = gc.modelPointToTriMesh(model, modelPoint, false);
+
+                             if (triMesh != null) {
+                                 var l = geoFactory.createGeometry(gviGeometryType.gviGeometryLine, gviVertexAttribute.gviVertexAttributeZ);
+                                 l.startPoint = polyline.startPoint;
+                                 l.endPoint = polyline.endPoint;
+                                 var v3 = triMesh.lineSegmentIntersect(l);
+                                 if (v3 != null) {
+                                     var fid = "";
+                                     var fName = "";
+                                     var groupId = "";
+                                     var env = null;
+                                     var fidPos = row.fieldIndex(fc.fidFieldName);
+                                     __g.featureManager.highlightFeature(fc, row.getValue(fidPos), 0xffff00ff);
+                                     for (var i = 0; i < row.fieldCount; i++) {
+                                         var fieldName = row.fields.get(i).name;
+                                         if (row.fields.get(i).name == "oid") {
+                                             fid = row.getValue(i);
+                                         }
+                                         else if (row.fields.get(i).name == "groupid") {
+                                             groupId = row.getValue(i);
+                                         }
+                                         else if (row.fields.get(i).name == "Name") {
+                                             fName = row.getValue(i);
+                                         }
+                                         else if (row.fields.get(i).name == "Geometry") {
+                                             var geometry = row.getValue(i);
+                                             env = geometry.envelope;
+                                         }
+                                     }
+
+                                     var ro = new Object();
+                                     ro.fid = fid;
+                                     ro.groupId = groupId;
+                                     ro.name = fName;
+                                     ro.featureClass = fc;
+                                     ro.envelop = env;
+
+                                     rowMap[ro.fid] = ro;
+                                 }
+                             }
+                         }
+                     }
+                 }
+                 document.title = "通视分析完成！";
+
+                 if (rowMap != null) {
+                     var strTbody = ["<table class='featureInfo' style=' border:1px solid;'><tbody>"];
+                     strTbody.push("<tr>");
+                     strTbody.push("<td>" + "OID" + "</td>");
+                     strTbody.push("<td>" + "NAME" + "</td>");
+                     strTbody.push("</tr>");
+                     var i = 0;
+                     for (var rm in rowMap) {
+                         i += 1;
+                         strTbody.push("<tr>");
+                         strTbody.push("<td>" + rowMap[rm].fid + "</td>");
+                         strTbody.push("<td>" + rowMap[rm].name + "</td>");
+                         strTbody.push("</tr>");
+                     }
+                     strTbody.push("</tbody></table>");
+                     zhedangwu.innerHTML = strTbody.join("");
+                 }
+                 lbl.innerHTML = "共有" + i + "个障碍物";
+                 btn_analyse.enabled = true;
+                 btn_createLine.enabled = true;
+                 btnFlyToSourcePoint.enabled = true;
+                 btnFlyToTargetPoint.enabled = true;
+             }
+             catch (ex) {
+                 //alert(ex.Message);
+             }
+             finally {
+                 if (cursor != null) {
+                     cursor = null;
+                 }
+             }
+         }
+     }
+
+     /// <summary>
+     /// 飞入观察点
+     /// </summary>
+     /// <param name="sender"></param>
+     /// <param name="e"></param>
+     function btnFlyToSourcePoint_Click() {
+         if (startXX != "" && startYY != "" && startZZ != ""
+                    && endXX != "" && endYY != "" && endZZ != "") {
+             var position1 = __g.new_Vector3;
+             position1.set(startXX, startYY, startZZ);
+             var position2 = __g.new_Vector3;
+             position2.set(endXX, endYY, endZZ);
+             var angle = __g.new_EulerAngle;
+             angle = __g.camera.getAimingAngles(position1, position2);
+             __g.camera.lookAt(position1, 0, angle);
+         }
+     }
+
+     /// <summary>
+     /// 飞入目标点
+     /// </summary>
+     /// <param name="sender"></param>
+     /// <param name="e"></param>
+     function btnFlyToTargetPoint_Click() {
+         if (startXX != "" && startYY != "" && startZZ != ""
+                    && endXX != "" && endYY != "" && endZZ != "") {
+             var position1 = __g.new_Vector3;
+             position1.set(endXX, endYY, endZZ);
+             var position2 = __g.new_Vector3;
+             position2.set(startXX, startYY, startZZ);
+             var angle = __g.new_EulerAngle;
+             angle = __g.camera.getAimingAngles(position1, position2);
+             __g.camera.lookAt(position1, 0, angle);
+         }
+     } 
+ </script>
+</html>

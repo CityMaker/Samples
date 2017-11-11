@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>SYS</title>
+</head>
+
+<body>
+<button onclick="openWindow()">打开全屏网页窗口</button>
+<button onclick="closeWindow()">关闭窗口</button>
+</body>
+</html>
+<script type="application/javascript">
+
+function openWindow(){
+	var g = new ActiveXObject("GcmRenderControl.RenderControl");
+	g.browserComp.monitorX = 1;
+	
+	var i = location.href.lastIndexOf('/');
+	var strURL = location.href.substring(0, i+1) + "HTMLWindow.html";
+	g.browserComp.open(strURL);
+}
+
+function closeWindow(){
+	var g = new ActiveXObject("GcmRenderControl.RenderControl");
+	g.browserComp.close();	
+}
+
+</script>

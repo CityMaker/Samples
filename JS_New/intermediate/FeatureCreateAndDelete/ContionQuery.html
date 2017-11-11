@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>查询条件</title>
+    <style type="text/css">
+        #Select1
+        {
+            width: 374px;
+        }
+        
+        .style2
+        {
+            width: 227px;
+        }
+        
+    </style>
+    <link href="css/openDialog.css" rel="Stylesheet" type="text/css" />
+  <!--  <script type="text/javascript" src="../../cm7_sample_util.js" />-->
+    <script type="text/javascript">
+        var objwind = null;
+      
+        function InitCombo() {
+            objwind = window.dialogArguments;
+            queryFields();
+        }
+        function setfilter(obj) {
+            var txtFilter = document.getElementById("txtFilter");
+             //var txtFilter = $("txtFilter");
+           
+             txtFilter.value += " "+document.getElementById(obj).value;
+         }
+
+        function queryFields() {
+            var ds = objwind.__g.dataSourceFactory.openDataSource(objwind.ci);
+            var fdsNames = ds.getFeatureDatasetNames();
+            if (fdsNames.length == 0)
+                return;
+            var dataset = ds.openFeatureDataset(fdsNames[0]);
+
+            var  fc = dataset.openFeatureClass(objwind.selfc.innerText);
+          
+            var filter = objwind.__g.new_QueryFilter;
+            var nCount = fc.getCount(filter);
+            if(nCount == 0)
+                 return;
+
+            var fieldinfos = fc.getFields();
+            var txtfiledValue = document.getElementById("filedValue");
+            //var txtfiledValue = $("filedValue");
+            var strvalue="";
+            for (var i = 0; i < fieldinfos.count; i++)
+            {
+                var fieldinfo = fieldinfos.get(i);
+         
+                if (null == fieldinfo||fieldinfo.fieldType==99)
+                    continue;
+                 strvalue = fieldinfo.name;
+                 if(txtfiledValue.value.toString().indexOf(strvalue)<0)
+                 {  
+                      txtfiledValue.value += strvalue+ "\n";
+                 }
+            }  
+        }
+
+         function QueryOK() {
+             objwind.ContionQuery(txtFilter.value);
+             window.close();
+         }
+
+         function Cancel() {
+             window.close();
+         }
+
+         function getline() {
+             var txtfiledValue = document.getElementById("filedValue");
+//             var txtfiledValue = $("filedValue");
+             txtfiledValue.focus();
+             var r1 = document.body.createTextRange();
+             var r2 = document.body.createTextRange();
+             var s = document.selection.createRange();
+             var re = txtfiledValue.createTextRange().getClientRects();
+             var t = s.getBoundingClientRect().top;
+             for (i = 0; i < re.length; i++)
+                 if (re[i].top >= t||r2.text=="")
+                     break;
+             r2.moveToPoint(re[i].left, re[i].top);
+             r1.setEndPoint("StartToStart", r2);
+             r2.moveToPoint(re[i].left, re[i].bottom);
+             r1.setEndPoint("EndToEnd", r2);
+
+//             var txtFilter = $("txtFilter");
+             var txtFilter = document.getElementById("txtFilter");
+             txtFilter.value += r1.text+" ";
+         }
+    </script>
+</head>
+
+<body onload="InitCombo()">
+<table border="1" cellspacing="0" cellpadding="0" style="width: 452px">
+	 <tr>
+	  <td  style="border:1" class="style2">
+        <textarea id="filedValue" onselect=""  ondblclick="getline()" readonly="true" style="height: 81px; width: 240px; margin-left: 6px"></textarea>
+          </td>
+		<td align=left style="width:150px;border:1">
+          <input type="button" id="1" value="=" onClick="setfilter(1)" class="btnStyle1"> 
+          <input type="button" id="2" value="<>" onClick="setfilter(2)" class="btnStyle1"> 
+          <input type="button" id="3" value='""' onClick="setfilter(3)" class="btnStyle1"> 
+          <input type="button" id="5" value=">" onClick="setfilter(5)" class="btnStyle1"> 
+          <br/>
+          <input type="button" id="6" value=">=" onClick="setfilter(6)" class="btnStyle1"> 
+          <input type="button" id="7" value="<" onClick="setfilter(7)" class="btnStyle1"> 
+          <input type="button" id="4" value="()" onClick="setfilter(4)" class="btnStyle1"> 
+          <input type="button" id="9" value='And' onClick="setfilter(9)" class="btnStyle1"> 
+          <br/>
+          <input type="button" id="10" value='Or' onClick="setfilter(10)" class="btnStyle1"> 
+          <input type="button" id="14" value='Like' onClick="setfilter(14)" class="btnStyle1"> 
+          <input type="button" id="8" value="<=" onClick="setfilter(8)" class="btnStyle1"> 
+          <input type="button" id="16" value='%' onClick="setfilter(16)" class="btnStyle1"> 
+          <br/>
+    </td>
+
+	</tr>
+</table>
+<p>
+</p>
+  <input type="text" id="txtFilter" style="height: 57px; width: 450px"/> 
+<p>
+</p>
+
+<input  type="button" name="Submit1" value="确定" onClick="QueryOK()" class="btnStyle"/>
+<input type="button" name="Submit2" value="取消" onClick="Cancel()" class="btnStyle"/>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]>
+	<html class="ie6" lang="zh-cn">
+<![endif]-->
+<!--[if IE 7 ]>
+	<html class="ie7" lang="zh-cn">
+<![endif]-->
+<!--[if IE 8 ]>
+	<html class="ie8" lang="zh-cn">
+<![endif]-->
+<!--[if IE 9 ]>
+	<html class="ie9" lang="zh-cn">
+<![endif]-->
+<!--[if (gt IE 9)|!(IE)]>
+	<html class="" lang="zh-cn">
+<![endif]-->
+	<head>
+		<meta charset="utf-8" />
+		<title>消防水压监测总体情况</title>
+	</head>
+	<script type="text/javascript">
+		var buildNum = "";
+		var winId = null;
+		function init(){
+			fnGetBuildNum();
+			setShowHidden();
+			
+		}
+		function setShowHidden(){
+			
+		}
+		
+		function fnGetBuildNum(){
+			var url = window.location.href;
+			var arr = url.split("?");
+			if(arr && arr.length>1){
+				var arr1 = arr[1].split("&");
+				for(var i in arr1){
+					if(arr1[i].indexOf("buildNum")>-1){
+						var arr2 = arr1[i].split("=");
+						buildNum = parseInt(arr2[1]);
+					}
+					if(arr1[i].indexOf("winId")>-1){
+						var arr2 = arr1[i].split("=");
+						winId = parseInt(arr2[1]);
+					}
+				}
+			}
+		}
+	</script>
+	<body onload="init()" onselectstart="return false;">
+		<div class="cars">
+			<h2 id="ControlTitlebar"><span id="infor">园区整体</span>
+				<span class="gisclose">
+					<!-- <a href="#"><img id="ButtonClose" src="../../img/close.png" onclick=""></a>-->
+				</span>
+			</h2>
+			<div class="content">
+				<table>
+					<tr id="tr1">
+						<td class="car1">喷淋末端水压</td>
+						<td class="car2">
+							<span class="num" id="s2w">0</span>
+							<span id="s2">/0</span>个
+						</td>
+					</tr>
+					<tr id="tr2">
+						<td class="car1">室内消防栓水压</td>
+						<td>
+							<span class="num" id="s1w" >0</span>
+							<span id="s1">/0</span>个
+						</td>
+					</tr>
+					<tr id="tr3">
+						<td class="car1">室外消防栓水压</td>
+						<td>
+							<span class="num" id="s3w" >0</span>
+							<span id="s3">/0</span>个
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</body>
+</html>

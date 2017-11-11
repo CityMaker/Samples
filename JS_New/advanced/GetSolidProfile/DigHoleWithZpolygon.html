@@ -1,0 +1,281 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>剖切地质模型</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="text/javascript" src="../../cm7.js"></script>
+	<script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+    <div style="height: 30px;">
+        <input id="splitCubeModelWithZ" type="button" onclick="splitCubeModelWithZ()" value="地质模型剖切" />
+        <input id="cleanSplit" type="button" onclick="cleanSplit()" value="清除剖切" />
+    </div>
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 750px; width: 1200px"></object>
+    </div>
+</body>
+
+<script type="text/javascript">
+    var minZ = 0;//剖分最低高度
+    var maxZ = 0;//剖分最高高度；剖分模型在这个最低与最高Z值范围内进行
+    var renderModelA;
+    var renderPolygonA;
+    var selectedFeature;
+    var strechResult;
+    var polmodelSymbol;
+    var renderpolygon;
+    var renderpolygonDraw=null;
+    var PolygonList = new Array();
+    var RenderPolygonList = new Array();
+    var RenderMPInteriorList = new Array();
+    var RenderMPExteriorList = new Array();
+    var RenderMPProfileList = new Array();
+    var currentGeometry = null;
+    var currentRenderGeometry = null;
+    var __dataspatialCRS;
+    window.onload = function () {
+        Initialize();
+    }
+    function Initialize() {
+        //初始化三维控件
+        initAxControl();		
+        // 加载场景
+        loadFdb("ClosedTrimesh.FDB");
+        __g.new_LicenseServer.setHost("192.168.2.200", 8588, "")
+        __dataspatialCRS = __fds.spatialReference;
+    }
+    function splitCubeModelWithZ() {
+       if (renderpolygonDraw != null)
+            {
+               __g.objectManager.deleteObject(renderpolygonDraw.guid);
+                renderpolygonDraw = null;
+            }
+            polygonDraw = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPolygon, gviVertexAttribute.gviVertexAttributeZ);
+            polygonDraw.spatialCRS = __dataspatialCRS;
+            var sf =  __g.new_SurfaceSymbol;;
+            sf.color = 0x55ffff80;
+            cs = __g.new_CurveSymbol;
+            cs.color = 0x55ffff80;
+            sf.boundarySymbol = cs;
+            renderpolygonDraw = __g.objectManager.CreateRenderPolygon(polygonDraw,sf,__rootId);
+            __g.interactMode = gviInteractMode.gviInteractEdit;
+            __g.objectEditor.startEditRenderGeometry(renderpolygonDraw, gviGeoEditType.gviGeoEditCreator);
+    }
+    
+    
+    function onObjectEditing(geometry) {
+        currentGeometry = geometry;
+    }    
+   
+    function onObjectEditFinish() {
+        
+         __g.interactMode = gviInteractMode.gviInteractNormal;
+            polygonDraw = currentGeometry;
+            //抬高一点
+            for (var i = 0;i < polygonDraw.exteriorring.pointCount; i++)
+            {
+                var pointOnExr = polygonDraw.exteriorRing.getPoint(i).clone();
+                pointOnExr.z += 1;
+               var ss= polygonDraw.exteriorRing.updatePoint(i, pointOnExr);
+           }
+            renderpolygonDraw.setFdeGeometry(polygonDraw);
+            renderpolygonDraw.visibleMask = gviViewportMask.gviViewNone;
+
+            var height = 0.0;
+            //构造底面polygon
+            var polygonBottom = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPolygon, gviVertexAttribute.gviVertexAttributeZ);
+            polygonBottom.spatialCRS = __dataspatialCRS;
+            for (var j = 0; j < polygonDraw.exteriorRing.pointCount; j++)
+            {
+                var pointOnExr = polygonDraw.exteriorRing.getPoint(j).clone();
+                var fde_point = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+                fde_point.setCoords(pointOnExr.x, pointOnExr.y, pointOnExr.z, 0, 0);
+                maxZ = pointOnExr.z;
+                pointOnExr.z -= height;
+                minZ = pointOnExr.z;
+                polygonBottom.exteriorRing.appendPoint(fde_point);
+            }
+            polygonBottom.close();
+            PolygonList.push(polygonBottom);
+            //CreateRenderPolygon(polygonBottom
+                //构造侧面polygon            
+            for (var a = 0; a < polygonDraw.exteriorRing.pointCount; a++)
+            {
+                var point1 = polygonDraw.exteriorRing.getPoint(a).clone();
+                var pointOnExr = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+                point1.z -= height;
+                pointOnExr.setCoords(point1.x, point1.y, point1.z, 0, 0);
+
+                var point2 = null;
+                var pointOnExr2 = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+
+                if (a == polygonDraw.exteriorRing.pointCount - 1) {
+                    point2 = polygonDraw.exteriorRing.getPoint(0).clone();
+                    pointOnExr2.setCoords(point2.x, point2.y, point2.z, 0, 0);
+                }
+                else {
+                    point2 = polygonDraw.exteriorRing.getPoint(a + 1).clone();
+                    point2.z -= height;
+                    pointOnExr2.setCoords(point2.x, point2.y, point2.z, 0, 0);
+                }
+                var point3 = polygonDraw.exteriorRing.getPoint(a);
+                var pointOnExr3 = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+                pointOnExr3.setCoords(point3.x, point3.y, point3.z, 0, 0);
+                var polygonTemp = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPolygon, gviVertexAttribute.gviVertexAttributeZ);
+                polygonTemp.exteriorRing.appendPoint(pointOnExr3);
+                polygonTemp.exteriorRing.appendPoint(pointOnExr);
+                polygonTemp.exteriorRing.appendPoint(pointOnExr2);
+
+                if (i == polygonDraw.exteriorRing.pointCount - 1)
+                    polygonTemp.exteriorRing.appendPoint(pointOnExr2);
+                else
+                    polygonTemp.exteriorRing.appendPoint(pointOnExr2);
+                polygonTemp.close();
+                PolygonList.push(polygonTemp);
+                //CreateRenderPolygon(polygonTemp);
+            }
+                var list = new Array();
+            var filter =  __g.new_SpatialFilter;
+            filter.geometry = polygonDraw;
+            filter.spatialRel = gviSpatialRel.gviSpatialRelEnvelope;
+            filter.geometryField = "Geometry";
+            var row = null;
+            var cursor = __fc.search(filter, false);
+            while ((row = cursor.nextRow()) != null)
+            {
+                list.push(row);
+            }
+            for (var k = 0; k < list.length; k++)  //  foreach (IRowBuffer r in list)
+            {
+                var r= list[k];
+                __fid = r.getValue(0);
+                var geometryIndex = -1;
+                geometryIndex = r.fieldIndex("Geometry");
+                var nameIndex = -1;
+                nameIndex = r.fieldIndex("Name");
+                if (geometryIndex != -1)
+                {
+                    
+                    // 获取ModelPoint
+                    var mp = r.getValue(geometryIndex);
+
+                    // 获取Model
+
+                    var modelName = mp.modelName;
+                    var  m =__fds.getModel(modelName);
+                    var gc = __g.geometryConvertor;
+                    //Logger.WriteMsg(LogLevel.Message, "---------开始ModelPointToTriMesh----------", DateTime.Now);
+                    // 获取MultiTriMesh                    
+                    var multiTM = gc.modelPointToTriMesh(m, mp, false);
+                   // Logger.WriteMsg(LogLevel.Message, string.Format("---------完成ModelPointToTriMesh:{0}----------", multiTM.GeometryCount), DateTime.Now);
+
+                    // 获取Name
+                    var strName = r.getValue(nameIndex).toString();
+                    for (var b = 0; b < multiTM.geometryCount; b++)
+                    {
+                        var tm = multiTM.getGeometry(b);
+                        //if (!tm.IsClosed)
+                        //    continue;
+
+                        // 生成剖面
+                        for (var p = 0; p < PolygonList.count; p++ )
+                        {
+                            var curPolygon = PolygonList[p];
+                           // Logger.WriteMsg(LogLevel.Message, string.Format("TM:{0} PG:{1}", i, p), DateTime.Now);
+                            if (gc.getSolidProfile(tm, curPolygon,multiPolygon))
+                            {
+                               // Logger.WriteMsg(LogLevel.Message, string.Format("TM:{0} PG:{1} TRUE", i, p), DateTime.Now);
+                                if (multiPolygon != null && multiPolygon.geometryCount > 0)
+                                {
+                                    for (var j = 0; j < multiPolygon.geometryCount; j++)
+                                    {
+                                        var tm2 = multiPolygon.getGeometry(j);
+                                        //RenderPolygonList.push(CreateRenderPolygon(tm2));
+                                        var cs = __g.new_CurveSymbol;
+                                        cs.color = 0;
+                                        var ss = __g.new_SurfaceSymbol();
+                                        ss.boundarySymbol = cs;
+                                        var cMaterial = m.getGroup(0).getPrimitive(0).material.diffuseColor;
+                                        ss.color =cMaterial | 255 << 24;
+                                        var tmPolygon =__g.objectManager.createRenderPolygon(tm2, ss, __rootId);
+                                        tmPolygon.setClientData("Name", strName);
+                                        RenderPolygonList.push(tmPolygon);
+                                                                  
+                                    }
+                                }
+                            }
+                        }//遍历PolygonList结束                        
+
+                    }//遍历multiTM结束      
+                    //去掉内环模型
+                    __fl.visibleMask = gviViewportMask.gviViewNone;
+                   
+                    var mltiPolygon = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryMultiPolygon, gviVertexAttribute.gviVertexAttributeZ);
+                    mltiPolygon.addGeometry(polygonDraw);
+                    //Logger.WriteMsg(LogLevel.Message, "---------开始SplitModelPointByPolygon2DWithZ----------", DateTime.Now);
+                    var split = gc.splitModelPointByPolygon2DWithZ(mltiPolygon, m, mp, minZ,maxZ);
+                    var modelInterior = split.modelInterior;
+                    var mpInterior =split.modelPointInterior ;
+                    var rmpInterior = null;
+                    var modelExterior = split.modelExterior;
+                    var mpExterior = split.modelPointExterior;
+                    var rmpExterior = null;
+                    if (split) {
+                        // Logger.WriteMsg(LogLevel.Message, "SplitModelPointByPolygon2DWithZ返回值为TRUE", DateTime.Now);
+                        if (modelExterior != null && mpExterior != null) {
+                            __g.objectManager.addModel(mpExterior.modelName, modelExterior);
+                            var imagenames = modelExterior.getImageNames();
+                            for (var q = 0; q < imagenames.length; q++) {
+                                var image = __fc.getImage(imagenames[q]);
+                                __g.objectManager.addImage(imagenames[q], image);
+                            }
+                            rmpExterior = __g.objectManager.createRenderModelPoint(mpExterior, null, __rootId);
+                            RenderMPExteriorList.push(rmpExterior);
+                        }
+                        if (modelInterior != null && mpInterior != null) {
+                            __g.objectManager.addModel(mpInterior.modelName, modelInterior);
+                            var imagenames = modelInterior.getImageNames();
+                            for (var m = 0; m < imagenames.length; m++) {
+                                var image = __fds.getImage(imagenames[m]);
+                                __g.objectManager.addImage(imagenames[m], image);
+                            }
+                            rmpInterior = __g.objectManager.createRenderModelPoint(mpInterior, null, __rootId);
+                            rmpInterior.visibleMask = gviViewportMask.gviViewNone;
+                            RenderMPInteriorList.push(rmpInterior);
+                        }
+                    }
+                }
+            }//遍历RowBufferList结束
+            //MessageBox.Show("执行成功");
+
+    }
+
+    
+
+    function cleanSplit() {
+        if (renderModelA.length != 0) {
+            for (var i = 0; i < renderModelA.length; i++) {
+                __g.objectManager.deleteObject(renderModelA[i]);
+            }
+            renderModelA.splice(0, renderModelA.length);
+        }
+        if (renderPolygonA.length != 0) {
+            for (var j = 0; j < renderPolygonA.length; j++) {
+                __g.objectManager.deleteObject(renderPolygonA[j]);
+            }
+            renderPolygonA.splice(0, renderPolygonA.length);
+        }
+
+        __g.featureManager.resetAllVisibleMask();
+
+        __g.interactMode = gviInteractMode.gviInteractNormal;
+    }
+
+
+
+
+</script>
+
+</html>
+</script>

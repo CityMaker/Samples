@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>SightlineAnalysis</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util_globe.js"></script>
+    <style type="text/css">
+        *{ margin:0px;}
+        p{ font-size:12px;}
+        #lbl{ color:Red; font-size:12px;}
+        input {font-size:12px;}
+        #zb{ float: left;}
+       #zhedangwu{float: left; border:1px solid;}
+       #oj{ float: right;}
+    </style>
+</head>
+<body>
+   <div>
+	   <button onclick="captureScreen()"> CaptureScreen</button>
+   </div>
+    <div id="oj">
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+        </object>
+    </div>
+</body>
+ <script type="text/javascript">
+     var __g = document.getElementById("renderControl");
+
+     window.onload = function () {
+         initialize();
+     }
+     
+     function initialize() {
+         //初始化三维控件
+         initAxControl();
+
+         // 加载FDB场景
+         loadFdb("SDKDEMO.FDB");
+
+		//注册地形        
+         var tmpTedPath = getSamplesRelatePath("") + "\\terrain\\SingaporeGlobeTerrain.ted";
+        __g.terrain.registerTerrain(tmpTedPath, "");
+        __g.terrain.flyTo(0);
+
+
+        __g.interactMode = gviInteractMode.gviInteractSelect;
+        __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectAll;
+        __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+        
+     }
+
+     function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+         if (pickResult.type == gviObjectType.gviObjectTerrainArrow) {                 
+            var type = pickResult.type;
+            var ta = pickResult.terrainArrow;
+//            var posss = ta.position;
+//            posss.heading += 45;
+//            ta.position = posss;
+            ta.headY += 0.0001;
+            alert("拾取到" + type + "类型");
+        }
+        else if (pickResult.type == gviObjectType.gviObjectTerrainCircle)
+         {
+             var type = pickResult.type;
+             var ta = pickResult.terrainCircle;
+             var posss = ta.position;
+             posss.heading += 45;
+             ta.position = posss;
+             alert("拾取到" + type + "类型,nums of segments is " + ta.numberOfSegments);
+         }
+         else if(pickResult.type == gviObjectType.gviObjectTerrainCylinder)
+         {
+             var type = pickResult.type;
+             var ta = pickResult.terrainCylinder;
+             var posss = ta.position;
+             posss.heading += 45;
+             ta.position = posss;
+             alert("拾取到" + type + "类型,nums of segments is " + ta.numberOfSegments);
+         }
+         else if (pickResult.type == gviObjectType.gviObjectTerrain)
+         {
+             var posss = __g.new_Position;
+             posss.init(intersectPoint.x, intersectPoint.y, 10, 0, 0, 0, 4);
+             var arrow = __g.objectManager.createArrow(posss, 30, 4, 0xffff0000, 0x5500ff00, __rootId);
+             var fill = __g.new_FillStyle;
+             var texture = __g.new_ObjectTexture;
+             texture.fileName = "C:\\CM703\\DeveloperKit7.0.3.1\\SDK\\Samples\\Media\\png\\huang.png"; ;
+             fill.texture = texture;
+             //arrow.fillStyle = fill;
+             var line = __g.new_LineStyle;
+             line.width = 2;
+             line.color = 0xff000000;
+             line.backColor = 0xffffffff;
+             line.pattern = 1;
+             arrow.lineStyle = line;
+             __g.camera.flyToObject(arrow.guid, 0);
+
+             posss.altitude = 20;
+             var circle = __g.objectManager.createCircle(posss, 10, 0xffff0000, 0x550000ff, __rootId);
+
+             posss.altitude = 30;
+             var cylinder = __g.objectManager.createCylinder(posss, 10, 5, 0xffff0000, 0x550099ff, 20, __rootId);
+         }       
+
+     }
+
+	/*
+    *	出图
+    */
+     function captureScreen() {
+        var higquality = false;
+        var b = __g.exportManager.exportImage("", 2048, 2048, higquality);
+        if (!b) {
+            alert("Capture Screen Failed, Please check it.");
+        }
+    }
+ </script>
+</html>

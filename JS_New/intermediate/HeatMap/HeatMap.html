@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+     <title>HeatMap</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+    
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+        </object>
+    </div>
+</body>
+     <script type="text/javascript">
+         var __g = document.getElementById("renderControl");
+         
+         var __fcMap = {};
+         var __fcGeoMap = {};
+         
+
+		 window.onload = function () {
+			 Initialize();
+		 }
+         
+         function Initialize() {
+             //初始化三维控件
+             initAxControl();
+             loadFdb("SDKDEMO.FDB");
+             var projectWKT = __g.getCurrentCrsWKT();
+             __projectSpatialCRS = __g.crsFactory.createFromWKT(projectWKT);
+             if (__projectSpatialCRS.isProjected() || __projectSpatialCRS.isUnknown()) {
+                 var tmpTedPath = getSamplesRelatePath("") + "\\terrain\\SingaporePlanarTerrain.ted";
+                 __g.terrain.registerTerrain(tmpTedPath, "");
+             }
+             else if (__projectSpatialCRS.isGeographic()) {
+                 var tmpTedPath = getSamplesRelatePath("") + "\\terrain\\SingaporeGlobeTerrain.ted";
+                 __g.terrain.registerTerrain(tmpTedPath, "");
+             }
+            
+             var Point1 = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+             Point1.setCoords(15221.93, 35324.95, 756.53, 0, 0);
+             Point1.spatialCRS = __projectSpatialCRS;
+             var ang = __g.new_EulerAngle;
+             ang.heading = 0;
+             ang.roll = -50;
+             ang.tilt = -50;
+             __g.camera.flyTime = 0;
+             __g.viewport.activeView = 0;
+             __g.camera.lookAt2(Point1, 50, ang);
+
+             var c = __g.new_ConnectionInfo;
+             c.connectionType = gviConnectionType.gviConnectionFireBird2x;
+             c.database = getSamplesRelatePath("/HeatMap.FDB");
+             var flRet = [];
+             var ds = __g.dataSourceFactory.openDataSource(c);
+              var fdsNames = ds.getFeatureDatasetNames();
+            if (fdsNames.length == 0)
+            return flRet;
+             var fds = ds.openFeatureDataset(fdsNames[0]);
+            var fcNames = fds.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+             if (fcNames.length == 0)
+            return flRet;
+
+              for (var i = 0; i < fcNames.length; i++) {
+                 var fc = fds.openFeatureClass(fcNames[i]);
+                 var fl = __g.objectManager.createHeatMap(fc, "Geometry", "HotValue", '');
+			    if(fl)
+				    flRet.push(fl);
+			}
+			var startTime=("2009/10/24 8:00:00");
+            var endTime=("2009/10/24 22:00:00");
+            __g.heatMapPlayer.startPlay(startTime, endTime, 15);
+           
+         }
+         
+     </script>
+</html>

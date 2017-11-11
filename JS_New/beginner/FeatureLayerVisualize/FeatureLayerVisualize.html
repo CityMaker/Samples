@@ -1,0 +1,187 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>FeatureLayerVisualize</title>
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+
+<body style="margin:0px;scroll:no"  >   
+<div id="tree" style="float:left;">
+</div>    
+<div style="float:left">
+    <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object>
+</div>
+</body>
+
+<script type="text/javascript">
+     
+    
+    
+    var fclst ={};  // 存储<featurelayer.Guid, featurelayer>
+    var flEnv ={};  // 存储<featurelayer.Guid, featurelayer.envelope>
+    
+     window.onload = function () {
+         initialize();
+     }
+    
+    function initialize() {
+        //初始化三维控件
+        initAxControl();
+
+        // 可视化Point类型FeatureLayer
+       {
+            var c = __g.new_ConnectionInfo;
+            c.connectionType = gviConnectionType.gviConnectionFireBird2x;
+            
+            c.database = getSamplesRelatePath("") + "/point.FDB";
+            FeatureLayerVisualize(c, true, "Point");
+        }
+        // 可视化Polyline类型FeatureLayer 
+       {
+            var c = __g.new_ConnectionInfo;
+            c.connectionType = gviConnectionType.gviConnectionFireBird2x;
+            
+            c.database = getSamplesRelatePath("") + "/polyline.FDB";
+            FeatureLayerVisualize(c, false, "Polyline");
+        }
+        // 可视化Polygon类型FeatureLayer
+       {
+            var c = __g.new_ConnectionInfo;
+            c.connectionType = gviConnectionType.gviConnectionFireBird2x;
+            
+            c.database = getSamplesRelatePath("") + "/polygon.FDB";
+            
+            FeatureLayerVisualize(c, false, "Polygon");
+        }                        
+        // 可视化ModelPoint类型FeatureLayer
+        {
+            var c = __g.new_ConnectionInfo;
+            c.connectionType = gviConnectionType.gviConnectionFireBird2x;
+
+            c.database = getSamplesRelatePath("") + "/SDKDEMO.FDB";
+            FeatureLayerVisualize(c, false, "ModelPoint");
+        }
+    }
+ 
+    /*
+     *	设置Featurelayer渲染样式
+     */
+    function FeatureLayerVisualize(ci,needfly,sourceName)
+    {
+        try {
+            var ds = __g.dataSourceFactory.openDataSource(ci);
+            var fdsNames = ds.getFeatureDatasetNames();
+            if (fdsNames.length == 0)
+                return;
+            __fds = ds.openFeatureDataset(fdsNames[0]);
+
+            var fcNames = __fds.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+            if (fcNames.length == 0)
+                return;
+           
+            var __fcMap = {};
+            var __fcGeoMap = {};
+    
+            for (var i = 0; i < fcNames.length; i++) {
+                var fc = __fds.openFeatureClass(fcNames[i]);
+                // 找到空间列字段
+                var __geoNames = [];
+                var fieldinfos = fc.getFields();
+                for (var j = 0; j < fieldinfos.count; j++) {
+                    var fieldInfo = fieldinfos.get(j);
+                    if (fieldInfo == null)
+                        continue;
+                    var geometryDef = fieldInfo.geometryDef;
+                    if (geometryDef == undefined)
+                        continue;
+                    __geoNames.push(fieldInfo.name);
+                }
+                __fcMap[fc.guid] = fc;
+                __fcGeoMap[fc.guid] = __geoNames;
+            }
+
+            // CreateFeautureLayer
+            var hasfly = !needfly;
+            for (var fcGuid in __fcGeoMap) {
+                var fc = __fcMap[fcGuid];
+                var geoNames = __fcGeoMap[fcGuid]; 
+                for (var k = 0; k < geoNames.length; k++) {
+                    var geoName = geoNames[k];
+                    var fl = __g.objectManager.createFeatureLayer(fc, geoName, null, null, __rootId);
+                    fclst[fl.guid] = fl;
+
+                    // 添加节点到界面上
+                    document.getElementById('tree').innerHTML += "<input type='checkbox' checked='true' onclick='SetLayerVisiable(this)' value='" + fl.guid + "'>" + "<a href='#' onclick='SetLayerCamera(this)' value='" + fl.guid + "'>" + sourceName + "_" + fc.name+ "_" + fl.maxVisibleDistance + "</a></br>";
+                                        
+                    var fieldinfos = fc.getFields();
+                    var fieldinfo = fieldinfos.get(fieldinfos.indexOf(geoName));
+                    var geometryDef = fieldinfo.geometryDef;
+                    var env = geometryDef.envelope;
+                    
+                    if (env.maxX == 0.0 && env.maxY == 0.0 && env.maxZ == 0.0 &&
+                        env.minX == 0.0 && env.minY == 0.0 && env.minZ == 0.0)
+                        continue;
+                    flEnv[fl.guid] = env;
+
+                    // 相机飞入
+                    if (!hasfly) {
+                        var pos = __g.new_Vector3;
+                        var ang = __g.new_EulerAngle;
+                        pos.set((env.maxX + env.minX) / 2, (env.maxY + env.minY) / 2, (env.maxZ + env.minZ) / 2);
+                        ang.heading = 0;
+                        ang.tilt = -20;
+                        __g.camera.lookAt(pos, 600, ang);
+                    }
+                    hasfly = true;
+                }
+            }
+        } 
+        catch (e) {
+            exceptionHandler(e);
+        }
+
+    }
+    
+    /*
+     *	定位图层
+     */
+    function SetLayerCamera(obj) {
+		var val = obj.getAttribute("value");
+        if (flEnv == null) return;
+        for (var flGuid in flEnv) {
+            if (flGuid == val) {
+                var env = flEnv[flGuid];
+                if (env) {
+                    var pos = __g.new_Vector3;
+                    var ang = __g.new_EulerAngle;
+                    pos.set((env.maxX + env.minX) / 2, (env.maxY + env.minY) / 2, (env.maxZ + env.minZ) / 2);
+                    ang.heading = 0;
+                    ang.tilt = -20;
+                    __g.camera.lookAt(pos, 600, ang);
+                }
+            }
+        }
+    }
+    
+    /*
+     *	设置图层可见性
+     */
+    function SetLayerVisiable(obj) {
+        if (fclst == null) return;
+        for (var flGuid in fclst) {
+            if (flGuid == obj.value) {
+                var layer = fclst[flGuid]; 
+                if (obj.checked) {
+                    layer.visibleMask = gviViewportMask.gviViewAllNormalView;
+                }
+                else {
+                    layer.visibleMask = gviViewportMask.gviViewNone;
+                } 
+            }
+        }
+    }
+     
+</script>
+</html>

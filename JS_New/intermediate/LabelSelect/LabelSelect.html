@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>LabelSelect</title>
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body style="margin:0px;scroll:no"  > 
+<div style="float:left">         
+   <input type="button" value="切换活动视口" onclick="changeActiveView()"/>
+</div>        
+<div>
+    <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object><!-- object里的style="height: 600px; width: 800px " 必须有，否则无法全页面显示-->
+</div>
+</body>
+<script type="text/javascript">    
+     window.onload = function () {
+         Initialize();
+     }
+	function Initialize() {
+        //初始化三维控件
+        initAxControl();         
+        // 加载场景
+		var cepPath = getSamplesRelatePath("") + "/cep/Package_Label/Label.cep";
+        __g.project.open(cepPath, false, "");
+		__g.camera.flyTime = 1;		
+        //绑定拾取事件
+        //__g.onmouseclickselect = fnMouseClickSelect;	
+		__g.viewport.viewportMode = gviViewportMode.gviViewportL1R2;		
+		var pathID1 =   __g.projectTree.findItem("第三大街");
+		var robj1= __g.objectManager.getObjectById(pathID1);
+		robj1.visibleMask = gviViewportMask.gviView0;		
+		var pathID2 =   __g.projectTree.findItem("滨海新区");
+		var robj2= __g.objectManager.getObjectById(pathID2);
+		robj2.visibleMask = gviViewportMask.gviView1;		
+		__g.viewport.activeView = 2;
+		__g.camera.flyToObject(pathID2, 0);		
+		__g.interactMode = gviInteractMode.gviInteractNormal;
+		__g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+		__g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectLable;
+	}
+
+	function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+        if (pickResult == null)
+            return;
+        if (pickResult != null) {
+            if (pickResult.type == gviObjectType.gviObjectLabel) {
+                alert(pickResult.label.text);
+            }
+        }
+    }
+    function changeActiveView() {
+		__g.viewport.activeView = 0;
+    }     
+</script>
+</html>

@@ -1,0 +1,116 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<style type="text/css">
+   table.featureInfo td,table.featureInfo th{
+        border:1px solid #ddd;
+        border-collapse:collapse;
+        margin:0;
+        padding:0;
+        font-size:90%;
+    }
+
+</style>
+
+<script type="text/javascript">
+    var objwind;
+    function InitTable() {
+    
+        objwind = window.dialogArguments;
+       
+        document.title = objwind.title;
+             
+        var strTbody = objwind.fieldTbody;
+       
+        var obj = document.getElementById("tableDiv");
+        obj.innerHTML = strTbody.join("");
+
+        var ModifyBtn = document.getElementById("ModifyFeature");
+        if (objwind.showOperateBtn) {
+            ModifyBtn.style.display = "";
+        }
+    }
+
+
+    var currentActiveRow;
+    function changeActiveRow(obj) {
+        if (currentActiveRow) currentActiveRow.style.background = "#ffffff";
+        currentActiveRow = obj;
+        currentActiveRow.style.background = "#33CCFF";
+
+    }
+    function closeWind() {
+         window.close();
+    }
+    
+    function editFeature(obj)
+    { 
+        var cell=obj;
+        if(cell.cellIndex==	1)
+        {
+            cell.innerText = newGuid();
+            newValue = cell.innerText;
+        }        
+    }
+    var newValue;
+    function newGuid()
+     {
+         var guid="";
+         for(var i=1;i<=8;i++){
+             var n=Math.floor(Math.random()*16.0).toString(16);
+             guid+=n;
+             if((i==8)||(i==12)||(i==16)||(i==20))
+             {
+                guid+="";
+             }
+             
+         }
+         return guid;
+     }
+    function CommitFeature() {
+        var ds = objwind.__g.dataSourceFactory.openDataSource(objwind.ci);
+        var fdsNames = ds.getFeatureDatasetNames();
+        if (fdsNames.length == 0)
+            return;
+        var dataset = ds.openFeatureDataset(fdsNames[0]);
+
+        var fc = dataset.openFeatureClass(objwind.selfc.innerText);
+        var oid = parseInt(currentActiveRow.cells[0].childNodes[0].nodeValue);
+
+        // 修改数据库中记录
+        var filter = objwind.__g.new_QueryFilter;
+        filter.whereClause = "oid = " + oid;
+        var cursor = fc.update(filter);
+        var fdeRow = null;
+        if ((fdeRow = cursor.nextRow()) != null) {
+            var fieldinfos = fc.getFields();
+            var field;
+            for (var j = 0; j < fieldinfos.count; ++j) {
+                var strColName = fieldinfos.get(j).name;
+                var nPos = fdeRow.fieldIndex(strColName);
+                if (nPos != -1)
+                    field = fdeRow.fields.get(nPos);
+                if (nPos != -1 && strColName != "oid" && strColName != "GroupName" && field.fieldType != 99) {
+                    fdeRow.setValue(nPos, newValue);
+                    break;
+                }
+            }
+            cursor.updateRow(fdeRow);
+        }
+        
+        alert("修改成功");
+    }
+</script>
+<body onload="InitTable()" onunload="closeWind()">
+<div style="float:left"> 
+   <input type="button" value="CommitFeature" id="ModifyFeature" onclick="CommitFeature()" style="display:none"/>
+</div>  
+<br />
+<br />
+<div id="tableDiv">
+</div>
+</body>
+</html>

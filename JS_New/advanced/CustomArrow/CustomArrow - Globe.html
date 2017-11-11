@@ -1,0 +1,342 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>GeometryEdit</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="../../cm7.js"></script>
+<script type="text/javascript" src="../../cm7_sample_util_globe.js"></script>
+<script type="text/javascript" src="CustomArrow.js"></script>
+</head>
+<body>
+
+<input type="button" onclick="btnCreatePolyline()" value="创建RenderPolyline"/>
+<input type="checkbox"  id ="cbBeginEdit" onclick="cbBeginEdit_CheckedChanged()"/>
+退出编辑<br />
+<input type="checkbox"  id="rbMove" onclick="rbMove_CheckedChanged()" />
+平移
+<input type="checkbox" id="rbRotate" onclick="rbRotate_CheckedChanged()" />
+旋转
+<input type="checkbox" id="rbScale" onclick=" rbScale_CheckedChanged()"/>
+缩放
+<input type="checkbox" checked="checked" id="rbVertex" onclick=" rbVertex_CheckedChanged()"/>
+顶点编辑
+<br />
+<br />
+<!--    <input type="button" onclick="btnCreateCustom3DArrow()" value="创建3D箭头"/>   -->
+<input type="button" onclick="btnCreateCurveArrow2D()" value="创建2D箭头"/>
+<input type="button" onclick="btnCreateMultiArrow2D_2()" value="创建2D双箭头"/>
+<input type="button" onclick="btnCreateMultiArrow2D_3()" value="创建2D三箭头"/>
+<div>
+  <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+  </object>
+</div>
+
+<div id="tree" style="float:left;">
+</div> 
+</body>
+<script type="text/javascript">
+
+
+    var __geo;    
+	var rpolyline;
+	var currentGeometry;
+
+	var str=["<ul>"];
+
+     window.onload = function () {
+         Initialize();
+     }
+	 
+    function Initialize() {
+        //初始化三维控件
+        initAxControl();
+
+        // 加载场景
+        loadFdb("community.FDB");
+        
+		__g.onmouseclickselect = RcMouseClickSelect_Edit;
+		__g.onobjecteditfinish = _geoEditor_EditFinish;
+		__g.onobjectediting = _geoEditor_Editing;
+		
+		__g.interactMode = gviInteractMode.gviInteractEdit;		
+		__g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectRenderGeometry;
+		__g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;      
+    }  	 
+	
+	
+    function _geoEditor_EditFinish() {
+		rpolyline.setFdeGeometry(__geo);
+    }
+	
+    function _geoEditor_Editing(Geometry) { 
+        __geo = Geometry;
+    }	
+
+
+	function btnCreatePolyline(){
+		__g.objectEditor.finishEdit();
+
+		__geo = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPolyline, gviVertexAttribute.gviVertexAttributeZ);
+		__geo.spatialCRS = __datasetCRS;
+		rpolyline = __g.objectManager.createRenderPolyline(__geo, null, __rootId);
+		var resultCode = __g.objectEditor.startEditRenderGeometry(rpolyline, gviGeoEditType.gviGeoEditCreator);
+		if(!resultCode)
+			alert(__g.getLastError());
+	}
+     
+    function EditGeometry() {
+        __g.objectEditor.finishEdit();   //用于当拾取到基准面时，或者没有正常右键结束连续调用Start时
+        if (currentGeometry) {
+            var resultCode = true;
+            if (rbMove.checked)
+                resultCode = __g.objectEditor.startEditRenderGeometry(currentGeometry, gviGeoEditType.gviGeoEdit3DMove);
+            else if (rbRotate.checked)
+                resultCode = __g.objectEditor.startEditRenderGeometry(currentGeometry, gviGeoEditType.gviGeoEdit3DRotate);
+            else if (rbScale.checked)
+                resultCode = __g.objectEditor.startEditRenderGeometry(currentGeometry, gviGeoEditType.gviGeoEdit3DScale);
+            else if (rbVertex.checked)
+                resultCode = __g.objectEditor.startEditRenderGeometry(currentGeometry, gviGeoEditType.gviGeoEditVertex);
+            
+            if (!resultCode)
+                alert(resultCode.ToString());
+        }
+    }
+
+     function RcMouseClickSelect_Edit(pickResult, intersectPoint, mask, eventSender) {    
+			if(rpolyline == null){
+				alert("请先点击创建RenderPolyline按钮再编辑");
+				return;
+			}			
+			
+            // 置空
+            currentGeometry = null;
+
+            if (pickResult) {                
+                switch (pickResult.type) {                    
+                    case gviObjectType.gviObjectRenderPolyline: {
+                            rpolyline = pickResult.polyline;
+                            currentGeometry = rpolyline;
+                            EditGeometry();      
+                        }
+                        break;
+                }
+            }
+        }
+     
+    function cbBeginEdit_CheckedChanged() {
+        if (!cbBeginEdit.checked) {
+			// 进入编辑模式
+			__g.interactMode = gviInteractMode.gviInteractEdit;		
+            __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectRenderGeometry;
+            __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;            
+            document.title = "请在屏幕中点选需要编辑的对象。。。。。";
+        }
+        else {
+			__g.interactMode = gviInteractMode.gviInteractNormal;
+            //__g.objectEditor.cancelEdit();    
+        }
+    }
+
+
+    function rbMove_CheckedChanged() {
+        if (rbMove.checked)
+            EditGeometry();
+    }
+
+    function rbRotate_CheckedChanged() {
+    if (rbRotate.checked)
+        EditGeometry();
+    }
+
+    function rbScale_CheckedChanged() {
+        if (rbScale.checked)
+            EditGeometry();
+    }
+
+	function rbVertex_CheckedChanged(){
+		if(rbScale.checked)
+			 EditGeometry();
+	}
+	
+	function setRenderVisble(g){
+		var o = __g.objectManager.getObjectById(g.value);
+		var m = o.visibleMask;
+		if(m == gviViewportMask.gviViewNone)
+			o.visibleMask = gviViewportMask.gviViewAllNormalView;
+		else
+			o.visibleMask = gviViewportMask.gviViewNone;
+	}
+
+	function btnCreateCustom3DArrow(){
+		if (rpolyline != null) {
+			__geo = rpolyline.getFdeGeometry();
+			if(__geo.pointCount < 2){
+				alert("请创建含2个顶点的RenderPolyline");
+				return;
+			}
+			var p0 = __geo.getPoint(0);
+			var p1 = __geo.getPoint(1);
+			var points = CreateCustom3DArrow(p0.x, p0.y, p0.z, p1.x, p1.y, p1.z, null);
+			
+			var floatArray = __g.new_FloatArray;
+			for(var i=0; i<points.length; i++){	
+				if(points[i] == undefined)
+					floatArray.append(0);
+				else
+					floatArray.append(points[i]);
+			}
+			
+			var model = __g.resourceFactory.createModel();
+			var drawGroup = __g.new_DrawGroup;
+			var drawPrimitive = __g.new_DrawPrimitive;
+			var drawMaterial = __g.new_DrawMaterial;
+			drawMaterial.specularColor = colorFromARGB(120, 222, 222, 33);
+			drawPrimitive.material = drawMaterial;
+			drawPrimitive.vertexArray = floatArray;
+			drawPrimitive.primitiveMode = gviPrimitiveMode.gviPrimitiveModeTriangleList; //此处需要DA_TRIANGLE_STRIP底层暂不支持
+			drawGroup.addPrimitive(drawPrimitive);			
+			model.addGroup(drawGroup);
+			//model.writeFile("I:\\gvitech\\DeveloperKit7\\trunk\\SDK\\Samples\\JS\\advanced\\CustomArrow\\1.osg", null, null);
+			
+			__g.objectManager.addModel("Apartment", model);
+			var modelPoint = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryModelPoint, gviVertexAttribute.gviVertexAttributeZ);
+	        modelPoint.modelName = "Apartment";
+	        modelPoint.spatialCRS = __datasetCRS;
+	        modelPoint.x = 0.0;
+	        modelPoint.y = 0.0;
+	        modelPoint.z = 0.0;			
+			var rp = __g.objectManager.createRenderModelPoint(modelPoint, null, __rootId);			
+			
+			str.push("<li><input type='checkbox' onclick='setRenderVisble(this)'value='" + rp.guid + "' checked='checked'>3D箭头" + rp.guid +"</li>");
+			document.getElementById('tree').innerHTML = str.join("");
+		}	
+		else
+			alert("请创建含2个顶点的RenderPolyline");
+		
+		rpolyline.visibleMask = 0;
+	}
+	
+	function btnCreateCurveArrow2D(){
+		if (rpolyline != null) {
+			__geo = rpolyline.getFdeGeometry();
+			if(__geo.pointCount < 3){
+				alert("请创建含3个顶点的RenderPolyline");
+				return;
+			}
+			var p0 = __geo.getPoint(0);
+			var p1 = __geo.getPoint(1);
+			var p2 = __geo.getPoint(2);
+			var points = CreateCurveArrow2D(p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, null);
+			
+			var polygon = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPolygon, gviVertexAttribute.gviVertexAttributeZ);
+			polygon.spatialCRS = __datasetCRS;
+			var point = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+			point.spatialCRS = __datasetCRS;
+			for(var i=0; i<points.length; ){				
+				point.setCoords(points[i], points[i+1], points[i+2], 0, 0);
+				polygon.exteriorRing.appendPoint(point);
+				i += 3;
+			}
+			
+			var surfaceSymbol = __g.new_SurfaceSymbol;
+			surfaceSymbol.color = colorFromARGB(255, 33, 147, 222);
+			var curveSymbol = __g.new_CurveSymbol;
+			curveSymbol.color = colorFromARGB(255, 33, 147, 222);
+			surfaceSymbol.boundarySymbol = curveSymbol;
+			var rp = __g.objectManager.createRenderPolygon(polygon, surfaceSymbol, __rootId);
+			
+			str.push("<li><input type='checkbox' onclick='setRenderVisble(this)'value='" + rp.guid + "' checked='checked'>2D箭头" + rp.guid +"</li>");
+			document.getElementById('tree').innerHTML = str.join("");
+		}	
+		else
+			alert("请创建含3个顶点的RenderPolyline");
+			
+		rpolyline.visibleMask = 0;
+	}
+	
+	function btnCreateMultiArrow2D_2(){
+		if (rpolyline != null) {
+			__geo = rpolyline.getFdeGeometry();
+			if(__geo.pointCount < 7){
+				alert("请创建含7个顶点的RenderPolyline");
+				return;
+			}
+			var p0 = __geo.getPoint(0);
+			var p1 = __geo.getPoint(5);
+			var p2 = __geo.getPoint(1);
+			var p3 = __geo.getPoint(3);
+			var p4 = __geo.getPoint(6);
+			var p5 = __geo.getPoint(2);
+			var p6 = __geo.getPoint(4);
+			var points = CreateMultiArrow2D_2(p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p4.x, p4.y, p5.x, p5.y, p6.x, p6.y, null);
+			
+			var polygon = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPolygon, gviVertexAttribute.gviVertexAttributeZ);
+			polygon.spatialCRS = __datasetCRS;
+			var point = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+			point.spatialCRS = __datasetCRS;
+			for(var i=0; i<points.length; ){				
+				point.setCoords(points[i], points[i+1], points[i+2], 0, 0);
+				polygon.exteriorRing.appendPoint(point);
+				i += 3;
+			}
+			
+			var surfaceSymbol = __g.new_SurfaceSymbol;
+			surfaceSymbol.color = colorFromARGB(255, 222, 147, 33);
+			var curveSymbol = __g.new_CurveSymbol;
+			curveSymbol.color = colorFromARGB(255, 222, 147, 33);
+			surfaceSymbol.boundarySymbol = curveSymbol;
+			var rp = __g.objectManager.createRenderPolygon(polygon, surfaceSymbol, __rootId);
+			
+			str.push("<li><input type='checkbox' onclick='setRenderVisble(this)'value='" + rp.guid + "' checked='checked'>2D双箭头" + rp.guid +"</li>");
+			document.getElementById('tree').innerHTML = str.join("");
+		}		
+		else
+			alert("请创建含7个顶点的RenderPolyline");
+			
+		rpolyline.visibleMask = 0;
+	}
+	
+	function btnCreateMultiArrow2D_3(){
+		if (rpolyline != null) {
+			__geo = rpolyline.getFdeGeometry();
+			if(__geo.pointCount < 8){
+				alert("请创建含8个顶点的RenderPolyline");
+				return;
+			}
+			var p0 = __geo.getPoint(0);
+			var p1 = __geo.getPoint(6);
+			var p2 = __geo.getPoint(1);
+			var p3 = __geo.getPoint(5);
+			var p4 = __geo.getPoint(2);
+			var p5 = __geo.getPoint(4);
+			var p6 = __geo.getPoint(7);
+			var p7 = __geo.getPoint(3);
+			var points = CreateMultiArrow2D_3(p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, p4.x, p4.y, p5.x, p5.y, p6.x, p6.y, p7.x, p7.y, null);
+			
+			var polygon = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPolygon, gviVertexAttribute.gviVertexAttributeZ);
+			polygon.spatialCRS = __datasetCRS;
+			var point = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+			point.spatialCRS = __datasetCRS;
+			for(var i=0; i<points.length; ){				
+				point.setCoords(points[i], points[i+1], points[i+2], 0, 0);
+				polygon.exteriorRing.appendPoint(point);
+				i += 3;
+			}
+			
+			var surfaceSymbol = __g.new_SurfaceSymbol;
+			surfaceSymbol.color = colorFromARGB(255, 147, 22, 33);
+			var curveSymbol = __g.new_CurveSymbol;
+			curveSymbol.color = colorFromARGB(255, 147, 22, 33);
+			surfaceSymbol.boundarySymbol = curveSymbol;
+			var rp = __g.objectManager.createRenderPolygon(polygon, surfaceSymbol, __rootId);
+			
+			str.push("<li><input type='checkbox' onclick='setRenderVisble(this)'value='" + rp.guid + "' checked='checked'>2D三箭头" + rp.guid +"</li>");
+			document.getElementById('tree').innerHTML = str.join("");
+		}		
+		else
+			alert("请创建含8个顶点的RenderPolyline");
+			
+		rpolyline.visibleMask = 0;
+	}
+</script>
+</html>

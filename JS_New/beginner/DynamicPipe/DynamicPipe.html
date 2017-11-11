@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML  .0 Transitional//EN" "http://www.w3.org/TR/xhtml /DTD/xhtml -transitional.dtd">
+<html xmlns="http://www.w3.org/ 999/xhtml">
+<head>
+    <title>DynamicPipe</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+   
+   
+</head>
+    
+<body >
+   
+    <div style="text-align:center">
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 700px; width:  1000px" > 
+        </object>
+    </div>
+
+</body>
+
+<script type="text/javascript">
+  
+     window.onload = function () {
+         Initialize();
+    
+     }
+    function Initialize() {
+        initAxControl();
+        loadFdb("PIPE.FDB");
+        __g.new_LicenseServer.setHost("192.168.2.200", 8588, "");
+         var position = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+         position.setCoords(506308.31579040177, 314272.281405516, 3.2581421811509275, 0, 0);
+         //position.spatialCRS =  __datasetCRS;
+         var angle = __g.new_EulerAngle;
+         angle.set(66.16, -14.2, 0);
+         __g.camera.setCamera2(position, angle, gviSetCameraFlags.gviSetCameraNoFlags);
+
+    }
+   
+</script>
+</html>

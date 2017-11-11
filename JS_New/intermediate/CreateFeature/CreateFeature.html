@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>CreateFeature</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util_globe.js"></script>
+</head>
+<body>
+    <button onclick="mouseLocation()">
+        鼠标插入</button>
+    <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+    </object>
+</body>
+<script type="text/javascript">
+    window.onload = function () {
+        Initialize();
+    }
+
+    function Initialize() {
+        //初始化三维控件
+        initAxControl();
+        // 加载场景
+        loadFdb("SDKDEMO.FDB");
+   
+        var tmpTedPath = getSamplesRelatePath("") + "\\terrain\\SingaporeGlobeTerrain.ted";
+        __g.terrain.registerTerrain(tmpTedPath, "");
+        __g.terrain.flyTo(0);
+        __g.camera.flyTime = 1;
+    }
+    /************************************************************************/
+    /* 鼠标插入模型
+    /************************************************************************/
+    function mouseLocation() {
+        //鼠标插入模型函数
+        modelPath = getSamplesRelatePath("") + "\\osg\\Buildings\\Apartment1\\Apartment1.OSG";
+		
+		/*
+		var nModel = fds.getModelCount();
+		var enumMName = fds.getModelNames();
+		var mName;
+		while(enumMName.moveNext()){
+			mName = enumMName.current;
+			if(mName.indexOf("Apartment") != -1){
+				var bDel = fds.deleteModel(mName);
+				if(!bDel)
+					alert("删除模型失败");
+			}
+		}
+		*/
+
+        var fcNames = __fds.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+        if (fcNames.length == 0)
+            return false;
+        if (modelPath != "") {
+            __g.interactMode = gviInteractMode.gviInteractEdit;
+            //将模型插入到“建筑”要素类中
+            fc_building = __fds.openFeatureClass("Building")
+            if (fc_building != null) {
+                createSingleModel(modelPath, fc_building, "Geometry");
+                __g.onobjectediting = fnonobjectediting;
+                __g.onobjecteditfinish = fnonobjecteditfinish;
+            }
+        }
+    }
+
+    function createSingleModel(modelPath, fc, geoColume) {
+        var geoFactory = __g.geometryFactory;
+        var modelPoint = geoFactory.createGeometry(gviGeometryType.gviGeometryModelPoint, gviVertexAttribute.gviVertexAttributeZ);
+        modelPoint.spatialCRS =__datasetCRS;  //设置坐标系
+        modelPoint.modelName = modelPath;
+        modelPoint.setCoords(0, 0, 0, 0, 0);
+        var symbol = __g.new_ModelPointSymbol;
+        _renderGeometry = __g.objectManager.createRenderModelPoint(modelPoint, symbol, __rootId);
+       _renderGeometry.maxVisibleDistance = 10000;
+        var _geoEditor = __g.objectEditor;
+        var bRet = _geoEditor.startEditRenderGeometry(_renderGeometry, gviGeoEditType.gviGeoEditCreator);
+    }
+
+    function fnonobjectediting(Geometry) {
+        _geometry = Geometry;
+    }
+
+    function fnonobjecteditfinish() {
+        saveSingleModel();
+    }
+
+    function saveSingleModel() {
+        if (_renderGeometry != null) {
+            __g.objectManager.deleteObject(_renderGeometry.guid);
+            _renderGeometry = null;
+        }
+        var cursor = fc_building.insert();
+        var row = fc_building.createRowBuffer();
+        var posName = row.fieldIndex("ModelName");
+        var posGeometry = row.fieldIndex("Geometry");
+        if (_geometry != null) {
+            var len = modelPath.lastIndexOf(".");
+            var len2 = modelPath.lastIndexOf("\\");
+            modelName = modelPath.substring(len2 + 1, len);
+			var myDate = new Date();
+			var myTime = myDate.toLocaleTimeString();
+			var strTime = myTime.replace(/:/g, "");
+			modelName = modelName + strTime;		
+			
+            var mp = _geometry.clone();  
+			var bPrj = mp.project(__datasetCRS);
+			if(bPrj){
+				importModel(fc_building.featureDataSet, modelPath, modelName);
+				
+	            mp.modelName = modelName;
+	            mp.modelEnvelope = model.envelope;
+	            row.setValue(posName, modelName);
+	            row.setValue(posGeometry, mp);
+				cursor.insertRow(row);
+				var id = cursor.lastInsertId;
+		        cursor.close();
+				cursor.releaseObject();
+		        row.setValue(0, id);
+		        __g.featureManager.createFeature(fc_building, row);
+			}
+			else
+				alert("Project Failed!");
+        }      
+		
+        __g.interactMode = gviInteractMode.gviInteractNormal;
+    }
+
+    function importModel(dataset, modelPath, modelName) {
+	//        var lic = __g.new_LicenseServer;
+	//        lic.setHost("D:\\CityMaker\\安装文件\\295392046514169528824145284_131132860609315839.lic", 0, "");
+        var rm = dataset;
+        var resourceFac = __g.resourceFactory;
+        var imgSet;
+        if (resourceFac != null && modelPath != "") {
+            var vm = resourceFac.createModelAndImageFromFile(modelPath);
+
+            var images = vm["images"];
+            model = vm["model"];
+            var matrix = vm["matrix"];
+            var bAM = rm.addModel(modelName, model, null);
+			if(!bAM)
+				alert("添加模型失败");
+
+            var count = images.getCount();
+            if (count > 0) {
+                var imageNames = images.getAllKeys();
+                for (var i = 0; i < count; i++) {
+                    var imageName = imageNames[i];
+					if(!rm.imageExist(imageName)){
+	                    var img = images.getProperty(imageName);
+	                    rm.addImage(imageName, img);
+	                    __g.refreshImage(dataset, imageName);
+					}
+                }
+            }
+            __g.refreshModel(dataset, modelName);
+        }
+    }
+</script>
+</html>

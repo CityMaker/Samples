@@ -1,0 +1,40 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+     <title>ClipPlane_gviClipBox</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+    
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+        </object>
+    </div>
+</body>
+     <script type="text/javascript">
+         var __g = document.getElementById("renderControl");
+         
+         var __fcMap = {};
+         var __fcGeoMap = {};
+         
+
+		 window.onload = function () {
+			 Initialize();
+		 }
+         
+         function Initialize() {
+             //初始化三维控件
+             initAxControl();
+             // 加载FDB场景
+             loadFdb("community.fdb");
+             __g.interactMode = gviInteractMode.gviInteractClipPlane;
+            __g.clipMode = gviClipMode.gviClipBox;
+         }
+         
+         
+    
+     </script>
+</html>

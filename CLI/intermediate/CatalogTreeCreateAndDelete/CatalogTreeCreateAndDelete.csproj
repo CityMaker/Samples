@@ -1,0 +1,244 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{063C0565-2819-4248-B6E6-8E57C2D2022A}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CatalogTreeCreateAndDelete</RootNamespace>
+    <AssemblyName>CatalogTreeCreateAndDelete</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>..\..\bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Gvitech.CityMaker.Common.v8.0, Version=8.0.0.1, Culture=neutral, PublicKeyToken=08b05199bd5dd760, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Gvitech.CityMaker.Common.v8.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Gvitech.CityMaker.FdeCore.v8.0, Version=8.0.0.1, Culture=neutral, PublicKeyToken=08b05199bd5dd760, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Gvitech.CityMaker.FdeCore.v8.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Gvitech.CityMaker.FdeDataInterop.v8.0, Version=8.0.0.1, Culture=neutral, PublicKeyToken=08b05199bd5dd760, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Gvitech.CityMaker.FdeDataInterop.v8.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Gvitech.CityMaker.FdeGeometry.v8.0, Version=8.0.0.1, Culture=neutral, PublicKeyToken=08b05199bd5dd760, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Gvitech.CityMaker.FdeGeometry.v8.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Gvitech.CityMaker.FdeUndoRedo.v8.0, Version=8.0.0.1, Culture=neutral, PublicKeyToken=08b05199bd5dd760, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Gvitech.CityMaker.FdeUndoRedo.v8.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Gvitech.CityMaker.Math.v8.0, Version=8.0.0.1, Culture=neutral, PublicKeyToken=08b05199bd5dd760, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Gvitech.CityMaker.Math.v8.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Gvitech.CityMaker.RenderControl.v8.0, Version=8.0.0.1, Culture=neutral, PublicKeyToken=08b05199bd5dd760, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Gvitech.CityMaker.RenderControl.v8.0.dll</HintPath>
+    </Reference>
+    <Reference Include="Gvitech.CityMaker.Resource.v8.0, Version=8.0.0.1, Culture=neutral, PublicKeyToken=08b05199bd5dd760, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Gvitech.CityMaker.Resource.v8.0.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="OperateForm\DataSetForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateForm\DataSetForm.Designer.cs">
+      <DependentUpon>DataSetForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OperateForm\CreateDataSourceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateForm\CreateDataSourceForm.Designer.cs">
+      <DependentUpon>CreateDataSourceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OperateForm\EditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateForm\EditForm.Designer.cs">
+      <DependentUpon>EditForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utils.cs" />
+    <Compile Include="ViewForm\OpenDataSourceForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ViewForm\OpenDataSourceForm.Designer.cs">
+      <DependentUpon>OpenDataSourceForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OperateForm\FeatureClassForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateForm\FeatureClassForm.Designer.cs">
+      <DependentUpon>FeatureClassForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OperateForm\OperateFieldInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateForm\OperateFieldInfoForm.Designer.cs">
+      <DependentUpon>OperateFieldInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ViewForm\ViewFieldInfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ViewForm\ViewFieldInfoForm.Designer.cs">
+      <DependentUpon>ViewFieldInfoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="OperateForm\DataSetForm.resx">
+      <DependentUpon>DataSetForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OperateForm\CreateDataSourceForm.resx">
+      <DependentUpon>CreateDataSourceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OperateForm\EditForm.resx">
+      <DependentUpon>EditForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViewForm\OpenDataSourceForm.resx">
+      <DependentUpon>OpenDataSourceForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OperateForm\FeatureClassForm.resx">
+      <DependentUpon>FeatureClassForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OperateForm\OperateFieldInfoForm.resx">
+      <DependentUpon>OperateFieldInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ViewForm\ViewFieldInfoForm.resx">
+      <DependentUpon>ViewFieldInfoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="stdole">
+      <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>LabelAndRenderGeometry</title>
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+
+<body style="margin:0px;scroll:no"  > 
+<div style="float:left">请选择创建类型:   
+   <select id="CreateObjMode">
+       <option value="0">CreateLabel</option>
+       <option value="1">CreateRenderModelPoint</option>
+       <option value="2">CreateRenderPoint</option>
+       <option value="3">CreateRenderPolyline</option>
+       <option value="4">CreateRenderPolygon</option>
+       <option value="5">CreateRenderPOI</option>
+       <option value="6">CreateFixBillboard</option>
+	   <option value="7">CreateTerrainRegularPolygon</option>
+   </select>   
+   <input id="Normal" type="checkbox" onchange="BeginNormal()" />进入漫游
+</div>
+        
+<div>
+    <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object><!-- object里的style="height: 600px; width: 800px " 必须有，否则无法全页面显示-->
+</div>
+</body>
+
+<script type="text/javascript">
+    
+     window.onload = function () {
+         initialize();
+     }
+
+    function initialize() {
+        //初始化三维控件
+        initAxControl();
+        
+        __g.interactMode = gviInteractMode.gviInteractSelect;
+        __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectAll;
+        __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+
+		attachMouse();
+    }
+
+    /*
+     *	绑定RenderControl拾取事件
+     */
+    function attachMouse() {
+        
+    }
+
+
+    function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+		if(pickResult == null)
+			return;
+
+        if (pickResult.type == gviObjectType.gviObjectLabel) {
+            alert("拾取到" + pickResult.type + "类型，内容为" + pickResult.label.text);
+        }
+        else if (pickResult.type == gviObjectType.gviObjectRenderModelPoint) {
+            alert("拾取到" + pickResult.type + "类型，模型名称为" + pickResult.renderModelPoint.modelName);
+        }
+        else if (pickResult.type == gviObjectType.gviObjectRenderPoint) {
+            alert("拾取到" + pickResult.type + "类型，大小为" + pickResult.renderPoint.symbol.size);
+        }
+        else if (pickResult.type == gviObjectType.gviObjectRenderPolyline) {
+            alert("拾取到" + pickResult.type + "类型，GUID为" + pickResult.renderPolyline.guid);
+        }
+        else if (pickResult.type == gviObjectType.gviObjectRenderPolygon) {
+            alert("拾取到" + pickResult.type + "类型，GUID为" + pickResult.renderPolygon.guid);
+        }
+        else if (pickResult.type == gviObjectType.gviObjectRenderPOI) {
+			alert("拾取到" + pickResult.type + "类型，名称为" + pickResult.renderPOI.getFdeGeometry().name);
+        }
+		else if (pickResult.type == gviObjectType.gviObjectTerrainRegularPolygon) {
+			alert("拾取到" + pickResult.type + "类型，名称为" + pickResult.terrainRegularPolygon.lineStyle.width);
+        }
+        else if (pickResult.type == gviObjectType.gviObjectReferencePlane) {
+            var selmode = $("CreateObjMode");
+            var ang = __g.new_EulerAngle;
+            ang.heading = 0;
+            ang.tilt = -20;
+            switch (selmode.value) {
+                case "0":
+                    {
+                        var label = __g.objectManager.createLabel(__rootId);
+                        label.text = "我是testlabel";
+                        label.position = intersectPoint;
+                        var textSymbol = __g.new_TextSymbol;
+                        var textAttribute = __g.new_TextAttribute;
+                        textAttribute.textColor = 0xffffff00;
+                        textAttribute.textSize = 20;
+                        textAttribute.underline = true;
+                        textAttribute.font = "楷体";
+                        textSymbol.textAttribute = textAttribute;
+                        label.textSymbol = textSymbol;
+                        __g.camera.lookAt(intersectPoint.position, 20, ang);
+                    }
+                    break;
+                case "1":
+                    {
+                        var gfactory = __g.geometryFactory;
+                        var tmpOSGPath = getSamplesRelatePath("\\osg\\Buildings\\Apartment\\Apartment.osg");
+                        var fde_modelpoint = gfactory.createGeometry(gviGeometryType.gviGeometryModelPoint,
+                            gviVertexAttribute.gviVertexAttributeZ);
+                        if (intersectPoint == null) return;
+                        fde_modelpoint.setCoords(intersectPoint.x, intersectPoint.y, intersectPoint.z, 0, 0);
+                        fde_modelpoint.modelName = tmpOSGPath;
+                        var rmodelpoint = __g.objectManager.createRenderModelPoint(fde_modelpoint, null, __rootId);
+                        __g.camera.lookAt(intersectPoint.position, 100, ang);
+                    }
+                    break;
+                case "2":
+                    {
+                        var gfactory = __g.geometryFactory;
+
+                        var fde_point = gfactory.createGeometry(gviGeometryType.gviGeometryPoint,
+                            gviVertexAttribute.gviVertexAttributeZ);
+                        fde_point.setCoords(intersectPoint.x, intersectPoint.y, intersectPoint.z, 0, 0);
+
+                        var pointSymbol = __g.new_SimplePointSymbol;
+                        pointSymbol.fillColor = 0xff0000ff;
+                        pointSymbol.size = 10;
+                        var rpoint = __g.objectManager.createRenderPoint(fde_point, pointSymbol, __rootId);
+                        __g.camera.lookAt(intersectPoint.position, 20, ang);
+                    }
+                    break;
+                case "3":
+                    {
+                        var gfactory = __g.geometryFactory;
+                        var fde_polyline = gfactory.createGeometry(gviGeometryType.gviGeometryPolyline,
+                            gviVertexAttribute.gviVertexAttributeZ);
+                        var fde_point = gfactory.createGeometry(gviGeometryType.gviGeometryPoint,
+                            gviVertexAttribute.gviVertexAttributeZ);
+                        fde_point.setCoords(intersectPoint.x, intersectPoint.y, intersectPoint.z, 0, 0);
+                        fde_polyline.appendPoint(fde_point);
+                        fde_point.setCoords(intersectPoint.x + 20, intersectPoint.y, intersectPoint.z, 0, 0);
+                        fde_polyline.appendPoint(fde_point);
+                        fde_point.setCoords(intersectPoint.x + 20, intersectPoint.y + 20, intersectPoint.z, 0, 0);
+                        fde_polyline.appendPoint(fde_point);
+                        fde_point.setCoords(intersectPoint.x + 20, intersectPoint.y + 20, intersectPoint.z + 20, 0, 0);
+                        fde_polyline.appendPoint(fde_point);
+
+                        var lineSymbol = __g.new_CurveSymbol;
+                        lineSymbol.color = 0xffff00ff;  // 紫红色
+                        var rpolyline = __g.objectManager.createRenderPolyline(fde_polyline, lineSymbol, __rootId);
+                        __g.camera.lookAt(intersectPoint.position, 20, ang);
+                    }
+                    break;
+                case "4":
+                    {
+                        var gfactory = __g.geometryFactory;
+                        var fde_polygon = gfactory.createGeometry(gviGeometryType.gviGeometryPolygon,
+                            gviVertexAttribute.gviVertexAttributeZ);
+                        var fde_point = gfactory.createGeometry(gviGeometryType.gviGeometryPoint,
+                            gviVertexAttribute.gviVertexAttributeZ);
+                        fde_point.setCoords(intersectPoint.x, intersectPoint.y, intersectPoint.z, 0, 0);
+                        fde_polygon.exteriorRing.appendPoint(fde_point);
+                        fde_point.setCoords(intersectPoint.x + 10, intersectPoint.y, intersectPoint.z, 0, 0);
+                        fde_polygon.exteriorRing.appendPoint(fde_point);
+                        fde_point.setCoords(intersectPoint.x + 10, intersectPoint.y + 10, intersectPoint.z, 0, 0);
+                        fde_polygon.exteriorRing.appendPoint(fde_point);
+                        fde_point.setCoords(intersectPoint.x, intersectPoint.y + 10, intersectPoint.z, 0, 0);
+                        fde_polygon.exteriorRing.appendPoint(fde_point);
+
+                        var surfaceSymbol = __g.new_SurfaceSymbol;
+                        surfaceSymbol.color = 0xFF0000FF;  // 蓝色
+                        var rpolygon = __g.objectManager.createRenderPolygon(fde_polygon, surfaceSymbol, __rootId);
+                        __g.camera.lookAt(intersectPoint.position, 20, ang);
+                    }
+                    break;
+                case "5":
+                    {
+                        var gfactory = __g.geometryFactory;
+
+                        var fde_poi = gfactory.createGeometry(gviGeometryType.gviGeometryPOI,
+                            gviVertexAttribute.gviVertexAttributeZ);
+                        fde_poi.setCoords(intersectPoint.x, intersectPoint.y, intersectPoint.z, 0, 0);
+                        var tmpPath = getSamplesRelatePath("") + "/png\\star.png";
+                        fde_poi.imageName = tmpPath;
+                        fde_poi.size = 10;
+                        var rpoi = __g.objectManager.createRenderPOI(fde_poi);
+                        __g.camera.lookAt(intersectPoint.position, 20, ang);
+                    }
+                    break;
+                case "6":
+                    {
+                        var textAttribute = __g.new_TextAttribute;
+                        textAttribute.textColor = 0xffff0000;
+                        
+                        var retMap = __g.utility.createFixedBillboard("I'm fixed billboard!", textAttribute, 50, 100, true);
+                        __g.objectManager.addModel("fixedModel", retMap["model"]);
+                        __g.objectManager.addImage(retMap["imageName"], retMap["image"]);
+
+                        var gfactory = __g.geometryFactory;
+                        var fde_modelpoint = gfactory.createGeometry(gviGeometryType.gviGeometryModelPoint,
+                            gviVertexAttribute.gviVertexAttributeZ);
+                        if (intersectPoint == null) return;
+                        fde_modelpoint.setCoords(intersectPoint.x, intersectPoint.y, intersectPoint.z, 0, 0);
+                        fde_modelpoint.modelName = "fixedModel";
+                        var rmodelpoint = __g.objectManager.createRenderModelPoint(fde_modelpoint, null, __rootId);
+                        __g.camera.lookAt(intersectPoint.position, 100, ang);
+                    }
+                    break;  
+                case "7":
+                    {
+						var pos = __g.new_Position;
+						pos.x = intersectPoint.x;
+						pos.y = intersectPoint.y;
+						pos.altitude = intersectPoint.z;
+						
+                        var terrPoly = __g.objectManager.createRegularPolygon(pos, 10, 10, 0xffff0000, 0xffffffff, __rootId);                        
+                        __g.camera.flyToObject(terrPoly.guid, 0);
+                    }
+                    break;					
+            }
+        }
+    }
+
+    function BeginNormal() {
+        if ($("Normal").checked)
+            __g.interactMode = gviInteractMode.gviInteractNormal;
+        else
+            __g.interactMode = gviInteractMode.gviInteractSelect;        
+    }
+     
+</script>
+</html>

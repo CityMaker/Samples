@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>UIImageButton</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="../../cm7.js"></script>
+<script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+<input type="button" value="删除全部" onclick="delAll()"/>
+<object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object>
+</body>
+<script type="text/javascript">
+	var buttons = [];
+	var rootWindow;
+        var uiLeft;
+        var uiTop;
+        var uiRight;
+        var uiBottom;	
+
+    window.onload = function () {
+        setTimeout(function () {
+            //初始化三维控件
+            initAxControl();
+
+            // 加载场景
+            loadFdb("SDKDEMO.FDB");
+
+            // 加载按钮
+            loadButtons();
+        }, 1);
+    }
+
+
+    function onUIWindowEvent(args, type) {
+        document.title = "触发：" + type;
+
+        if (args.uiWindow == null)
+            return;
+
+        if (type == gviUIEventType.gviUIMouseClick)
+        {
+            if (args.uiWindow.type == gviUIWindowType.gviUIImageButton)
+            {
+                switch (args.uiWindow.name)
+                {
+                    case "漫游":
+                        __g.interactMode = gviInteractMode.gviInteractNormal;     
+						buttons[1].isVisible=false;
+                        break;
+                    case "点选":
+                        __g.interactMode = gviInteractMode.gviInteractSelect;
+                        break;    
+                }
+            }
+        }
+    }
+
+
+    /*
+    *	加载按钮
+    */
+    function loadButtons() {
+		uiLeft = __g.new_UIDim;
+		uiTop = __g.new_UIDim;
+		uiRight = __g.new_UIDim;
+		uiBottom = __g.new_UIDim;
+			
+        var rect = __g.new_UIRect;
+		uiLeft.init(0, 10);
+		uiTop.init(0, 10);
+		uiRight.init(0, 42);
+		uiBottom.init(0, 42);
+		rect.init(uiLeft, uiTop, uiRight, uiBottom);		
+        
+        var manager = __g.uiWindowManager;
+		rootWindow = manager.uiRootWindow;
+        var button1 = manager.createImageButton();
+		rootWindow.addChild(button1);
+        button1.setArea(rect);
+        button1.name = "漫游";
+        button1.isVisible = true;
+        var imagePath = getSamplesRelatePath("/png");
+        button1.normalImage = imagePath + "/button/漫游/normal.png"; 
+        button1.hoverImage = imagePath + "/button/漫游/hover.png";
+        button1.pushedImage = imagePath + "/button/漫游/pushed.png";
+        button1.subscribeEvent(gviUIEventType.gviUIMouseClick);
+		button1.toolTipText = "漫游";
+		buttons.push(button1);
+
+		uiLeft.init(0, 52);
+		uiTop.init(0, 10);
+		uiRight.init(0, 84);
+		uiBottom.init(0, 42);
+		rect.init(uiLeft, uiTop, uiRight, uiBottom);			
+        
+        var button2 = manager.createImageButton();
+		rootWindow.addChild(button2);
+        button2.setArea(rect);
+        button2.name = "点选";
+        button2.isVisible = true;
+        button2.normalImage = imagePath + "/button/点选/normal.png";
+        button2.hoverImage = imagePath + "/button/点选/hover.png";
+        button2.pushedImage = imagePath + "/button/点选/pushed.png";
+        button2.subscribeEvent(gviUIEventType.gviUIMouseClick);
+		button2.toolTipText = "点选";
+		buttons.push(button2);
+    }
+
+	function delAll(){
+		//var manager = __g.uiWindowManager;
+		//manager.destroyAllWindows();
+		for(var i=0; i<buttons.length; i++){
+			//manager.destroyWindow(buttons[i]);
+			buttons[i].isVisible=false;
+		}
+		
+		var imagePath = getSamplesRelatePath("/png");
+		var rect = __g.new_UIRect;
+		uiLeft.init(0, 94);
+		uiTop.init(0, 10);
+		uiRight.init(0, 126);
+		uiBottom.init(0, 42);
+		rect.init(uiLeft, uiTop, uiRight, uiBottom);			
+        
+		var button3 = manager.createImageButton();
+		rootWindow.addChild(button3);
+        button3.setArea(rect);
+        button3.name = "天气";
+        button3.isVisible = true;
+        button3.normalImage = imagePath + "/button/天气/normal.png";
+        button3.hoverImage = imagePath + "/button/天气/hover.png";
+        button3.pushedImage = imagePath + "/button/天气/pushed.png";
+        button3.subscribeEvent(gviUIEventType.gviUIMouseClick);
+		button3.toolTipText = "天气";
+	}
+</script>
+</html>

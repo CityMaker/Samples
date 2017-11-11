@@ -1,0 +1,941 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>OverlayUILabel</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+     <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+        </object>
+		<input type="button" onclick="set()" value="选定"  style="height:30px;width:100px; font-size:16px;color:blue"/>
+    </div>
+</body>
+<script type="text/javascript">
+        var uiLeft;
+        var uiTop;
+        var uiRight;
+        var uiBottom;
+        var uiWidth;
+        var uiHeight;
+        var uiRect;
+		
+	var heightText;
+	var pointer;
+    var stcImg_pop;
+    var stcTxt_pop;	
+	
+        var font_8;
+        var font_10;
+        var font_11;
+        var font_12;
+        var font_16;	
+		
+		var arrStars = [];
+		var arrTempers = [];
+	
+	var __uimanager;
+	var __rootWindow;
+	
+     window.onload = function () {
+         initialize();
+     }
+
+    function initialize() {
+        //初始化三维控件
+        initAxControl();
+
+        // 加载FDB场景
+        loadFdb("SDKDEMO.FDB");
+		
+		__uimanager = __g.uiWindowManager;
+		__rootWindow = __uimanager.uiRootWindow;
+		
+		uiLeft = __g.new_UIDim;
+		uiTop = __g.new_UIDim;
+		uiRight = __g.new_UIDim;
+		uiBottom = __g.new_UIDim;
+		uiWidth = __g.new_UIDim;
+		uiHeight = __g.new_UIDim;
+		uiRect = __g.new_UIRect;
+		
+		LoadOverlayUILabel_Doing();
+		LoadOverlayUILabel_ToDo();
+		LoadOverlayUILabel_Done();
+		LoadOverlayUILabel_Tempers();
+    }
+	
+    function onCameraFlyFinished(finishType) {
+			var ret = __g.camera.getCamera();
+			LoadTextLabel(ret.position);
+			LoadPicLabel();
+			LoadPointerLabel(ret.position.z);
+    } 	
+	
+	function set(){		
+			____events["onCameraFlyFinished"] = -1;
+			____events["onFrame"] = onFrame222;
+			__g.callback = ____events;
+	}
+
+	function LoadTextLabel(v){
+		if(heightText == undefined){
+			heightText = __g.objectManager.createOverlayLabel(__rootId);
+			var ta = __g.new_TextAttribute;
+			ta.textSize = 15;
+            ta.bold = true;
+            heightText.textStyle = ta;
+			heightText.setWidth(85, 0, 0);
+            heightText.setHeight(40, 0, 0);
+            heightText.setX(heightText.getWidth() / 2 + 20, 0, 0);
+            heightText.setY(heightText.getHeight() / 2 + 50, 0, 0);
+		}
+		heightText.text = "H:" + Math.round(v.z) + "m";   
+	}
+	
+	function LoadPicLabel(){
+            var pic = __g.objectManager.createOverlayLabel(__rootId);
+            pic.imageName = getSamplesRelatePath("/") + "/png/overlayUI/graduation.png";
+            pic.setWidth(235, 0, 0);
+            pic.setHeight(30, 0, 0);
+            pic.setX(pic.getWidth() / 2 + 20, 0, 0);
+            pic.setY(pic.getHeight() / 2 + 20, 0, 0);	
+	}
+  
+	function LoadPointerLabel(height){
+            if(pointer == undefined)
+            {
+                pointer = __g.objectManager.createOverlayLabel(__rootId);
+                pointer.imageName = getSamplesRelatePath("/") + "/png/overlayUI/pointer.png";
+                pointer.setWidth(12, 0, 0);
+                pointer.setHeight(20, 0, 0);
+                pointer.setY(pointer.getHeight() / 2, 0, 0);
+            }
+            if(height>=500)
+            {
+                pointer.setX(43, 0, 0);                
+            }
+            else if(height<500 && height>=150)
+            {
+                pointer.setX(106, 0, 0);
+            }
+            else if(height<150 && height>=80)
+            {
+                pointer.setX(170, 0, 0);
+            }
+            else if(height<80)
+            {
+                pointer.setX(232, 0, 0);
+            }	
+	}
+	
+	function onFrame222(frameIndex, refTime) {
+		document.title = frameIndex + "//" + refTime;       
+		var ret = __g.camera.getCamera();
+		LoadTextLabel(ret.position);
+		LoadPointerLabel(ret.position.z);
+	}
+	
+	
+	function LoadOverlayUILabel_Doing(){	
+		var uilabel1 = __g.objectManager.createOverlayUILabel(__rootId);		
+            uiLeft.init(0, 20);			
+            uiTop.init(1.0, -1);			
+            uilabel1.setAnchor(uiLeft, uiTop);			
+            var pos1 = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+            pos1.setCoords(15418.77, 35708.32, 39.08, 0, 0);
+            uilabel1.worldPosition = pos1;
+            uilabel1.maxVisibleDistance = 800; //直线距离的可见范围
+            uilabel1.minVisibleDistance = 0;
+            var wLabel1 = uilabel1.getCanvas();
+            uiWidth.init(0, 250);
+            uiHeight.init(0, 180);
+            uiRect.setSize(uiWidth, uiHeight);
+            wLabel1.setArea(uiRect);  //设置画布宽高			
+			
+			var stcImg_bg = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_bg);  //addChild放前面
+            var img_bg = __uimanager.createImageFromFile(getSamplesRelatePath("/") + "/png/overlayUI/background.png");  
+            stcImg_bg.setImage(img_bg);
+            uiLeft.init(0, 0);
+            uiTop.init(0, 0);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(1, 0);
+            uiHeight.init(1, 0);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_bg.setArea(uiRect);
+            stcImg_bg.isMousePassThroughEnabled = true;  //会响应鼠标滚轮事件，不会响应UI事件
+            stcImg_bg.isZOrderingEnabled = false;   //鼠标点击后不会跑上面来            
+			
+
+			//状态标记：待维修，正在维修，维修完毕
+            var stcImg_ss_doing = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_ss_doing);  //addChild放前面
+            var img_ss_doing = __uimanager.createImageFromFile(getSamplesRelatePath("/") + "/png/overlayUI/ss_doing.png");
+            stcImg_ss_doing.setImage(img_ss_doing);
+            uiLeft.init(0, 27);
+            uiTop.init(0, 27);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(0, 37);
+            uiHeight.init(0, 37);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_ss_doing.setArea(uiRect);
+            stcImg_ss_doing.isMousePassThroughEnabled = true;  //会响应鼠标滚轮事件，不会响应UI事件
+            stcImg_ss_doing.isZOrderingEnabled = false;
+            
+
+			//65%
+            stcImg_pop = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_pop);   //addChild放前面
+            var img_pop = __uimanager.createImageFromFile(getSamplesRelatePath("/") + "/png/overlayUI/pop.png");
+            stcImg_pop.setImage(img_pop);
+            uiLeft.init(0, 175);
+            uiTop.init(0, 6);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(0, 28);
+            uiHeight.init(0, 20);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_pop.setArea(uiRect);
+            stcImg_pop.isMousePassThroughEnabled = true;  //会响应鼠标滚轮事件，不会响应UI事件
+            stcImg_pop.isZOrderingEnabled = false;
+            stcImg_pop.isVisible = false;
+            
+			
+			stcTxt_pop = __uimanager.createStaticLabel();
+			wLabel1.addChild(stcTxt_pop);   //addChild放前面
+            font_8 = __uimanager.createUIFont(8, "aa");
+            stcTxt_pop.text = "[font='" + font_8 + "'][colour='FFFFFFFF']65%";
+            uiLeft.init(0, 177);
+            uiTop.init(0, 7);
+            stcTxt_pop.setPosition(uiLeft, uiTop);            
+            stcTxt_pop.isMousePassThroughEnabled = true;  //会响应鼠标滚轮事件，不会响应UI事件
+            stcTxt_pop.isZOrderingEnabled = false;
+            stcTxt_pop.isVisible = false;
+            
+			
+			//进度条
+            var stcImg_probar_none = __uimanager.createStaticImage();  	
+			wLabel1.addChild(stcImg_probar_none);  //addChild放前面
+            var img_probar_none = __uimanager.createImageFromFile(getSamplesRelatePath("/") + "/png/overlayUI/ProgressBar/none.png");	
+            stcImg_probar_none.setImage(img_probar_none);
+            uiLeft.init(0, 66);
+            uiTop.init(0, 27);
+            uiRect.setPosition(uiLeft, uiTop);			
+            uiWidth.init(0, 170);
+            uiHeight.init(0, 6);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_probar_none.setArea(uiRect);
+            //stcImg_probar_none.IsMousePassThroughEnabled = true;  //设为true时会导致无法响应UI事件
+            stcImg_probar_none.isZOrderingEnabled = false;
+            stcImg_probar_none.name = "stcImg_probar_none";            
+            stcImg_probar_none.subscribeEvent(gviUIEventType.gviUIMouseEntersArea);
+            stcImg_probar_none.subscribeEvent(gviUIEventType.gviUIMouseLeavesArea);
+
+            var stcImg_probar_done = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_probar_done);   //addChild放前面
+            var img_probar_done = __uimanager.createImageFromFile(getSamplesRelatePath("/") + "/png/overlayUI/ProgressBar/done.png");
+            stcImg_probar_done.setImage(img_probar_done);
+            uiLeft.init(0, 66);
+            uiTop.init(0, 27);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(0, 110.5);
+            uiHeight.init(0, 6);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_probar_done.setArea(uiRect);
+            //stcImg_probar_done.IsMousePassThroughEnabled = true;  //设为true时会导致无法响应UI事件
+            stcImg_probar_done.isZOrderingEnabled = false;
+            stcImg_probar_done.name = "stcImg_probar_done";            
+            stcImg_probar_done.subscribeEvent(gviUIEventType.gviUIMouseEntersArea);
+            stcImg_probar_done.subscribeEvent(gviUIEventType.gviUIMouseLeavesArea);
+
+            //创建文字：无法设置粗体行间距
+            var staticTxt = __uimanager.createStaticLabel();
+			wLabel1.addChild(staticTxt);   //addChild放前面
+            font_16 = __uimanager.createUIFont(16, "aa");
+            font_11 = __uimanager.createUIFont(11, "aa");
+            staticTxt.text = "[font='" + font_16 + "'][colour='FFFFFFFF']环球中心主楼\n[font='" + font_11 + "'][colour='FFFFFFFF']时间：2016.1.22 10:25:00\n原因：玻璃裂纹\n处理：进行中";
+            uiLeft.init(0, 66);
+            uiTop.init(0, 35);
+            staticTxt.setPosition(uiLeft, uiTop);            
+            staticTxt.isMousePassThroughEnabled = true;
+            staticTxt.isZOrderingEnabled = false;
+            staticTxt.horzFormatting = "LeftAligned";               
+	}
+	
+	
+	function LoadOverlayUILabel_ToDo(){
+		var uilabel1 = __g.objectManager.createOverlayUILabel(__rootId);
+            uiLeft.init(0, 20);
+            uiTop.init(1.0, -1);
+            uilabel1.setAnchor(uiLeft, uiTop);
+            var pos1 = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+            pos1.setCoords(15261.38, 35725.24, 29.50, 0, 0);
+            uilabel1.worldPosition = pos1;
+            uilabel1.maxVisibleDistance = 800; //直线距离的可见范围
+            uilabel1.minVisibleDistance = 0;
+            var wLabel1 = uilabel1.getCanvas();
+            uiWidth.init(0, 250);
+            uiHeight.init(0, 150);
+            uiRect.setSize(uiWidth, uiHeight);
+            wLabel1.setArea(uiRect);  //设置画布宽高
+			
+			var stcImg_bg = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_bg);  //addChild放前面
+            var img_bg = __uimanager.createImageFromFile(getSamplesRelatePath("/") + "/png/overlayUI/background.png");
+            stcImg_bg.setImage(img_bg);
+            uiLeft.init(0, 0);
+            uiTop.init(0, 0);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(1, 0);
+            uiHeight.init(1, 0);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_bg.setArea(uiRect);
+            stcImg_bg.isMousePassThroughEnabled = true;  //响应鼠标事件
+            stcImg_bg.isZOrderingEnabled = false;   //鼠标点击后不会跑上面来
+            
+			
+			//状态标记：待维修，正在维修，维修完毕
+            var stcImg_ss_todo = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_ss_todo);  //addChild放前面
+            var img_ss_todo = __uimanager.createImageFromFile(getSamplesRelatePath("/") +  "/png/overlayUI/ss_todo.png");
+            stcImg_ss_todo.setImage(img_ss_todo);
+            uiLeft.init(0, 27);
+            uiTop.init(0, 15);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(0, 37);
+            uiHeight.init(0, 37);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_ss_todo.setArea(uiRect);
+            stcImg_ss_todo.isMousePassThroughEnabled = true;
+            stcImg_ss_todo.isZOrderingEnabled = false;
+            
+			
+			//创建文字：无法设置粗体行间距
+            var staticTxt = __uimanager.createStaticLabel();
+			wLabel1.addChild(staticTxt);  //addChild放前面
+            staticTxt.text = "[font='" + font_16 + "'][colour='FFFFFFFF']茂业中心B座\n[font='" + font_11 + "'][colour='FFFFFFFF']时间：2016.1.22 10:25:00\n原因：玻璃裂纹\n处理：待处理";
+            uiLeft.init(0, 66);
+            uiTop.init(0, 15);
+            staticTxt.setPosition(uiLeft, uiTop);   			
+            staticTxt.isMousePassThroughEnabled = true;
+            staticTxt.isZOrderingEnabled = false;
+            staticTxt.horzFormatting = "LeftAligned";
+            
+	}
+	
+	function LoadOverlayUILabel_Done(){
+		var uilabel1 = __g.objectManager.createOverlayUILabel(__rootId);
+            uiLeft.init(0, 20);
+            uiTop.init(1.0, -1);
+            uilabel1.setAnchor(uiLeft, uiTop);
+            var pos1 = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+            pos1.setCoords(15373.86, 36009.12, 20.87, 0, 0);
+            uilabel1.worldPosition = pos1;
+            uilabel1.maxVisibleDistance = 800; //直线距离的可见范围
+            uilabel1.minVisibleDistance = 0;
+			uilabel1.maxViewHeight = 800;  //相机高度和label高度的差值必须在ViewHeight范围内才能显示
+            uilabel1.minViewHeight = 50;
+            var wLabel1 = uilabel1.getCanvas();
+            uiWidth.init(0, 250);
+            uiHeight.init(0, 180);
+            uiRect.setSize(uiWidth, uiHeight);
+            wLabel1.setArea(uiRect);  //设置画布宽高
+
+            var stcImg_bg = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_bg);   //addChild放前面
+            var img_bg = __uimanager.createImageFromFile(getSamplesRelatePath("/") + "/png/overlayUI/background.png");
+            stcImg_bg.setImage(img_bg);
+            uiLeft.init(0, 0);
+            uiTop.init(0, 0);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(1, 0);
+            uiHeight.init(1, 0);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_bg.setArea(uiRect);
+            stcImg_bg.isMousePassThroughEnabled = true;  //会响应鼠标滚轮事件，不会响应UI事件
+            stcImg_bg.isZOrderingEnabled = false;   //鼠标点击后不会跑上面来
+            
+			
+			//状态标记：待维修，正在维修，维修完毕
+            var stcImg_ss_done = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_ss_done);  //addChild放前面
+            var img_ss_done = __uimanager.createImageFromFile(getSamplesRelatePath("/") + "/png/overlayUI/ss_done.png");
+            stcImg_ss_done.setImage(img_ss_done);
+            uiLeft.init(0, 27);
+            uiTop.init(0, 15);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(0, 37);
+            uiHeight.init(0, 37);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_ss_done.setArea(uiRect);
+            stcImg_ss_done.isMousePassThroughEnabled = true;  //会响应鼠标滚轮事件，不会响应UI事件
+            stcImg_ss_done.isZOrderingEnabled = false;
+            
+			
+			//创建文字：无法设置粗体行间距
+            var staticTxt = __uimanager.createStaticLabel();
+			wLabel1.addChild(staticTxt);  //addChild放前面
+            font_10 = __uimanager.createUIFont(10, "aa");
+            staticTxt.text = "[font='" + font_16 + "'][colour='FFFFFFFF']人民医院\n[font='" + font_10 + "'][colour='FFFFFFFF']时间：2016.1.22 10:25:00\n原因：胶水老化引起玻璃松动\n处理：已完成";
+            uiLeft.init(0, 66);
+            uiTop.init(0, 15);
+            staticTxt.setPosition(uiLeft, uiTop);            
+            staticTxt.isMousePassThroughEnabled = true;
+            staticTxt.isZOrderingEnabled = false;
+            staticTxt.horzFormatting = "LeftAligned";
+            
+			
+			//创建文字：无法设置粗体行间距
+            var staticTxt_clpj = __uimanager.createStaticLabel();
+			wLabel1.addChild(staticTxt_clpj);  //addChild放前面
+            font_12 = __uimanager.createUIFont(12, "aa");
+            staticTxt_clpj.text = "[font='" + font_11 + "'][colour='FFFFFF00']处理评价：";
+            uiLeft.init(0, 66);
+            uiTop.init(0, 82);
+            staticTxt_clpj.setPosition(uiLeft, uiTop);            
+            staticTxt_clpj.isMousePassThroughEnabled = true;
+            staticTxt_clpj.isZOrderingEnabled = false;
+            staticTxt_clpj.horzFormatting = "LeftAligned";
+            
+			
+			//小星星
+            var img_star_gray = __uimanager.createImageFromFile(getSamplesRelatePath("/") + "/png/overlayUI/graystar.png");
+            var img_star_green = __uimanager.createImageFromFile(getSamplesRelatePath("/") + "/png/overlayUI/greenstar.png");
+
+            var stcImg_star_gray1 = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_star_gray1);  //addChild放前面
+            stcImg_star_gray1.setImage(img_star_gray);
+            uiLeft.init(0, 140);
+            uiTop.init(0, 82);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(0, 15);
+            uiHeight.init(0, 15);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_star_gray1.setArea(uiRect);
+            //stcImg_star_gray1.IsMousePassThroughEnabled = true;  //设为true时会导致无法响应UI事件
+            stcImg_star_gray1.isZOrderingEnabled = false;
+            stcImg_star_gray1.name = "stcImg_star_gray1";            
+            stcImg_star_gray1.subscribeEvent(gviUIEventType.gviUIMouseEntersArea);
+			
+			var stcImg_star_green1 = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_star_green1);  //addChild放前面
+            stcImg_star_green1.setImage(img_star_green);
+            uiLeft.init(0, 140);
+            uiTop.init(0, 82);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(0, 15);
+            uiHeight.init(0, 15);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_star_green1.setArea(uiRect);
+            //stcImg_star_green1.IsMousePassThroughEnabled = true;  //设为true时会导致无法响应UI事件
+            stcImg_star_green1.isZOrderingEnabled = false;
+            stcImg_star_green1.name = "stcImg_star_green1";
+            stcImg_star_green1.isVisible = false;            
+            stcImg_star_green1.subscribeEvent(gviUIEventType.gviUIMouseClick);
+            stcImg_star_green1.subscribeEvent(gviUIEventType.gviUIMouseLeavesArea);
+            arrStars.push(stcImg_star_green1);
+			
+			var stcImg_star_gray2 = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_star_gray2);  //addChild放前面
+            stcImg_star_gray2.setImage(img_star_gray);
+            uiLeft.init(0, 156);
+            uiTop.init(0, 82);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(0, 15);
+            uiHeight.init(0, 15);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_star_gray2.setArea(uiRect);
+            //stcImg_star_gray2.IsMousePassThroughEnabled = true;  //设为true时会导致无法响应UI事件
+            stcImg_star_gray2.isZOrderingEnabled = false;
+            stcImg_star_gray2.name = "stcImg_star_gray2";            
+            stcImg_star_gray2.subscribeEvent(gviUIEventType.gviUIMouseEntersArea);
+			
+			var stcImg_star_green2 = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_star_green2);  //addChild放前面
+            stcImg_star_green2.setImage(img_star_green);
+            uiLeft.init(0, 156);
+            uiTop.init(0, 82);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(0, 15);
+            uiHeight.init(0, 15);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_star_green2.setArea(uiRect);
+            //stcImg_star_green2.IsMousePassThroughEnabled = true;  //设为true时会导致无法响应UI事件
+            stcImg_star_green2.isZOrderingEnabled = false;
+            stcImg_star_green2.name = "stcImg_star_green2";
+            stcImg_star_green2.isVisible = false;            
+            stcImg_star_green2.subscribeEvent(gviUIEventType.gviUIMouseClick);
+            stcImg_star_green2.subscribeEvent(gviUIEventType.gviUIMouseLeavesArea);
+            arrStars.push(stcImg_star_green2);
+			
+			var stcImg_star_gray3 = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_star_gray3);  //addChild放前面
+            stcImg_star_gray3.setImage(img_star_gray);
+            uiLeft.init(0, 171);
+            uiTop.init(0, 82);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(0, 15);
+            uiHeight.init(0, 15);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_star_gray3.setArea(uiRect);
+            //stcImg_star_gray3.IsMousePassThroughEnabled = true;  //设为true时会导致无法响应UI事件
+            stcImg_star_gray3.isZOrderingEnabled = false;
+            stcImg_star_gray3.name = "stcImg_star_gray3";            
+            stcImg_star_gray3.subscribeEvent(gviUIEventType.gviUIMouseEntersArea);
+
+            var stcImg_star_green3 = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_star_green3);  //addChild放前面
+            stcImg_star_green3.setImage(img_star_green);
+            uiLeft.init(0, 171);
+            uiTop.init(0, 82);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(0, 15);
+            uiHeight.init(0, 15);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_star_green3.setArea(uiRect);
+            //stcImg_star_green3.IsMousePassThroughEnabled = true;  //设为true时会导致无法响应UI事件
+            stcImg_star_green3.isZOrderingEnabled = false;
+            stcImg_star_green3.name = "stcImg_star_green3";
+            stcImg_star_green3.isVisible = false;            
+            stcImg_star_green3.subscribeEvent(gviUIEventType.gviUIMouseClick);
+            stcImg_star_green3.subscribeEvent(gviUIEventType.gviUIMouseLeavesArea);
+            arrStars.push(stcImg_star_green3);
+			
+			var stcImg_star_gray4 = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_star_gray4);  //addChild放前面
+            stcImg_star_gray4.setImage(img_star_gray);
+            uiLeft.init(0, 186);
+            uiTop.init(0, 82);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(0, 15);
+            uiHeight.init(0, 15);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_star_gray4.setArea(uiRect);
+            //stcImg_star_gray4.IsMousePassThroughEnabled = true;  //设为true时会导致无法响应UI事件
+            stcImg_star_gray4.isZOrderingEnabled = false;
+            stcImg_star_gray4.name = "stcImg_star_gray4";            
+            stcImg_star_gray4.subscribeEvent(gviUIEventType.gviUIMouseEntersArea);
+
+            var stcImg_star_green4 = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_star_green4);  //addChild放前面
+            stcImg_star_green4.setImage(img_star_green);
+            uiLeft.init(0, 186);
+            uiTop.init(0, 82);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(0, 15);
+            uiHeight.init(0, 15);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_star_green4.setArea(uiRect);
+            //stcImg_star_green4.IsMousePassThroughEnabled = true;  //设为true时会导致无法响应UI事件
+            stcImg_star_green4.isZOrderingEnabled = false;
+            stcImg_star_green4.name = "stcImg_star_green4";
+            stcImg_star_green4.isVisible = false;            
+            stcImg_star_green4.subscribeEvent(gviUIEventType.gviUIMouseClick);
+            stcImg_star_green4.subscribeEvent(gviUIEventType.gviUIMouseLeavesArea);
+            arrStars.push(stcImg_star_green4);
+			
+			var stcImg_star_gray5 = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_star_gray5);   //addChild放前面
+            stcImg_star_gray5.setImage(img_star_gray);
+            uiLeft.init(0, 201);
+            uiTop.init(0, 82);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(0, 15);
+            uiHeight.init(0, 15);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_star_gray5.setArea(uiRect);
+            //stcImg_star_gray5.IsMousePassThroughEnabled = true;  //设为true时会导致无法响应UI事件
+            stcImg_star_gray5.isZOrderingEnabled = false;
+            stcImg_star_gray5.name = "stcImg_star_gray5";            
+            stcImg_star_gray5.subscribeEvent(gviUIEventType.gviUIMouseEntersArea);
+
+            var stcImg_star_green5 = __uimanager.createStaticImage();
+			wLabel1.addChild(stcImg_star_green5);  //addChild放前面
+            stcImg_star_green5.setImage(img_star_green);
+            uiLeft.init(0, 201);
+            uiTop.init(0, 82);
+            uiRect.setPosition(uiLeft, uiTop);
+            uiWidth.init(0, 15);
+            uiHeight.init(0, 15);
+            uiRect.setSize(uiWidth, uiHeight);
+            stcImg_star_green5.setArea(uiRect);
+            //stcImg_star_green5.IsMousePassThroughEnabled = true;  //设为true时会导致无法响应UI事件
+            stcImg_star_green5.isZOrderingEnabled = false;
+            stcImg_star_green5.name = "stcImg_star_green5";
+            stcImg_star_green5.isVisible = false;            
+            stcImg_star_green5.subscribeEvent(gviUIEventType.gviUIMouseClick);
+            stcImg_star_green5.subscribeEvent(gviUIEventType.gviUIMouseLeavesArea);
+            arrStars.push(stcImg_star_green5);
+	}
+	
+	function LoadOverlayUILabel_Tempers(){
+		{
+                var uilabel1 = __g.objectManager.createOverlayUILabel(__rootId);
+                uiLeft.init(0, 5);
+                uiTop.init(1.0, -5);
+                uilabel1.setAnchor(uiLeft, uiTop);
+                var pos1 = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+                pos1.setCoords(15049.64, 35694.76, 17.25, 0, 0);
+                uilabel1.worldPosition = pos1;
+                uilabel1.maxVisibleDistance = 1200; //直线距离的可见范围
+                uilabel1.minVisibleDistance = 0;
+                var wLabel1 = uilabel1.getCanvas();
+				uiLeft.init(0, 0);
+				uiTop.init(0, 0);
+				uiRect.setPosition(uiLeft, uiTop);
+                uiWidth.init(0, 38);
+                uiHeight.init(0, 119);
+                uiRect.setSize(uiWidth, uiHeight);
+                wLabel1.setArea(uiRect);  //设置画布宽高
+                wLabel1.name = "temper1";
+                wLabel1.subscribeEvent(gviUIEventType.gviUIMouseEntersArea);
+                wLabel1.subscribeEvent(gviUIEventType.gviUIMouseLeavesArea);
+                arrTempers.push(uilabel1);
+
+                var stcImg_bg = __uimanager.createStaticImage();
+				wLabel1.addChild(stcImg_bg);  //addChild放前面
+                var img_bg = __uimanager.createImageFromFile(getSamplesRelatePath("/") + "/png/overlayUI/bg_temper.png");
+                stcImg_bg.setImage(img_bg);
+                uiLeft.init(0, 0);
+                uiTop.init(0, 0);
+                uiRect.setPosition(uiLeft, uiTop);
+                uiWidth.init(0, 38);
+                uiHeight.init(0, 119);
+                uiRect.setSize(uiWidth, uiHeight);
+                stcImg_bg.setArea(uiRect);
+                stcImg_bg.isZOrderingEnabled = false;   //鼠标点击后不会跑上面来
+                
+
+                var stcImg_detail = __uimanager.createStaticImage();
+				wLabel1.addChild(stcImg_detail);  //addChild放前面
+                var img_detail = __uimanager.createImageFromFile(getSamplesRelatePath("/") + "/png/overlayUI/bg_detail.png");
+                stcImg_detail.setImage(img_detail);
+                uiLeft.init(0, 37);
+                uiTop.init(0, 0);
+                uiRect.setPosition(uiLeft, uiTop);
+                uiWidth.init(0, 140);
+                uiHeight.init(0, 34);
+                uiRect.setSize(uiWidth, uiHeight);
+                stcImg_detail.setArea(uiRect);
+                stcImg_detail.isZOrderingEnabled = false;   //鼠标点击后不会跑上面来
+                stcImg_detail.name = "detail1";
+                stcImg_detail.subscribeEvent(gviUIEventType.gviUIMouseClick);
+                
+
+                //创建文字：无法设置粗体行间距
+                var staticTxt = __uimanager.createStaticLabel();
+				wLabel1.addChild(staticTxt);  //addChild放前面
+                staticTxt.text = "[font='" + font_16 + "'][colour='FFFFFFFF']24          45";
+                uiLeft.init(0, 42);
+                uiTop.init(0, 2);
+                staticTxt.setPosition(uiLeft, uiTop);                
+                staticTxt.isMousePassThroughEnabled = true;
+                staticTxt.isZOrderingEnabled = false;
+                staticTxt.horzFormatting = "LeftAligned";                
+            }
+			
+			{
+                var uilabel1 = __g.objectManager.createOverlayUILabel(__rootId);
+                uiLeft.init(0, 5);
+                uiTop.init(1.0, -5);
+                uilabel1.setAnchor(uiLeft, uiTop);
+                var pos1 = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+                pos1.setCoords(15117.75, 35739.19, 17.51, 0, 0);
+                uilabel1.worldPosition = pos1;
+                uilabel1.maxVisibleDistance = 1200; //直线距离的可见范围
+                uilabel1.minVisibleDistance = 0;
+                var wLabel1 = uilabel1.getCanvas();
+				uiLeft.init(0, 0);
+				uiTop.init(0, 0);
+				uiRect.setPosition(uiLeft, uiTop);
+                uiWidth.init(0, 38);
+                uiHeight.init(0, 119);
+                uiRect.setSize(uiWidth, uiHeight);
+                wLabel1.setArea(uiRect);  //设置画布宽高
+                wLabel1.name = "temper2";
+                wLabel1.subscribeEvent(gviUIEventType.gviUIMouseEntersArea);
+                wLabel1.subscribeEvent(gviUIEventType.gviUIMouseLeavesArea);
+                arrTempers.push(uilabel1);
+
+                var stcImg_bg = __uimanager.createStaticImage();
+				wLabel1.addChild(stcImg_bg);   //addChild放前面
+                var img_bg = __uimanager.createImageFromFile(getSamplesRelatePath("/") + "/png/overlayUI/bg_temper.png");
+                stcImg_bg.setImage(img_bg);
+                uiLeft.init(0, 0);
+                uiTop.init(0, 0);
+                uiRect.setPosition(uiLeft, uiTop);
+                uiWidth.init(0, 38);
+                uiHeight.init(0, 119);
+                uiRect.setSize(uiWidth, uiHeight);
+                stcImg_bg.setArea(uiRect);
+                stcImg_bg.isZOrderingEnabled = false;   //鼠标点击后不会跑上面来
+                
+
+                var stcImg_detail = __uimanager.createStaticImage();
+				wLabel1.addChild(stcImg_detail);   //addChild放前面
+                var img_detail = __uimanager.createImageFromFile(getSamplesRelatePath("/") + "/png/overlayUI/bg_detail.png");
+                stcImg_detail.setImage(img_detail);
+                uiLeft.init(0, 37);
+                uiTop.init(0, 0);
+                uiRect.setPosition(uiLeft, uiTop);
+                uiWidth.init(0, 140);
+                uiHeight.init(0, 34);
+                uiRect.setSize(uiWidth, uiHeight);
+                stcImg_detail.setArea(uiRect);
+                stcImg_detail.isZOrderingEnabled = false;   //鼠标点击后不会跑上面来
+                stcImg_detail.name = "detail2";
+                stcImg_detail.subscribeEvent(gviUIEventType.gviUIMouseClick);
+                
+
+                //创建文字：无法设置粗体行间距
+                var staticTxt = __uimanager.createStaticLabel();
+				wLabel1.addChild(staticTxt);   //addChild放前面
+                staticTxt.text = "[font='" + font_16 + "'][colour='FFFFFFFF']24          45";
+                uiLeft.init(0, 42);
+                uiTop.init(0, 2);
+                staticTxt.setPosition(uiLeft, uiTop);                
+                staticTxt.isMousePassThroughEnabled = true;
+                staticTxt.isZOrderingEnabled = false;
+                staticTxt.horzFormatting = "LeftAligned";                
+            }			
+			
+			{
+                var uilabel1 = __g.objectManager.createOverlayUILabel(__rootId);
+                uiLeft.init(0, 5);
+                uiTop.init(1.0, -5);
+                uilabel1.setAnchor(uiLeft, uiTop);
+                var pos1 = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+                pos1.setCoords(15198.83, 35801.62, 16.42, 0, 0);
+                uilabel1.worldPosition = pos1;
+                uilabel1.maxVisibleDistance = 1200; //直线距离的可见范围
+                uilabel1.minVisibleDistance = 0;
+                var wLabel1 = uilabel1.getCanvas();
+				uiLeft.init(0, 0);
+				uiTop.init(0, 0);
+				uiRect.setPosition(uiLeft, uiTop);
+                uiWidth.init(0, 38);
+                uiHeight.init(0, 119);
+                uiRect.setSize(uiWidth, uiHeight);
+                wLabel1.setArea(uiRect);  //设置画布宽高
+                wLabel1.name = "temper3";
+                wLabel1.subscribeEvent(gviUIEventType.gviUIMouseEntersArea);
+                wLabel1.subscribeEvent(gviUIEventType.gviUIMouseLeavesArea);
+                arrTempers.push(uilabel1);
+
+                var stcImg_bg = __uimanager.createStaticImage();
+				wLabel1.addChild(stcImg_bg);   //addChild放前面
+                var img_bg = __uimanager.createImageFromFile(getSamplesRelatePath("/") + "/png/overlayUI/bg_temper.png");
+                stcImg_bg.setImage(img_bg);
+                uiLeft.init(0, 0);
+                uiTop.init(0, 0);
+                uiRect.setPosition(uiLeft, uiTop);
+                uiWidth.init(0, 38);
+                uiHeight.init(0, 119);
+                uiRect.setSize(uiWidth, uiHeight);
+                stcImg_bg.setArea(uiRect);
+                stcImg_bg.isZOrderingEnabled = false;   //鼠标点击后不会跑上面来
+                
+
+                var stcImg_detail = __uimanager.createStaticImage();
+				wLabel1.addChild(stcImg_detail);   //addChild放前面
+                var img_detail = __uimanager.createImageFromFile(getSamplesRelatePath("/") + "/png/overlayUI/bg_detail.png");
+                stcImg_detail.setImage(img_detail);
+                uiLeft.init(0, 37);
+                uiTop.init(0, 0);
+                uiRect.setPosition(uiLeft, uiTop);
+                uiWidth.init(0, 140);
+                uiHeight.init(0, 34);
+                uiRect.setSize(uiWidth, uiHeight);
+                stcImg_detail.setArea(uiRect);
+                stcImg_detail.isZOrderingEnabled = false;   //鼠标点击后不会跑上面来
+                stcImg_detail.name = "detail3";
+                stcImg_detail.subscribeEvent(gviUIEventType.gviUIMouseClick);
+                
+
+                //创建文字：无法设置粗体行间距
+                var staticTxt = __uimanager.createStaticLabel();
+				wLabel1.addChild(staticTxt);   //addChild放前面
+                staticTxt.text = "[font='" + font_16 + "'][colour='FFFFFFFF']24          45";
+                uiLeft.init(0, 42);
+                uiTop.init(0, 2);
+                staticTxt.setPosition(uiLeft, uiTop);                
+                staticTxt.isMousePassThroughEnabled = true;
+                staticTxt.isZOrderingEnabled = false;
+                staticTxt.horzFormatting = "LeftAligned";                
+            }
+	}
+	
+	function onUIWindowEvent(args, type){		
+        if (args.uiWindow == undefined)
+            return;
+			
+		var windowName = args.uiWindow.name;
+            if (type == gviUIEventType.gviUIMouseClick)
+            {
+                switch (windowName)
+                {
+                    case "stcImg_star_green1":
+                    case "stcImg_star_green2":
+                    case "stcImg_star_green3":
+                    case "stcImg_star_green4":
+                    case "stcImg_star_green5":
+                        {
+							console.log("gviUIMouseClick");
+                            arrStars = [];
+                        }
+                        break;
+                    case "detail1":
+                    case "detail2":
+                    case "detail3":
+                        {
+                            var strIdx = windowName.substring(6);
+                            var idx = Number(strIdx);
+                            var label = arrTempers[idx - 1];
+
+                            var wp = __g.htmlWindow.createWindowParam();
+                            wp.filePath = "this is " + windowName;
+                            wp.position = gviHTMLWindowPosition.gviWinPosMousePosition;
+                            wp.sizeX = 200;
+                            wp.sizeY = 150;
+                            wp.hastitle = true;
+                            wp.isPopupWindow = false;
+                            wp.hideOnClick = true;
+                            wp.winId = 1;
+                            __g.htmlWindow.showPopupWindowEx(label.worldPosition, wp, true);
+                        }
+                        break;
+                }
+            }
+            else if (type == gviUIEventType.gviUIMouseEntersArea)
+            {
+                switch (windowName)
+                {
+                    case "stcImg_probar_none":
+                    case "stcImg_probar_done":
+                        {
+                            stcImg_pop.isVisible = true;
+                            stcTxt_pop.isVisible = true;
+                        }
+                        break;
+                    case "stcImg_star_gray1":
+                    case "stcImg_star_gray2":
+                    case "stcImg_star_gray3":
+                    case "stcImg_star_gray4":
+                    case "stcImg_star_gray5":
+                        {
+                            console.log("gviUIMouseEntersArea");
+                            var strIdx = windowName.substring(16);
+                            var idx = Number(strIdx);
+                            for (var ii = 0; ii < arrStars.length; ii++)
+                            {
+                                var stcImgInArr = arrStars[ii];
+                                if (ii < idx && stcImgInArr.isVisible != true)
+                                    stcImgInArr.isVisible = true;
+								else if(ii >= idx)
+									stcImgInArr.isVisible = false;
+                            }
+                        }
+                        break;
+                    case "temper1":
+                    case "temper2":
+                    case "temper3":
+                        {
+							console.log("gviUIMouseEntersArea:" + windowName);
+                            var strIdx = windowName.substring(6);
+                            var idx = Number(strIdx);
+                            var label = arrTempers[idx-1];
+                            var wLabel1 = label.getCanvas();
+							
+							var area = wLabel1.getArea();							
+							var pos = area.getPosition();
+							var m_left = pos.left;
+							var m_top = pos.top;
+							//console.log("left:" + m_left.scale + ", " + m_left.offset);
+							//console.log("top:" + m_top.scale + ", " + m_top.offset);
+							//var size = area.getSize();
+							//var m_width = size.width;
+							//var m_height = size.height;
+							//console.log("width:" + m_width.scale + ", " + m_width.offset);
+							//console.log("height:" + m_height.scale + ", " + m_height.offset);
+							
+							//console.log("position:" + label.worldPosition.x + ", " + label.worldPosition.y + ", " + label.worldPosition.z);							
+							
+							uiRect.setPosition(m_left, m_top);
+                            uiWidth.init(0, 178);
+                            uiHeight.init(0, 119);
+                            uiRect.setSize(uiWidth, uiHeight);
+                            wLabel1.setArea(uiRect);  //设置画布宽高
+                        }
+                        break;
+                }
+            }
+            else if (type == gviUIEventType.gviUIMouseLeavesArea)
+            {
+                switch (windowName)
+                {
+                    case "stcImg_probar_none":
+                    case "stcImg_probar_done":
+                        {
+                            stcImg_pop.isVisible = false;
+                            stcTxt_pop.isVisible = false;
+                        }
+                        break;
+                    case "stcImg_star_green1":
+                    case "stcImg_star_green2":
+                    case "stcImg_star_green3":
+                    case "stcImg_star_green4":
+                    case "stcImg_star_green5":
+                        {
+                            console.log("gviUIMouseLeavesArea");
+                            var strIdx = windowName.substring(17);
+                            var idx = Number(strIdx);
+                            for (var ii = 0; ii < arrStars.length; ii++)
+                            {
+                                var stcImgInArr = arrStars[ii];
+                                if (ii < idx && stcImgInArr.isVisible != false)
+                                    stcImgInArr.isVisible = false;
+								else if(ii >= idx)
+									stcImgInArr.isVisible = false;
+                            }
+                        }
+                        break;
+                    case "temper1":
+                    case "temper2":
+                    case "temper3":
+                        {
+							console.log("gviUIMouseLeavesArea:" + windowName);
+                            var strIdx = windowName.substring(6);
+                            var idx = Number(strIdx);
+                            var label = arrTempers[idx-1];
+                            var wLabel1 = label.getCanvas();
+							
+							var area = wLabel1.getArea();							
+							var pos = area.getPosition();
+							var m_left = pos.left;
+							var m_top = pos.top;
+							//console.log("left:" + m_left.scale + ", " + m_left.offset);
+							//console.log("top:" + m_top.scale + ", " + m_top.offset);
+							//var size = area.getSize();
+							//var m_width = size.width;
+							//var m_height = size.height;
+							//console.log("width:" + m_width.scale + ", " + m_width.offset);
+							//console.log("height:" + m_height.scale + ", " + m_height.offset);
+							
+							//console.log("position:" + label.worldPosition.x + ", " + label.worldPosition.y + ", " + label.worldPosition.z);	
+							
+							uiRect.setPosition(m_left, m_top);
+                            uiWidth.init(0, 38);
+                            uiHeight.init(0, 119);
+                            uiRect.setSize(uiWidth, uiHeight);
+                            wLabel1.setArea(uiRect);  //设置画布宽高
+                        }
+                        break;
+                }
+            }
+	}
+ 
+</script>
+</html>

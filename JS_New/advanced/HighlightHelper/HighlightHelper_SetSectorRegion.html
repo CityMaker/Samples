@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+     <title>HighlightHelper_SectorRegion</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+    <script type="text/javascript" src="qunit/qunit-test-cap.js"></script>
+</head>
+<body>
+    
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+        </object>
+    </div>
+</body>
+     <script type="text/javascript">
+         var __g = document.getElementById("renderControl");
+         
+         var __fcMap = {};
+         var __fcGeoMap = {};
+         
+
+		 window.onload = function () {
+			 setTimeout("Initialize(true);", 1);
+		 }
+         
+         function Initialize() {
+             //初始化三维控件
+             initAxControl();
+             // 加载FDB场景
+             loadFdb("SDKDEMO.fdb");
+             var point = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+             point.setCoords(15385.88, 35830.10, 11.12, 0, 0);
+             //point.spatialCRS = __datasetSpatialCRS;
+             var point2 = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+             point2.setCoords(15260.82, 35813.66, 9.39, 0, 0);
+            // point2.spatialCRS = __datasetSpatialCRS;
+             __g.highlightHelper.visibleMask = gviViewportMask.gviViewAllNormalView;
+             __g.highlightHelper.color = 0xffff00ff;
+             __g.highlightHelper.setSectorRegion(point, point2, 45);
+
+             point.setCoords(15311.10, 35618.09, 267.51, 0, 0);
+             var eulerAngle = __g.new_EulerAngle;
+             eulerAngle.tilt = -45;
+             __g.camera.setCamera2(point, eulerAngle, gviSetCameraFlags.gviSetCameraNoFlags);
+         }
+         
+         
+    
+     </script>
+</html>

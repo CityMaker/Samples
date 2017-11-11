@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>MouseHover</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+    
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+        </object>
+    </div>
+</body>
+
+<script type="text/javascript">
+
+
+    var __fcMap = {};
+    var __fcGeoMap = {};
+    var tableLabel = null;
+
+     window.onload = function () {
+         initialize();
+     }
+
+    function initialize() {
+        //初始化三维控件
+        initAxControl();
+
+        // 加载FDB场景
+        loadFdb("community.FDB");
+
+        __g.interactMode = gviInteractMode.gviInteractSelect;
+        __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectFeatureLayer;
+        __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectHover;
+        
+    }
+
+
+    function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+        if (pickResult == null) {
+            if (tableLabel != null)
+                __g.objectManager.deleteObject(tableLabel.guid);
+            return;
+        }
+
+        var featureId = pickResult.featureId;
+        var featureClass = null;
+        var fl = pickResult.featureLayer;
+        var fc = __fcMap[fl.featureClassId];
+        if (fc) {
+            var filter = __g.new_QueryFilter;
+            filter.whereClause = "oid=" + featureId;
+            var nCount = fc.getCount(filter);
+            if (nCount == 0)
+                return;
+            var cursor = fc.search(filter, true);
+            if (cursor != null) {
+                var fdeRow = null;
+                if (tableLabel) {
+                    __g.objectManager.deleteObject(tableLabel.guid);
+                    tableLabel = null;
+                }
+                var fInfoColl = fc.getFields();
+                tableLabel = __g.objectManager.createTableLabel(fInfoColl.count, 2, __rootId);
+                tableLabel.visibleMask = gviViewportMask.gviViewNone;
+                while ((fdeRow = cursor.nextRow()) != null) {
+                    for (var i = 0; i < fInfoColl.count; ++i) {
+                        var fieleInfo = fInfoColl.get(i);
+                        var strColName = fieleInfo.name;
+                        var nPos = fdeRow.fieldIndex(strColName);
+                        if (fieleInfo.fieldType == gviFieldType.gviFieldGeometry) {
+                            tableLabel.setRecord(i, 0, strColName);
+                            tableLabel.setRecord(i, 1, "Geometry");
+                            continue;
+                        } if (fieleInfo.fieldType == gviFieldType.gviFieldBlob) {
+                            tableLabel.setRecord(i, 0, strColName);
+                            tableLabel.setRecord(i, 1, "Blob");
+                            continue;
+                        }
+                        if (nPos == -1 || fdeRow.isNull(nPos))
+                            continue;
+                        var v = fdeRow.getValue(nPos);  // 从库中读取值
+                        tableLabel.setRecord(i, 0, strColName);
+                        tableLabel.setRecord(i, 1, v);
+                    }
+                }
+                // 设定表位置
+                tableLabel.position = intersectPoint;
+
+                //表头
+                tableLabel.titleText = "拾取模型信息";
+                //表头背景色
+                tableLabel.titleBackgroundColor = colorFromARGB(255, 255, 255, 200);
+
+                tableLabel.setColumnWidth(0, 80);
+
+                tableLabel.setColumnWidth(1, 150);
+
+                //表的边框颜色
+                tableLabel.borderColor = 0xff000000;
+                //表的边框的宽度
+                tableLabel.borderWidth = 2;
+                //表的背景色
+                tableLabel.tableBackgroundColor = colorFromARGB(200, 255, 255, 200);
+
+                // 表头样式
+                var headerTextAttribute = __g.new_TextAttribute;
+                headerTextAttribute.textColor = colorFromARGB(255, 0, 0, 0); ;
+                headerTextAttribute.outlineColor = 0xff808080;
+                headerTextAttribute.font = "宋体";
+                headerTextAttribute.textSize = 12;
+                headerTextAttribute.bold = false;
+                headerTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineLeft;
+                tableLabel.setColumnTextAttribute(0, headerTextAttribute);
+
+                // 内容样式  列的内容 样式
+                var contentTextAttribute = __g.new_TextAttribute;
+                contentTextAttribute.textColor = colorFromARGB(255, 0, 0, 0);
+                contentTextAttribute.outlineColor = 0xff808080;
+                contentTextAttribute.font = "宋体";
+                contentTextAttribute.bold = false;
+                contentTextAttribute.textSize = 12;
+                contentTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineLeft;
+                tableLabel.setColumnTextAttribute(1, contentTextAttribute);
+
+                // 标题样式
+                var capitalTextAttribute = __g.new_TextAttribute;
+                capitalTextAttribute.textColor = 0xffffffff;
+                capitalTextAttribute.outlineColor = 4279834905;
+                capitalTextAttribute.font = "华文新魏";
+                capitalTextAttribute.textSize = 15;
+                capitalTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineCenter;
+                capitalTextAttribute.bold = true;
+                tableLabel.titleTextAttribute = capitalTextAttribute;
+
+                tableLabel.mouseSelectMask = 0;
+                tableLabel.visibleMask = gviViewportMask.gviViewAllNormalView;
+            }
+        }
+    }
+   
+
+</script>
+
+</html>

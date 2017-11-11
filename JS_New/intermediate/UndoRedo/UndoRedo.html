@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>UndoRedo</title>
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+    <script type="text/javascript" src="object.js"></script>
+    <script type="text/javascript" src="function.js"></script>
+</head>
+<body style="margin: 0px; scroll: no">
+    <div style="float: left">
+        <input type="button" value="Pan" onclick="Pan()" />
+        <input type="button" value="Select" onclick="Select()" />
+        <input type="button" id="tsb_Undo" value="Undo" onclick="Undo()" />
+        <input type="button" id="tsb_Redo" value="Redo" onclick="Redo()" />
+        <input type="button" value="Delete" onclick="Delete()" />
+        <input type="button" value="Update" onclick="Update()" />
+        <input type="button" value="Insert" onclick="Insert()" />
+    </div>
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+        </object>
+        <!-- object里的style="height: 600px; width: 800px " 必须有，否则无法全页面显示-->
+    </div>
+</body>
+
+<script type="text/javascript">
+     window.onload = function () {
+         initialize();
+     }
+
+	function initialize() {
+		//初始化三维控件
+        initAxControl();
+
+        //设置选择对象类型
+        __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectFeatureLayer;
+        __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+
+
+        // 加载场景
+		/*
+		var c = __g.new_ConnectionInfo;
+		c.connectionType = 101;
+		c.server = "192.168.2.95";
+		c.database = "service1";
+		c.port = 8040;
+		c.userName = "";  
+		c.password = "";  //如发布服务时有密码则填
+		loadServer(c);
+		*/
+        loadFdb("community.FDB");
+
+        // 创建内存数据集
+        var ci = __g.new_ConnectionInfo;
+        ci.connectionType = gviConnectionType.gviConnectionSQLite3;
+        var ds = __g.dataSourceFactory.createDataSource(ci, "");
+        backupSet = ds.createFeatureDataset(__fds.name, __fds.spatialReference);
+
+        $("tsb_Undo").disabled = "disabled";
+        $("tsb_Redo").disabled = "disabled";
+	}
+    
+    function Pan() {
+        __g.interactMode = gviInteractMode.gviInteractNormal;
+    }
+
+    function Select() {
+        __g.interactMode = gviInteractMode.gviInteractSelect;
+    }
+
+
+    var curSelectFc;
+    var curSelectFid;
+    function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+        if (pickResult == null)
+            return;
+        __g.featureManager.unhighlightAll();
+        if (pickResult != null) {
+            if (pickResult.type == gviObjectType.gviObjectFeatureLayer) {
+                curSelectFid = pickResult.featureId;
+                var fl = pickResult.featureLayer;
+                for (var fcGuid in __fcMap) {
+                    if (fcGuid == fl.featureClassId) {
+                        curSelectFc = __fcMap[fcGuid];
+                        __g.featureManager.highlightFeature(curSelectFc, curSelectFid, 0xffff0000);
+                    }
+                }
+            }
+        }
+    }
+
+    function checkButton() {
+        if (m_stackRedo.length > 0)
+            $("tsb_Redo").disabled = "";
+        else
+            $("tsb_Redo").disabled = "disabled";
+        if (m_stackUndo.length > 0)
+            $("tsb_Undo").disabled = "";
+        else
+            $("tsb_Undo").disabled = "disabled";
+    }
+
+    //////////////////////////////////////////////////////////////////////////
+    ///枚举定义
+    //////////////////////////////////////////////////////////////////////////
+    if (typeof gvCommandType == "undefined") {
+        var gvCommandType = {};
+        gvCommandType.gvInsertCommand = 1,   //插入操作
+        gvCommandType.gvDeleteCommand = 2,   //删除操作
+        gvCommandType.gvUpdateCommand = 3	   //更新操作
+    }
+
+    /*
+     *	删除
+     */
+    function Delete() {
+        _OpenBackUpObjectClass(curSelectFc);
+        
+        var pCmd= new Command();
+        pCmd.m_cmdType = gvCommandType.gvDeleteCommand;
+        pCmd.m_pSrcDataset = curSelectFc.featureDataSet;
+        pCmd.m_pSrcFCName = curSelectFc.name;
+	    pCmd.m_pDesObjectClass = backupOC;
+	    pCmd.m_idToDel = curSelectFid;
+	    pCmd.delRow();
+        m_stackUndo.push(pCmd);        
+
+        __g.featureManager.deleteFeature(curSelectFc, curSelectFid);
+
+        checkButton();
+    }
+
+    /*
+    *	更新
+    */
+    function Update() {
+        _OpenBackUpObjectClass(curSelectFc);
+
+        //获取当前选中要素，将其放大一倍，作为新的行进行更新
+        var row = curSelectFc.getRow(curSelectFid);
+        var geoPos = curSelectFc.getFields().indexOf("Geometry");
+        if(geoPos != -1)
+        {
+            var geo = row.getValue(geoPos);
+            geo.selfScale(2, 2, 2);
+            row.setValue(geoPos, geo);
+        }
+
+        var pCmd = new Command();
+        pCmd.m_cmdType = gvCommandType.gvUpdateCommand;
+        pCmd.m_pSrcDataset = curSelectFc.featureDataSet;
+        pCmd.m_pSrcFCName = curSelectFc.name;
+        pCmd.m_pDesObjectClass = backupOC;
+        pCmd.m_idToDel = curSelectFid;
+        pCmd.updateRow(row);
+        m_stackUndo.push(pCmd);
+
+        __g.featureManager.editFeature(curSelectFc, row);
+
+        checkButton();
+    }
+
+    /*
+    *	插入
+    */
+    function Insert() {
+        _OpenBackUpObjectClass(curSelectFc);
+
+        //克隆当前选中要素，将z值提高10米，作为新的行进行插入
+        var row = curSelectFc.getRow(curSelectFid).clone(false);
+        var geoPos = curSelectFc.getFields().indexOf("Geometry");
+        if (geoPos != -1) {
+            var geo = row.getValue(geoPos);
+            geo.z = geo.z + 10;
+            row.setValue(geoPos, geo);
+        }
+        row.setNull(0);
+
+        var pCmd = new Command();
+        pCmd.m_cmdType = gvCommandType.gvInsertCommand;
+        pCmd.m_pSrcDataset = curSelectFc.featureDataSet;
+        pCmd.m_pSrcFCName = curSelectFc.name;
+        pCmd.m_pDesObjectClass = backupOC;
+        pCmd.insertRow(row);
+        m_stackUndo.push(pCmd);
+
+        __g.featureManager.createFeature(curSelectFc, row);
+
+        checkButton();
+    }
+
+    function Undo() {
+        if (m_stackUndo.length == 0)
+            return;
+        var pCmd = m_stackUndo.pop();
+        pCmd.undo();
+        //入栈RedoCommand
+        m_stackRedo.push(pCmd);
+
+        checkButton();
+    }
+
+    function Redo() {
+        if (m_stackRedo.length == 0)
+            return;
+        var pCmd = m_stackRedo.pop();
+        pCmd.redo();
+        //入栈UndoCommand
+        m_stackUndo.push(pCmd);
+
+        checkButton();
+    }
+</script>
+
+</html>

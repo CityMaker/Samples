@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>ExportManager</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="../../cm7.js"></script>
+<script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+<button onclick="captureScreen()">CaptureScreen</button>
+&nbsp;<br />
+<object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+</object>
+</body>
+<script type="text/javascript">
+	
+    /************************************************************************/
+    /* 出图事件                                                             */
+    /************************************************************************/
+    function onPictureExportBegin(nw, nh) {
+        document.title = "出图开始了：" + nw + " * " + nh;
+    }
+
+    function onPictureExporting(index, per) {
+        document.title = "出图中, 已完成" + (per * 100) + "%";
+    }
+
+    function onPictureExportEnd() {
+        document.title = "出图完成!";
+		logoLabel.visibleMask = 0;
+    }
+
+     window.onload = function () {
+         initialize();
+     }
+
+	 var logoLabel;
+	function initialize() {
+        //初始化三维控件
+        initAxControl();
+
+        // 加载场景
+        loadFdb("SDKDEMO.FDB");
+		
+        //自定义右下角Logo
+	    logoLabel = __g.objectManager.createOverlayLabel(__rootId);
+		logoLabel.imageName = getSamplesRelatePath("/bmp/Tulips.bmp");
+		logoLabel.setWidth(128, 0, 0);
+		logoLabel.setHeight(96, 0, 0);
+		logoLabel.setX(-logoLabel.getWidth() / 2, 1.0, 0);
+		logoLabel.setY(logoLabel.getHeight() / 2, 0, 0);
+		__g.viewport.logoVisible = false;
+	}
+	
+
+    /*
+    *	出图
+    */
+    function captureScreen() {
+        var higquality = false;
+		var center = __g.geometryFactory.createPoint(1);
+		center.spatialCRS = __fds.spatialReference;
+		center.x = 15346.299762268409;
+		center.y = 35751.586131130185;
+		center.z = 23.64777655074311;
+		var newEnv = __g.new_Envelope;
+		newEnv.minX = -85.499605924023854;  
+		newEnv.maxX = 85.499605924025673;
+		newEnv.minY = -108.15521244704723;
+		newEnv.maxY = 108.15521244704723;
+		newEnv.minZ = -100;  
+		newEnv.maxZ = 100;
+		var path = getSamplesRelatePath("/_ExportOrtho.png");
+		var b = __g.exportManager.exportImage(path, 0, 0, higquality);
+        if (!b) {
+            alert("Capture Screen Failed, Please check it.");
+        }
+    }
+
+</script>
+</html>

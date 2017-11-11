@@ -1,0 +1,152 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>FeaturelayerHole</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script type="text/javascript" src="../../cm7.js"></script>
+	<script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+    <div style="height: 50px;">
+        <input id="splitCubeModelWithZ" type="button" onclick="splitCubeModelWithZ()" value="挖洞" />
+		minZ:<input type="text" id="minZ" size="10"/>  
+		maxZ:<input type="text" id="maxZ" size="10"/> 	
+        <input id="cleanSplit" type="button" onclick="cleanSplit()" value="删洞" />
+    </div>
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 800px; width: 1200px"></object>
+    </div>
+</body>
+
+<script type="text/javascript">
+
+    window.onload = function () {
+        initialize();
+    }
+
+    
+    var minZ;//剖分最低高度
+    var maxZ;//剖分最高高度；剖分模型在这个最低与最高Z值范围内进行
+    var renderModelA;
+    var renderPolygonA;
+    var selectedFeature;    
+	var currentGeometry, currentRenderGeometry, searchFc,searchFcDt;
+
+    function initialize() {
+		//初始化三维控件
+        initAxControl();
+
+		// 加载场景
+        loadFdb("SDKDEMO.FDB");      
+
+    }
+
+    function splitCubeModelWithZ() {
+        renderModelA = new Array();
+        renderPolygonA = new Array();
+        
+        __g.interactMode = gviInteractMode.gviInteractEdit;
+
+        var surfaceSymbol = __g.new_SurfaceSymbol;
+        surfaceSymbol.color = 0x550000FF;
+        currentGeometry = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPolygon, gviVertexAttribute.gviVertexAttributeZ);
+        currentGeometry.spatialCRS = __fds.spatialReference;
+        currentRenderGeometry = __g.objectManager.createRenderPolygon(currentGeometry, surfaceSymbol, __rootId);
+        
+        renderPolygonA.push(currentRenderGeometry.guid);
+
+        __g.objectEditor.startEditRenderGeometry(currentRenderGeometry, gviGeoEditType.gviGeoEditCreator);
+    }
+
+    function onObjectEditing(geometry) {
+        currentGeometry = geometry;
+    }
+
+    function onObjectEditFinish() {
+		var minZstr = document.getElementById("minZ").value;
+		if(minZstr.length == 0)
+			minZ = 0;
+		else
+			minZ = parseInt(minZstr);
+		var maxZstr = document.getElementById("maxZ").value;
+		if(maxZstr.length == 0)
+			maxZ = 0;
+		else
+			maxZ = parseInt(maxZstr);	
+	
+        var spatialFilter = __g.new_SpatialFilter;
+        spatialFilter.geometry = currentGeometry;
+        spatialFilter.spatialRel = gviSpatialRel.gviSpatialRelEnvelope;   //用不相离查不出来
+        spatialFilter.geometryField = "Geometry";
+
+        for (var fcId in __fcGeoMap) {
+            var fc = __fcMap[fcId];
+            if (fc.name == "Building") {
+                searchFc = fc;
+                searchFcDt = fc.featureDataSet;
+                break;
+            }
+        }
+
+        var cursor = searchFc.search(spatialFilter, false);
+        var modelRow = null;
+        var multiPolygon = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryMultiPolygon, gviVertexAttribute.gviVertexAttributeZ);
+        multiPolygon.addPolygon(currentGeometry);
+        if (cursor != null) {
+            while ((modelRow = cursor.nextRow()) != null) {
+                var modelOid = modelRow.getValue(modelRow.fieldIndex("oid"));
+                __g.featureManager.setFeatureVisibleMask(searchFc, modelOid, gviViewportMask.gviViewNone);
+                var modelPnt = modelRow.getValue(modelRow.fieldIndex("Geometry"));
+                var model = searchFcDt.getModel(modelPnt.modelName);
+                var splitResult = null;
+                if (minZ == 0 && maxZ == 0) {
+                    
+                    splitResult = __g.geometryConvertor.splitModelPointByPolygon2D(multiPolygon, model, modelPnt);
+                }
+                else {
+                    
+                    splitResult = __g.geometryConvertor.splitModelPointByPolygon2DWithZ(multiPolygon, model, modelPnt, minZ, maxZ);
+                }
+                if (splitResult["modelExterior"] != null) {
+                    __g.objectManager.addModel(searchFc.name + modelOid + "Exterior", splitResult["modelExterior"]);
+                    splitResult["modelPointExterior"].modelName = searchFc.name + modelOid + "Exterior";
+
+                    var imagenames = splitResult["modelExterior"].getImageNames();
+                    for (var k = 0; k < imagenames.length; k++) {
+                        var image = searchFcDt.getImage(imagenames[k]);
+                        __g.objectManager.addImage(imagenames[k], image);
+                    }
+                    var splitModel = __g.objectManager.createRenderModelPoint(splitResult["modelPointExterior"], null, __rootId);
+                    renderModelA.push(splitModel.guid);
+                }
+            }
+        }
+
+		__g.interactMode = gviInteractMode.gviInteractNormal;
+		currentRenderGeometry.visibleMask = gviViewportMask.gviViewNone;
+    }
+
+    function cleanSplit() {
+        if (renderModelA.length != 0) {
+            for (var i = 0; i < renderModelA.length; i++) {
+                __g.objectManager.deleteObject(renderModelA[i]);
+            }
+            renderModelA.splice(0, renderModelA.length);
+        }
+        if (renderPolygonA.length != 0) {
+            for (var j = 0; j < renderPolygonA.length; j++) {
+                __g.objectManager.deleteObject(renderPolygonA[j]);
+            }
+            renderPolygonA.splice(0, renderPolygonA.length);
+        }
+
+        __g.featureManager.resetAllVisibleMask();
+    }
+
+
+
+
+</script>
+
+</html>
+</script>

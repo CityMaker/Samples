@@ -1,0 +1,169 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>FeatureLayerValueMapRender</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+        </object>
+    </div>
+</body>
+<script type="text/javascript">
+    
+     window.onload = function () {
+         initialize();
+     }
+
+    function initialize() {
+
+        //初始化三维控件
+        initAxControl();
+        
+        //定义文字渲染风格
+        var textRender = __g.new_ValueMapTextRender;
+        textRender.expression = "''..$(Name)";
+        {
+            var textAttribute = __g.new_TextAttribute;
+            textAttribute.textColor = 0xffff0000;
+            textAttribute.font = "黑体";
+            textAttribute.textSize = 15;
+
+            var textSymbol = __g.new_TextSymbol;
+            textSymbol.textAttribute = textAttribute;
+            textSymbol.pivotAlignment = gviPivotAlignment.gviPivotAlignBottomCenter;
+
+            var uniqValRule = __g.new_UniqueValuesRenderRule;
+            uniqValRule.lookUpField = "type";
+            uniqValRule.addValue("写字楼");
+
+            var textScheme = __g.new_TextRenderScheme;
+            textScheme.symbol = textSymbol;
+            textScheme.addRule(uniqValRule);
+            textRender.addScheme(textScheme);
+        }
+
+        {
+            var textAttribute = __g.new_TextAttribute;
+            textAttribute.textColor = 0xFF00FFFF;
+            textAttribute.textSize = 11;
+            textAttribute.font = "华文新魏";
+
+            var textSymbol = __g.new_TextSymbol;
+            textSymbol.textAttribute = textAttribute;
+            textSymbol.pivotAlignment = gviPivotAlignment.gviPivotAlignBottomCenter;
+
+            var uniqValRule = __g.new_UniqueValuesRenderRule;
+            uniqValRule.lookUpField = "type";
+            uniqValRule.addValue("别墅");
+
+            var textScheme = __g.new_TextRenderScheme;
+            textScheme.symbol = textSymbol;
+            textScheme.addRule(uniqValRule);
+            textRender.addScheme(textScheme);
+        }
+
+        {
+            var textAttribute = __g.new_TextAttribute;
+            textAttribute.textColor = 0xff00ff00;
+            textAttribute.textSize = 20;
+            textAttribute.font = "幼圆";
+
+            var textSymbol = __g.new_TextSymbol;
+            textSymbol.textAttribute = textAttribute;
+            textSymbol.pivotAlignment = gviPivotAlignment.gviPivotAlignBottomCenter;
+
+            var uniqValRule = __g.new_UniqueValuesRenderRule;
+            uniqValRule.lookUpField = "type";
+            uniqValRule.addValue("商场");
+
+            var textScheme = __g.new_TextRenderScheme;
+            textScheme.symbol = textSymbol;
+            textScheme.addRule(uniqValRule);
+            textRender.addScheme(textScheme);
+        }
+
+        // *****定义几何物体渲染风格*****
+        var geoRender = __g.new_ValueMapGeometryRender;
+        // 特别注意：此处设置了逻辑组字段，则需要在CreateFeatureLayer后设置组的可见性。否则，默认FeatureLayer将不可见。
+        // 注意：必须用已注册RenderIndex的字段，否则CreateFeatureLayer创建不成功返回null
+        //geoRender.renderGroupField = "groupid";
+        {
+            var rangeRule = __g.new_RangeRenderRule;
+            rangeRule.lookUpField = "storey";
+            rangeRule.maxValue = 3;
+            rangeRule.minValue = 0;
+            rangeRule.includeMin = false;
+
+            var geoSymbol = __g.new_ModelPointSymbol;
+            geoSymbol.color = 0xFFFFFFD7;  //模型颜色为浅黄
+            geoSymbol.enableColor = true;  //需开启，否则颜色设置无效
+
+            var grs = __g.new_GeometryRenderScheme;
+            grs.addRule(rangeRule);
+            grs.symbol = geoSymbol;
+            geoRender.addScheme(grs);
+        }
+        {
+            var rangeRule = __g.new_RangeRenderRule;
+            rangeRule.lookUpField = "storey";
+            rangeRule.maxValue = 9;
+            rangeRule.minValue = 3;
+            rangeRule.includeMin = false;
+
+            var geoSymbol = __g.new_ModelPointSymbol;
+            geoSymbol.color = 0xFFFFFF62;  //模型颜色为中黄
+            geoSymbol.enableColor = true;  //需开启，否则颜色设置无效
+
+            var grs = __g.new_GeometryRenderScheme;
+            grs.addRule(rangeRule);
+            grs.symbol = geoSymbol;
+            geoRender.addScheme(grs);
+        }
+        {
+            var rangeRule = __g.new_RangeRenderRule;
+            rangeRule.lookUpField = "storey";
+            rangeRule.maxValue = 12;
+            rangeRule.minValue = 9;
+            rangeRule.includeMin = false;
+
+            var geoSymbol = __g.new_ModelPointSymbol;
+            geoSymbol.color = 0xFFDDDD00;  //模型颜色为深黄
+            geoSymbol.enableColor = true;  //需开启，否则颜色设置无效
+
+            var grs = __g.new_GeometryRenderScheme;
+            grs.addRule(rangeRule);
+            grs.symbol = geoSymbol;
+            geoRender.addScheme(grs);
+        }
+        {
+            var rangeRule = __g.new_RangeRenderRule;
+            rangeRule.lookUpField = "storey";
+            rangeRule.maxValue = 15;
+            rangeRule.minValue = 12;
+            rangeRule.includeMin = false;
+
+            var geoSymbol = __g.new_ModelPointSymbol;
+            geoSymbol.color = 0xFF7D7D00;  //模型颜色为深黄
+            geoSymbol.enableColor = true;  //需开启，否则颜色设置无效
+
+            var grs = __g.new_GeometryRenderScheme;
+            grs.addRule(rangeRule);
+            grs.symbol = geoSymbol;
+            geoRender.addScheme(grs);
+        }
+        {
+            var geoSchemeOther = __g.new_GeometryRenderScheme;
+            geoRender.addScheme(geoSchemeOther);
+        }
+
+
+        // 加载场景
+        loadFdb("community.FDB", textRender, geoRender);
+    }
+</script>
+</html>

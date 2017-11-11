@@ -1,0 +1,317 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Hello World</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="../../cm7.js"></script>
+<script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+<button onclick="fullScreen()"> FullScreen</button>
+<button onclick="captureScreen()"> CaptureScreen</button>
+<select id="eWeather" onchange="changeWeather()">
+  <option>晴天</option>
+  <option>小雨</option>
+  <option>中雨</option>
+  <option>大雨</option>
+  <option>小雪</option>
+  <option>中雪</option>
+  <option>大雪</option>
+</select>
+<select id="eSkyBox" onchange="changeSkyBox()">
+  <option>无</option>
+  <option selected="selected">金色晨曦</option>
+  <option>光暗之手</option>
+  <option>天马行空</option>
+  <option>飘絮人间</option>
+  <option>七彩紫罗</option>
+  <option>云中之触</option>
+  <option>鲲鹏万里</option>
+  <option>血色苍穹</option>
+  <option>白云旋天</option>
+  <option>长空破日</option>
+  <option>混沌沧海</option>
+  <option>梦境之末</option>
+  <option>玄浑宇宙</option>
+  <option>月神之眼</option>
+</select>
+<select id="eSelCameraTour">
+</select>
+<button onclick="play()"> Play</button>
+<button onclick="pause()"> Pause</button> 
+<button onclick="stop()"> Stop</button>
+<button onclick="__g.pauseRendering(true)"> 停止渲染</button>
+<button onclick="__g.resumeRendering()"> 恢复渲染</button>
+&nbsp;<br />
+<object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+</object>
+</body>
+<script type="text/javascript">
+
+    var __cameraTour1 = null;
+    var __cameraTour2 = null;
+
+    /************************************************************************/
+    /* 出图事件                                                             */
+    /************************************************************************/
+    function onPictureExportBegin(nw, nh) {
+        document.title = "出图开始了：" + nw + " * " + nh;
+    } 
+
+    function onPictureExporting(index, per) {
+        document.title = "出图中, 已完成" + (per * 100) + "%";
+    }
+
+    function onPictureExportEnd() {
+        document.title = "出图完成!";
+        alert("OK");
+    }
+
+    function onMouseButton() {
+        
+    }
+
+    function onFrame(frameIndex, refTime) {
+        //document.title = frameIndex + "//" + refTime;       
+    }
+
+
+    function init() {        
+
+        //初始化三维控件
+        initAxControl();       
+
+        // 加载场景
+        loadFdb("SDKDEMO.FDB");
+
+        // 加载动画导航
+        loadTour();
+            }
+
+    window.onload = init;
+
+
+    
+    /*
+    *	全屏
+    */
+    function fullScreen() {
+        __g.fullScreen = !__g.fullScreen;
+    }
+
+    /*
+    *	出图
+    */
+    function captureScreen() {
+        var higquality = false;
+        var b = __g.exportManager.exportImage("", 2048, 2048, higquality);
+        if (!b) {
+            alert("Capture Screen Failed, Please check it.");
+        }
+    }
+
+    /*
+    *	天气
+    */
+    function changeWeather() {
+        var index = $("eWeather").selectedIndex;
+        var skyboxObj = __g.objectManager.getSkyBox(0);
+        skyboxObj.weather = index;
+    }
+
+    /*
+    *	加载Tour列表
+    */
+    function loadTour() {
+        var xmlPath = getSamplesRelatePath("/xml/CameraTour_1.xml");
+        var doc = new ActiveXObject("Microsoft.XMLDOM");
+        doc.load(xmlPath);
+        var xml = doc.xml;
+        __cameraTour1 = __g.objectManager.createCameraTour(__rootId);
+        __cameraTour1.fromXml(xml);
+        var varItem = new Option("CameraTour_1", 0);
+        $("eSelCameraTour").options.add(varItem);
+
+        xmlPath = getSamplesRelatePath("/xml/CameraTour_2.xml");
+        doc.load(xmlPath);
+        xml = doc.xml;
+        __cameraTour2 = __g.objectManager.createCameraTour(__rootId);
+        __cameraTour2.fromXml(xml);
+        varItem = new Option("CameraTour_2", 1);
+        $("eSelCameraTour").options.add(varItem);
+    }
+
+    /*
+    *	播放
+    */
+    function play() {
+        var index = $("eSelCameraTour").selectedIndex
+        if (index == 0)
+            __cameraTour1.play();
+        else
+            __cameraTour2.play();
+    }
+
+    /*
+    *	暂停
+    */
+    function pause() {
+
+        var index = $("eSelCameraTour").selectedIndex
+        if (index == 0)
+            __cameraTour1.pause();
+        else
+            __cameraTour2.pause();
+    }
+
+    /*
+    *	停止
+    */
+    function stop() {
+        var index = $("eSelCameraTour").selectedIndex
+        if (index == 0)
+            __cameraTour1.stop();
+        else
+            __cameraTour2.stop();
+    }
+
+    /*
+    *	切换天空盒
+    */
+    function changeSkyBox() {
+        var skyboxPath = getSamplesRelatePath("/skybox");
+        var sky = $("eSkyBox").selectedIndex;
+        var skyboxObj = __g.objectManager.getSkyBox(0);
+        switch (sky) {
+            case 0:
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBack, skyboxPath + "\\00_BK.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBottom, skyboxPath + "\\00_DN.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageFront, skyboxPath + "\\00_FR.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageLeft, skyboxPath + "\\00_LF.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageRight, skyboxPath + "\\00_RT.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageTop, skyboxPath + "\\00_UP.jpg");
+                break;
+            case 1:
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBack, skyboxPath + "\\1_BK.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBottom, skyboxPath + "\\1_DN.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageFront, skyboxPath + "\\1_FR.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageLeft, skyboxPath + "\\1_LF.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageRight, skyboxPath + "\\1_RT.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageTop, skyboxPath + "\\1_UP.jpg");
+                break;
+            case 2:
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBack, skyboxPath + "\\2_BK.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBottom, skyboxPath + "\\2_DN.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageFront, skyboxPath + "\\2_FR.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageLeft, skyboxPath + "\\2_LF.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageRight, skyboxPath + "\\2_RT.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageTop, skyboxPath + "\\2_UP.jpg");
+                break;
+            case 3:
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBack, skyboxPath + "\\04_BK.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBottom, skyboxPath + "\\04_DN.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageFront, skyboxPath + "\\04_FR.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageLeft, skyboxPath + "\\04_LF.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageRight, skyboxPath + "\\04_RT.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageTop, skyboxPath + "\\04_UP.jpg");
+                break;
+            case 4:
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBack, skyboxPath + "\\7_BK.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBottom, skyboxPath + "\\7_DN.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageFront, skyboxPath + "\\7_FR.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageLeft, skyboxPath + "\\7_LF.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageRight, skyboxPath + "\\7_RT.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageTop, skyboxPath + "\\7_UP.jpg");
+                break;
+            case 5:
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBack, skyboxPath + "\\9_BK.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBottom, skyboxPath + "\\9_DN.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageFront, skyboxPath + "\\9_FR.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageLeft, skyboxPath + "\\9_LF.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageRight, skyboxPath + "\\9_RT.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageTop, skyboxPath + "\\9_UP.jpg");
+                break;
+            case 6:
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBack, skyboxPath + "\\10_BK.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBottom, skyboxPath + "\\10_DN.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageFront, skyboxPath + "\\10_FR.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageLeft, skyboxPath + "\\10_LF.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageRight, skyboxPath + "\\10_RT.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageTop, skyboxPath + "\\10_UP.jpg");
+                break;
+            case 7:
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBack, skyboxPath + "\\11_BK.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBottom, skyboxPath + "\\11_DN.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageFront, skyboxPath + "\\11_FR.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageLeft, skyboxPath + "\\11_LF.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageRight, skyboxPath + "\\11_RT.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageTop, skyboxPath + "\\11_UP.jpg");
+                break;
+            case 8:
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBack, skyboxPath + "\\12_BK.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBottom, skyboxPath + "\\12_DN.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageFront, skyboxPath + "\\12_FR.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageLeft, skyboxPath + "\\12_LF.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageRight, skyboxPath + "\\12_RT.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageTop, skyboxPath + "\\12_UP.jpg");
+                break;
+            case 9:
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBack, skyboxPath + "\\13_BK.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBottom, skyboxPath + "\\13_DN.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageFront, skyboxPath + "\\13_FR.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageLeft, skyboxPath + "\\13_LF.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageRight, skyboxPath + "\\13_RT.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageTop, skyboxPath + "\\13_UP.jpg");
+                break;
+            case 10:
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBack, skyboxPath + "\\22_BK.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBottom, skyboxPath + "\\22_DN.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageFront, skyboxPath + "\\22_FR.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageLeft, skyboxPath + "\\22_LF.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageRight, skyboxPath + "\\22_RT.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageTop, skyboxPath + "\\22_UP.jpg");
+                break;
+            case 11:
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBack, skyboxPath + "\\44_BK.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBottom, skyboxPath + "\\44_DN.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageFront, skyboxPath + "\\44_FR.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageLeft, skyboxPath + "\\44_LF.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageRight, skyboxPath + "\\44_RT.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageTop, skyboxPath + "\\44_UP.jpg");
+                break;
+            case 12:
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBack, skyboxPath + "\\99_BK.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBottom, skyboxPath + "\\99_DN.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageFront, skyboxPath + "\\99_FR.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageLeft, skyboxPath + "\\99_LF.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageRight, skyboxPath + "\\99_RT.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageTop, skyboxPath + "\\99_UP.jpg");
+                break;
+            case 13:
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBack, skyboxPath + "\\100_BK.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBottom, skyboxPath + "\\100_DN.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageFront, skyboxPath + "\\100_FR.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageLeft, skyboxPath + "\\100_LF.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageRight, skyboxPath + "\\100_RT.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageTop, skyboxPath + "\\100_UP.jpg");
+                break;
+            case 14:
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBack, skyboxPath + "\\120_BK.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBottom, skyboxPath + "\\120_DN.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageFront, skyboxPath + "\\120_FR.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageLeft, skyboxPath + "\\120_LF.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageRight, skyboxPath + "\\120_RT.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageTop, skyboxPath + "\\120_UP.jpg");
+                break;
+            case 15:
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBack, skyboxPath + "\\130_BK.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageBottom, skyboxPath + "\\130_DN.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageFront, skyboxPath + "\\130_FR.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageLeft, skyboxPath + "\\130_LF.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageRight, skyboxPath + "\\130_RT.jpg");
+                skyboxObj.setImagePath(gviSkyboxImageIndex.gviSkyboxImageTop, skyboxPath + "\\130_UP.jpg");
+                break;
+        }
+    }
+</script>
+</html>

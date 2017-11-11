@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>SpatialQuery</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util_globe.js"></script>
+    <style type="text/css">
+        *{ margin:0px;}
+        p{ font-size:12px;}
+        #lbl{ color:Red; font-size:12px;}
+        input {font-size:12px;}
+        #zb{ float: left;}
+       #zhedangwu{float: left; border:1px solid;}
+       #oj{ float: right;}
+    </style>
+</head>
+<body>   
+    <div id="oj" align="center">
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px"></object>
+    </div>
+    <div id="zhedangwu"></div>
+</body>
+ <script type="text/javascript"> 
+     var __g = document.getElementById("renderControl");  
+     var zhedangwu = document.getElementById("zhedangwu");
+     var shpCRS = null;     
+     var geoFactory = null;
+     var rowMap = {};
+     
+     window.onload = function () {
+		initAxControl();		
+		// 加载FDB场景		
+        loadFdb("SDKDEMO.FDB");		
+		var ci = __g.new_ConnectionInfo;
+		ci.connectionType = gviConnectionType.gviConnectionShapeFile;			
+		ci.database = getSamplesRelatePath("/") + "shp\\Singapore\\BCA_EXISTING_BUILDING.shp"; 
+		var dsFactory = __g.dataSourceFactory;
+		var ds = dsFactory.openDataSource(ci);
+		var setnames = ds.getFeatureDatasetNames();
+		if (setnames.length == 0)
+			return;
+		var dataset = ds.openFeatureDataset(setnames[0]);
+		shpCRS = dataset.spatialReference;
+		var fcnames = dataset.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+		if (fcnames.length == 0)
+			return;
+		var fc = dataset.openFeatureClass(fcnames[0]);
+		__g.objectManager.createFeatureLayer(fc, "Geometry", null, null, __rootId); 
+		
+		 __g.interactMode = gviInteractMode.gviInteractSelect;
+         __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectFeatureLayer;
+         __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+		 //__g.onmouseclickselect = RcMouseClickSelect;   
+     }    // 核心功能         function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+		if (pickResult == null)
+		return;		
+		if(pickResult.type != gviObjectType.gviObjectFeatureLayer)
+		return;		
+		var layer = pickResult.featureLayer;
+		var cinfo = layer.featureClassInfo;		
+		if (cinfo.dataSourceConnectionString.indexOf("FireBird2x") != -1)
+			return;			
+		var ds = __g.dataSourceFactory.openDataSourceByString(cinfo.dataSourceConnectionString);
+		var dset = ds.openFeatureDataset(cinfo.dataSetName);
+		var shpfc = dset.openFeatureClass(cinfo.featureClassName);
+		var shprow = shpfc.getRow(pickResult.featureId);
+		var shpindex = shprow.fieldIndex("Geometry");
+		var polygon = shprow.getValue(shpindex);
+		if (polygon == null)
+			return;			
+		zhedangwu.innerHTML = "";
+		__g.featureManager.unhighlightAll();
+		rowMap = {};		
+		 var cursor = null;
+		 try {
+			 for (var f in __fcMap) {
+				 var fc = __fcMap[f];
+				 var row = null;
+				 var filter = __g.new_SpatialFilter;
+				 filter.geometry = polygon;
+				 filter.spatialRel = gviSpatialRel.gviSpatialRelEnvelope;
+				 filter.geometryField = "Geometry";
+				 cursor = fc.search(filter, false);
+				 while ((row = cursor.nextRow()) != null) {
+					 var geometryIndex = -1;
+					 geometryIndex = row.fieldIndex("Geometry");
+					 if (geometryIndex != -1) {                                    
+						 var fid = "";                                     
+						 var env = null;
+						 var fidPos = row.fieldIndex(fc.fidFieldName);
+						 __g.featureManager.highlightFeature(fc, row.getValue(fidPos), 0xffff00ff);
+						 for (var i = 0; i < row.fieldCount; i++) {
+							 var fieldName = row.fields.get(i).name;
+							 if (row.fields.get(i).name == "oid") {
+								 fid = row.getValue(i);
+							 }                                         
+							 else if (row.fields.get(i).name == "Geometry") {
+								 var geometry = row.getValue(i);
+								 env = geometry.envelope;
+							 }
+						 }
+						 var ro = new Object();
+						 ro.fid = fid;
+						 ro.fcguid = fc.guid;
+						 ro.fcname = fc.name;
+						 ro.featureClass = fc;
+						 ro.envelop = env;
+						 rowMap[ro.fid] = ro;                              
+					 }
+				 }
+			 }
+			 document.title = "分析完成！";
+			 if (rowMap != null) {
+				 var strTbody = ["<table class='featureInfo' style=' border:1px solid;'><tbody>"];
+				 strTbody.push("<tr>");
+				 strTbody.push("<td>" + "OID" + "</td>");
+				 strTbody.push("<td>" + "FCNAME" + "</td>");
+				 strTbody.push("</tr>");
+				 var i = 0;
+				 for (var rm in rowMap) {
+					 i += 1;
+					 strTbody.push("<tr>");
+					 strTbody.push("<td>" + rowMap[rm].fid + "</td>");
+					 strTbody.push("<td>" + rowMap[rm].fcname + "</td>");
+					 strTbody.push("</tr>");
+				 }
+				 strTbody.push("</tbody></table>");
+				 zhedangwu.innerHTML = strTbody.join("");
+			 }
+			 lbl.innerHTML = "共有" + i + "个障碍物";
+
+		 }
+		 catch (ex) {
+			 //alert(ex.Message);
+		 }
+		 finally {
+			 if (cursor != null) {
+				 cursor = null;
+			 }
+		 }
+      }    
+ </script>
+</html>

@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <script type="text/javascript" src="../../cm7.js"></script>  
+
+</head>
+<style type="text/css">
+   table.featureInfo td,table.featureInfo th{
+        border:1px solid #ddd;
+        border-collapse:collapse;
+        margin:0;
+        padding:0;
+        font-size:90%;
+    }
+
+</style>
+<script type="text/javascript">
+    var objwind;
+    function InitTable() {
+        objwind = window.dialogArguments;
+        document.title = objwind.title;
+        var strTbody = objwind.fieldTbody;
+        var obj = $("tableDiv");
+        obj.innerHTML = strTbody.join("");
+
+        var delBtn = $("deleteFeature");
+        var insertBtn = $("insertFeature");
+        if (objwind.showOperateBtn) {
+            delBtn.style.display = "";
+            insertBtn.style.display = "";
+        }
+    }
+
+    var currentActiveRow;
+    function changeActiveRow(obj) { 
+        if (currentActiveRow) currentActiveRow.style.background = "#ffffff";
+        currentActiveRow = obj;
+        currentActiveRow.style.background = "#33CCFF";
+
+    }
+    
+    function closeWind() {
+       window.close();
+    }
+
+    function DeleteFeature() {
+        if (currentActiveRow) {
+            alert("该操作无法恢复，请确定是否删除所选择的要素?");
+            var ds = objwind.__g.dataSourceFactory.openDataSource(objwind.ci);
+            var fdsNames = ds.getFeatureDatasetNames();
+            if (fdsNames.length == 0)
+                return;
+            var dataset = ds.openFeatureDataset(fdsNames[0]);
+            var fc = dataset.openFeatureClass(objwind.selfc.innerText);
+
+            var oid = parseInt(currentActiveRow.cells[0].childNodes[0].nodeValue);
+            var filter = objwind.__g.new_QueryFilter;
+            filter.whereClause = "oid = " + oid;  
+            var nRet = fc.del(filter);
+            alert("成功删除" + nRet + "条记录");
+            
+            var tr = currentActiveRow.rowIndex;
+            currentActiveRow.parentNode.deleteRow(tr);
+        }
+    }
+
+    function InsertFeature() {
+        if (!currentActiveRow) {
+            alert("请先选择一行");
+            return;
+        }
+        
+        var ds = objwind.__g.dataSourceFactory.openDataSource(objwind.ci);
+        var fdsNames = ds.getFeatureDatasetNames();
+        if (fdsNames.length == 0)
+            return;
+        var dataset = ds.openFeatureDataset(fdsNames[0]);
+        var fc = dataset.openFeatureClass(objwind.selfc.innerText);
+
+        var rbf = objwind.__g.rowBufferFactory;
+        var rb = rbf.createRowBuffer(fc.getFields());
+
+        // 构造待插入的数据：暂时用当前选择行的数据进行插入
+        var oid = parseInt(currentActiveRow.cells[0].childNodes[0].nodeValue);
+        var lastRow = fc.getRow(oid);
+
+        var fieldinfos = fc.getFields();   
+        var newRowindex = currentActiveRow.parentNode.rows.length;
+        var newRow = currentActiveRow.parentNode.insertRow(newRowindex);
+        // 构造往数据库里插入的数据
+        for (var i = 0; i < fieldinfos.count; i++) {
+            var strColName = fieldinfos.get(i).name;
+            var nPos = rb.fieldIndex(strColName);
+            
+            if (nPos != -1 && strColName != "oid") {
+                rb.setValue(nPos, lastRow.getValue(nPos));   //插入字段值
+            }
+        }
+        // 往数据库中增加
+        ds.startEditing();  
+        cursor = fc.insert();
+        cursor.insertRow(rb);
+        ds.stopEditing(true);  //用事务来防止cursor未释放导致的死锁
+
+        // 获取界面上显示数据
+        lastRow = fc.getRow(cursor.lastInsertId);
+
+        var cellCount = 0;
+        for (var j = 0; j < fieldinfos.count; j++) {
+            // 界面上不显示Geometry类型和Blob类型字段值
+            if (fieldinfos.get(j).fieldType == gviFieldType.gviFieldGeometry
+                        || fieldinfos.get(j).fieldType == gviFieldType.gviFieldBlob)
+                continue;
+                
+            var strColName = fieldinfos.get(j).name;  
+            var nPos = lastRow.fieldIndex(strColName);
+            if (nPos != -1) {
+                var cell = newRow.insertCell(cellCount++);
+                cell.innerHTML="<td>"+lastRow.getValue(nPos)+"</td>";
+            }
+        }
+             
+        alert("增加记录成功");
+    }
+</script>
+<body onload="InitTable()" onunload="closeWind()">
+<div style="float:left"> 
+   <input type="button" id="deleteFeature" value="deleteFeature" onclick="DeleteFeature()" style="display:none"/>
+   <input type="button" id="insertFeature" value="insertFeature" onclick="InsertFeature()" style="display:none"/>
+</div>  
+<br />
+<br />
+<div id="tableDiv" style="float:left">
+</div>
+</body>
+</html>

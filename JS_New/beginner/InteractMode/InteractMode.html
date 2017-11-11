@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>InteractMode</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+
+<body style="margin:0px;scroll:no" >
+    <div style="float:left">
+        <button onclick="Pan()">漫游</button>
+        <button onclick="Pick()">拾取</button>
+        <button onclick="AerialDistance()">直线测距</button>
+        <button onclick="HorizontalDistance()">水平测距</button>
+        <button onclick="VerticalDistance()">垂直测距</button>
+        <button onclick="Coordinate()">拾取坐标</button>
+        <button onclick="Walk()">步行</button>
+    </div>
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object>
+    </div>  
+</body>
+
+<script type="text/javascript">
+    
+    
+    var __fcMap = {};
+    var __fcGeoMap = {};
+
+     window.onload = function () {
+         initialize();
+     }
+
+    function initialize() {
+
+        //初始化三维控件
+        initAxControl();
+
+        // 加载场景
+        loadFdb("SDKDEMO.FDB");
+    }
+     
+    /*
+     *	漫游
+     */
+    function Pan() {
+    __g.interactMode = gviInteractMode.gviInteractNormal;
+    }
+    //拾取
+    function Pick(){
+    __g.interactMode = gviInteractMode.gviInteractSelect;
+    __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectAll;
+    __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+    
+    }
+    //直线测量
+    function AerialDistance(){
+    __g.interactMode = gviInteractMode.gviInteractMeasurement;
+    __g.measurementMode = gviMeasurementMode.gviMeasureAerialDistance;
+    }
+    //水平测量
+    function HorizontalDistance(){
+    __g.interactMode = gviInteractMode.gviInteractMeasurement;
+    __g.measurementMode = gviMeasurementMode.gviMeasureHorizontalDistance;
+    }
+    //垂直测量
+    function VerticalDistance(){
+    __g.interactMode = gviInteractMode.gviInteractMeasurement;
+    __g.measurementMode = gviMeasurementMode.gviMeasureVerticalDistance;
+    }
+    //拾取坐标
+    function Coordinate(){
+    __g.interactMode = gviInteractMode.gviInteractMeasurement;
+    __g.measurementMode = gviMeasurementMode.gviMeasureCoordinate;
+    }
+    //步行
+    function Walk(){
+    __g.interactMode = gviInteractMode.gviInteractWalk;
+}
+
+    function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+        if (pickResult == null)
+            return;
+        alert("拾取到" + pickResult.type + "类型的物体");
+}
+</script>
+</html>

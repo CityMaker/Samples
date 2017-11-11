@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+     <title>TileHole</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+    
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+        </object>
+    </div>
+</body>
+     <script type="text/javascript">
+         var __g = document.getElementById("renderControl");
+         
+         var __fcMap = {};
+         var __fcGeoMap = {};
+         var test3DTileLayer;
+
+		 window.onload = function () {
+			 Initialize();
+		 }
+         
+         function Initialize() {
+             //初始化三维控件
+             initAxControl();             
+             __g.new_LicenseServer.setHost("192.168.2.200", 8588, "");
+			 document.title = __g.new_LicenseServer.hasRuntimeLicense;
+             __g.camera.flyTime = 0;
+             var tilePath = getSamplesRelatePath("") + "\\sdk.tdb";
+             test3DTileLayer = __g.objectManager.create3DTileLayer("http:mountain@192.168.2.132:8040", '', '');
+             __g.camera.flyToObject(this.test3DTileLayer.guid, gviActionCode.gviActionFlyTo);
+             this.currentGeometry = null;
+             this.currentRenderGeometry = null;
+             this.terrainHole = null;
+             __g.interactMode = gviInteractMode.gviInteractEdit;
+             var surfaceSymbol = __g.new_SurfaceSymbol;
+             surfaceSymbol.color = 0x770000FF;
+             this.currentGeometry = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPolygon, gviVertexAttribute.gviVertexAttributeZ);
+             //this.currentGeometry.spatialCRS = datasetCRS;
+             this.currentRenderGeometry = __g.objectManager.createRenderPolygon(this.currentGeometry, surfaceSymbol, '');
+             this.currentRenderGeometry.heightStyle = gviHeightStyle.gviHeightOnEverything;
+             __g.objectEditor.startEditRenderGeometry(this.currentRenderGeometry, gviGeoEditType.gviGeoEditCreator);
+			 
+			EventCall = {
+                onObjectEditing: function (geometry) {
+                    this.currentGeometry = geometry;
+                },
+                onObjectEditFinish: function () {
+					var multipolygon = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryMultiPolygon, gviVertexAttribute.gviVertexAttributeZ);
+					multipolygon.addGeometry(this.currentGeometry);
+					test3DTileLayer.setHoles(multipolygon);          				
+                }
+            }
+            __g.callback = EventCall;
+
+         }
+     </script>
+</html>

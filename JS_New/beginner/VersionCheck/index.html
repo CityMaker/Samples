@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<script>
+	var __g=null;
+	function initialize() {
+    __g = document.getElementById("renderControl"); 
+    try {
+        var num = __g.runtimeInfo.installDate; //验证版本时用到
+        var version = __g.runtimeInfo.version;
+        var installPath = __g.runtimeInfo.installPath;
+        if (installPath = "") {
+            alert("没有安装runtime");
+            return false;
+        }
+    } catch (e) {
+        alert("没有安装runtime");
+        return false;
+    } //验证runtime win10还不可用
+    try {
+        var ps = __g.new_PropertySet;
+        if (ps == null) {
+            alert("ps初始化失败");
+            result = false;
+        }
+        ps.setProperty("RenderSystem", "OpenGL"); //选择渲染方式
+        var bInit = __g.initialize(false, ps); //平球
+        if (bInit) {
+            result = true;
+        }
+    }
+    catch (e) {
+        alert("三维控件初始化失败");
+        return false;
+    } //验证初始化
+    return true;
+}
+window.onload=function(){
+initialize();
+}
+	</script>
+</head>
+<body style="margin: 0px;">
+    <div id="map" style="height: 800px; width: 800px; float: left">
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 100%; width: 100%; float: left">
+        </object>
+    </div>
+</body>
+</html>

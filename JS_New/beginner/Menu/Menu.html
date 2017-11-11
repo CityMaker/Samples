@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Hello World</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="../../cm7.js"></script>
+<script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+<button onclick="__g.setMenuEnabled(true)"> 开启自动右键菜单</button>
+<button onclick="__g.setMenuEnabled(false)">停用自动右键菜单</button>
+<object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+</object>
+</body>
+<script type="text/javascript">
+
+    window.onload = function() {
+        //初始化三维控件
+        initAxControl();       
+
+        // 加载场景
+        loadFdb("SDKDEMO.FDB");
+
+
+        //设置菜单数据  
+        var str = '[{"name":"文件","children":[{"name":"打开","id":1},{"name":"关闭","id":2},{"name":"新建","id":3}]},{"name":"编辑","children":[{"name":"复制","id":4},{"name":"粘贴","id":5},{"name":"查找","id":6}]},{"name":"窗口","children":[{"name":"最大化","id":4},{"name":"全部关闭","id":5}]},{"name":"关于",		"id":6}]';
+        var bSet = __g.setMenuData(str);
+        if (!bSet) {
+            alert('设置错误，请检查JSON格式');
+        }
+    }
+
+
+    
+	// 绑定菜单项点击事件
+	function onResPacking(reserved, id) {
+		alert("click " + id);
+	}
+
+	//绑定MouseClick事件
+	function onMouseClick(mouseButton, x, y) {
+		var str = "MouseButton: " + mouseButton + ", x: " + x + ", y: " + y;
+		document.title = str;
+
+		if (mouseButton == gviUIMouseButtonType.gviUILeftButton)
+			__g.trackPopupMenu(x, y);
+	}
+
+
+
+/* 菜单的JSON数据格式
+
+[
+    {
+        "name": "文件",
+        "children": [
+            {
+                "name": "打开",
+                "id": 1
+            },
+            {
+                "name": "关闭",
+                "id": 2
+            },
+            {
+                "name": "新建",
+                "id": 3
+            }
+        ]
+    },
+    {
+        "name": "编辑",
+        "children": [
+            {
+                "name": "复制",
+                "id": 4
+            },
+            {
+                "name": "粘贴",
+                "id": 5
+            },
+            {
+                "name": "查找",
+                "id": 6
+            }
+        ]
+    },
+    {
+        "name": "窗口",
+        "children": [
+            {
+                "name": "最大化",
+                "id": 4
+            },
+            {
+                "name": "全部关闭",
+                "id": 5
+            }
+        ]
+    },
+    {
+        "name": "关于",
+		"id": 6
+    }
+]
+    */
+
+</script>
+</html>
+

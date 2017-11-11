@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>OverlayLabel</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+
+<body style="margin:0px;scroll:no" >
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object>
+    </div>  
+</body>
+
+<script type="text/javascript">
+
+    var __fcMap = {};
+    var __fcGeoMap = {};
+
+     window.onload = function () {
+         initialize();
+     }
+
+    function initialize() {
+
+        //初始化三维控件
+        initAxControl();
+
+        // 加载场景
+        loadFdb("SDKDEMO.FDB");
+
+		//自定义右下角Logo
+	    var logoLabel = __g.objectManager.createOverlayLabel(__rootId);
+		logoLabel.imageName = getSamplesRelatePath("/bmp/Tulips.bmp"); 
+		logoLabel.setWidth(128, 0, 0);
+		logoLabel.setHeight(96, 0, 0);
+		logoLabel.setX(-logoLabel.getWidth() / 2, 1.0, 0);
+		logoLabel.setY(logoLabel.getHeight() / 2, 0, 0);
+		__g.viewport.logoVisible = false;
+
+	    //拾取
+		 //__g.interactMode = gviInteractMode.gviInteractSelect;
+		 __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectOverlayLabel;
+	     //__g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+    }
+      
+	function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+        if (pickResult == null)
+            return;
+       alert("拾取到"+pickResult.type+"类型的物体");
+   }
+
+   function onMouseHover(flags, x, y) {
+       
+        var temp = __g.camera.screenToWorld(x, y);
+        var intersectPoint = temp.intersectPoint;
+		var pickResult = temp.pickResult;		
+        if (pickResult == null)
+            return;
+
+        var label = pickResult.overlayLabel;
+        document.title = label.text;
+        return;
+	}
+</script>
+</html>

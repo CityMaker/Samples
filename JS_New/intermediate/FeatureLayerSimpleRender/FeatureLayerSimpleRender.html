@@ -1,0 +1,262 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>FeatureLayerSimpleRender</title>
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+
+<body style="margin:0px;scroll:no"  >   
+<div id="tree" style="float:left;">
+</div>    
+<div style="float:left">
+    <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object>
+</div>
+</body>
+
+<script type="text/javascript">
+     
+    
+    
+    var fclst ={};
+    var flEnv ={};
+    
+     window.onload = function () {
+         initialize();
+     }
+    
+    function initialize() {
+        //初始化三维控件
+        initAxControl();
+
+        // 可视化Point类型FeatureLayer
+       {
+            var c = __g.new_ConnectionInfo;
+            c.connectionType = gviConnectionType.gviConnectionFireBird2x;
+            
+            c.database = getSamplesRelatePath("") + "/point.FDB";
+
+            // *******定义文字渲染风格*******
+            var textRender = __g.new_SimpleTextRender;
+            textRender.expression = "''..$(objectid)";
+            var textSymbol =  __g.new_TextSymbol;
+            var textAttribute = __g.new_TextAttribute;
+            textAttribute.backgroundColor = colorFromARGB(255, 0, 0, 255);
+            textSymbol.textAttribute = textAttribute;
+            textSymbol.pivotAlignment = gviPivotAlignment.gviPivotAlignBottomCenter;
+            textSymbol.verticalOffset = 10;
+            // 注意：必须设置symbol，默认文字不显示
+            textRender.symbol = textSymbol;  
+        
+            // *****定义几何物体渲染风格*****
+            var geoRender = __g.new_SimpleGeometryRender;
+            // 特别注意：此处设置了逻辑组字段，则需要在CreateFeatureLayer后设置组的可见性。否则，默认FeatureLayer将不可见。
+            // 注意：必须用已注册RenderIndex的字段，否则CreateFeatureLayer创建不成功返回null
+            //geoRender.renderGroupField = "Groupid";
+            var geoSymbol =  __g.new_ImagePointSymbol;   //将点以图片的形式显示出来
+            geoSymbol.imageName = "huang.png";  //使用ImageClass里存在的图片
+            geoSymbol.size = 25;
+            geoRender.symbol = geoSymbol;
+            
+            FeatureLayerVisualize(c, true, "Point", textRender, geoRender);
+        }
+                   
+        
+    }
+     
+
+    /*
+     *	设置Featurelayer渲染样式
+     */
+    function FeatureLayerVisualize(ci,needfly,sourceName,textRender,geoRender)
+    {
+        try {
+            var ds = __g.dataSourceFactory.openDataSource(ci);
+            var fdsNames = ds.getFeatureDatasetNames();
+            if (fdsNames.length == 0)
+                return;
+            __fds = ds.openFeatureDataset(fdsNames[0]);
+
+            var fcNames = __fds.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+            if (fcNames.length == 0)
+                return;
+           
+            var __fcMap = {};
+            var __fcGeoMap = {};
+    
+            for (var i = 0; i < fcNames.length; i++) {
+                var fc = __fds.openFeatureClass(fcNames[i]);
+                // 找到空间列字段
+                var __geoNames = [];  
+                var fieldinfos = fc.getFields();
+                for (var j = 0; j < fieldinfos.count; j++) {
+                    var fieldInfo = fieldinfos.get(j);
+                    if (fieldInfo == null)
+                        continue;
+                    var geometryDef = fieldInfo.geometryDef;
+                    if (geometryDef == undefined)
+                        continue;
+                    __geoNames.push(fieldInfo.name);
+                }
+                __fcMap[fc.guid] = fc;
+                __fcGeoMap[fc.guid] = __geoNames;
+            }
+
+            // CreateFeautureLayer
+            var hasfly = !needfly;
+            for (var fcGuid in __fcGeoMap) {
+                var fc = __fcMap[fcGuid];
+                var geoNames = __fcGeoMap[fcGuid]; 
+                for (var k = 0; k < geoNames.length; k++) {
+                    var geoName = geoNames[k];
+                    var fl = __g.objectManager.createFeatureLayer(fc, geoName, textRender, geoRender, __rootId);
+                    fclst[fcGuid] = fl;
+
+                    // 设置featureLayer组可见
+                    if(geoRender.renderGroupField !="")
+                    {
+                        SetGroupVisiable(__fds, fl); 
+                    }
+
+                    // 添加节点到界面上
+                    document.getElementById('tree').innerHTML += "<input type='checkbox' checked='true' onclick='SetLayerVisiable(this)' value='" + fcGuid + "'>" + "<a href='#' onclick='SetLayerCamera(this)' value='" + fcGuid + "'>" + sourceName + "_" + fc.name + "_" + fl.maxVisibleDistance + "</a></br>";
+                                        
+                    var fieldinfos = fc.getFields();
+                    var fieldinfo = fieldinfos.get(fieldinfos.indexOf(geoName));
+                    var geometryDef = fieldinfo.geometryDef;
+                    var env = geometryDef.envelope;
+                    
+                    if (env.maxX == 0.0 && env.maxY == 0.0 && env.maxZ == 0.0 &&
+                        env.minX == 0.0 && env.minY == 0.0 && env.minZ == 0.0)
+                        continue;
+                    flEnv[fcGuid] = env;
+
+                    // 相机飞入
+                    if (!hasfly) {
+                        var pos = __g.new_Vector3;
+                        var ang = __g.new_EulerAngle;
+                        pos.set((env.maxX + env.minX) / 2, (env.maxY + env.minY) / 2, (env.maxZ + env.minZ) / 2);
+                        ang.heading = 0;
+                        ang.tilt = -20;
+                        __g.camera.lookAt(pos, 600, ang);
+                    }
+                    hasfly = true;
+                }
+            }
+        } 
+        catch (e) {
+            exceptionHandler(e);
+        }
+
+    }
+    
+    /*
+     *	定位图层
+     */
+    function SetLayerCamera(obj) {
+        if (flEnv == null) return;
+        for (var fcGuid in flEnv) {
+            if (fcGuid == obj.value) {
+                var env = flEnv[fcGuid];
+                if (env) {
+                    var pos = __g.new_Vector3;
+                    var ang = __g.new_EulerAngle;
+                    pos.set((env.maxX + env.minX) / 2, (env.maxY + env.minY) / 2, (env.maxZ + env.minZ) / 2);
+                    ang.heading = 0;
+                    ang.tilt = -20;
+                    __g.camera.lookAt(pos, 600, ang);
+                }
+            }
+        }
+    }
+    
+    /*
+     *	设置图层可见性
+     */
+    function SetLayerVisiable(obj) {
+        if (fclst == null) return;
+        for (var fcGuid in fclst) {
+            if (fcGuid == obj.value) {
+                var layer = fclst[fcGuid];
+                if (obj.checked) {
+                    layer.visibleMask = gviViewportMask.gviViewAllNormalView;
+                }
+                else {
+                    layer.visibleMask = gviViewportMask.gviViewNone;
+                }
+            }
+        }
+    }
+    
+    /*
+     *	设置图层内的所有组
+     */
+    function SetGroupVisiable(dataset, featureLayer) {
+        var bb = GetLogicTreeContent(dataset);
+        if (bb == null)
+            return;
+
+        var doc = new ActiveXObject("Microsoft.XMLDOM");
+        doc.load(bb);
+        var rootNode = doc.documentElement;
+        if (rootNode != null && rootNode.hasChildNodes) {
+            TravelXML(rootNode.childNodes[0], featureLayer);
+        }
+    }    
+
+    /*
+     *	读数据库获取逻辑树xml内容
+     */
+    function GetLogicTreeContent(dataset) {
+        var strContent = null;
+        try {
+            var qd = dataset.dataSource.createQueryDef();
+            qd.addSubField("content");
+
+            qd.tables = ["cm_logictree", "cm_group"];
+            qd.whereClause = "cm_group.groupuid = cm_logictree.groupid "
+                                + " and cm_group.DataSet = " + "'" + dataset.name + "'";
+
+            var cursor = qd.execute(false);
+            var row = null;
+            if ((row = cursor.nextRow()) != null) {
+                var nPose = row.fieldIndex("content");
+                if (nPose != -1) {
+                    var bb = row.getValue(nPose);
+                    strContent = bb.asByteArray();
+                }
+            }
+        }
+        catch (e) {
+            exceptionHandler(e);
+        }
+        return strContent;
+    }
+
+    /*
+    *	遍历逻辑图层树，设置featurelayer内的所有逻辑组可见
+    */
+    function TravelXML(pNode, fLayer) {
+        if (pNode == null)
+            return;
+        var nodeName = pNode.nodeName;
+        if (nodeName.toLowerCase() == "pgroup" || nodeName.toLowerCase() == "agroup") {
+            var att = pNode.getAttribute("ID");
+            if (att != null) {
+                var grpId = parseInt(att);
+                if (grpId != null && fLayer != null) {
+                    fLayer.setGroupVisibleMask(grpId, gviViewportMask.gviViewAllNormalView);
+                }
+            }
+        }
+        else if (nodeName.toLowerCase() == "pgroups" || nodeName.toLowerCase() == "agroups") {
+            for (var i = 0; i < pNode.childNodes.length; i++) {
+                var node = pNode.childNodes[i];
+                TravelXML(node, fLayer);
+            }
+        }
+    }
+     
+</script>
+</html>

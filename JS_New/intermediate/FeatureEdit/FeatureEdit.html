@@ -1,0 +1,365 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>FeatureEdit</title>
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+    
+    <style>
+     a {text-decoration:none;}
+     table{border:#666666 1px solid;}
+     tr,td{height:20px;line-height:20px;font-size:14px;color:#666666;text-align:left;}
+     tr,td a{color:#666666}
+     tr,td a:hover{color:#FF0000}
+     #d{position:absolute;font-size:12px;padding:2px;visibility:hidden}
+    </style>
+</head>
+
+<body style="margin:0px;scroll:no">   
+<div id="d" z-index="0">
+<table style="font-size:12px;border:0; cellpadding:1; cellspacing:1; bgcolor:#cecece;">
+     <tr bgcolor=#ececec id="viewall">
+         <td width="100"><a href="#" onclick="ViewData()">查看所有记录</a></td>
+     </tr>
+     <tr bgcolor=#ececec  id="queryall">
+          <td width="100"><a href="#" onclick="Query()">按属性条件查询</a></td>
+     </tr>
+</table>
+</div>
+<div style="float:left"> 
+   <input type="button" value="addDataSource" onclick="AddDataSource()"/>
+</div>  
+<br>
+<div id="Tree" >
+
+</div>
+<div style="float:left;display:none">
+    <object id="renderControl" type="application/x-cm-3d8" ></object>
+</div>
+</body>
+
+<script type="text/javascript" class="source">
+    var __g = document.getElementById("renderControl");
+    var ci;
+    var fieldTbody;  // 要传递到弹出窗口的innerHTML内容
+    var title;
+    var selfc;  // 当前FeatureClass
+    var showOperateBtn;
+     
+    document.oncontextmenu=function(){
+         window.event.returnValue=false;
+    }
+
+    function showmenu(obj)
+    {
+           selfc= obj;
+           d.style.visibility="visible";
+           d.style.left=event.clientX;
+           d.style.top=event.clientY;
+           return false;
+    }
+    function document.onclick(){
+          d.style.visibility="hidden";
+    }
+    
+    function AddDataSource() {
+        var tFile = "dialogLeft:" + 100 + "px; dialogTop:" + 100 + "px; dialogHeight:200px; dialogWidth:400px";
+        var retValue = window.showModalDialog("DataSource.html", window, tFile);
+        if (retValue) {
+            ci = __g.new_ConnectionInfo;
+            switch (retValue.selType) {
+                case "0":
+                    ci.connectionType = gviConnectionType.gviConnectionFireBird2x;
+                    break;
+                case "1":
+                    ci.connectionType = gviConnectionType.gviConnectionMySql5x;
+                    break;
+                case "2":
+                    ci.connectionType = gviConnectionType.gviConnectionSQLite3;
+                    break;
+            }
+            ci.server = retValue.Server;
+            ci.port = parseInt(retValue.Port);
+            ci.database = retValue.Database;
+            ci.userName = retValue.UserName;
+            ci.password = retValue.Password;
+
+            var ds = __g.dataSourceFactory.openDataSource(ci);
+            var sourceNode = ["<ul><li id='rootnode'>"];
+            if (ci.connectionType == gviConnectionType.gviConnectionMySql5x)
+                sourceNode.push("<a href='#'>" + ci.database + "@" + ci.server + "</a>");
+            else
+                sourceNode.push("<a href='#'>" + ci.database + "</a>");
+
+            var fdsNames = ds.getFeatureDatasetNames();
+            if (fdsNames.length == 0)
+                return;
+            for (var i = 0; i < fdsNames.length; i++) {
+                var setname = fdsNames[i];
+                var dataset = ds.openFeatureDataset(setname);
+
+                sourceNode.push("<ul><li><a href='#'>" + setname + "</a></li>");
+
+
+                var fcnames = dataset.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+                if (fcnames == null || fcnames.Length == 0)
+                    continue;
+                for (var j = 0; j < fcnames.length; j++) {
+                    var fcname = fcnames[j];
+                    var fc = dataset.openFeatureClass(fcname);
+
+                    sourceNode.push("<ul><li><a href='#' oncontextmenu='showmenu(this)'>" + fcname + "</a></li><ul>");
+                    // 获取属性字段
+                    var fieldinfos = fc.getFields();
+                    for (var m = 0; m < fieldinfos.count; m++) {
+                        var fieldinfo = fieldinfos.get(m);
+                        if (null == fieldinfo)
+                            continue;
+                        sourceNode.push("<li><a href='#' onclick='GetFieldInfo(this)'>" + fieldinfo.name + "</a></li>");
+                    }
+                    sourceNode.push("</ul></ul>");
+                }
+                sourceNode.push("</ul>");
+            }
+            sourceNode.push("</li></ul>");
+
+            var str = sourceNode.join("");
+            document.getElementById('Tree').innerHTML = str;
+        }
+    }
+
+    /*
+     *	查看属性字段定义
+     */
+    function GetFieldInfo(obj) {
+        try {
+            var ds = __g.dataSourceFactory.openDataSource(ci);
+            var fdsNames = ds.getFeatureDatasetNames();
+            if (fdsNames.length == 0)
+                return;
+            var dataset = ds.openFeatureDataset(fdsNames[0]);
+            var fcnames = dataset.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+            if (fcnames == null || fcnames.Length == 0)
+                return;
+            var fc = dataset.openFeatureClass(obj.parentNode.parentNode.parentNode.firstChild.innerText);
+            var fieldinfos = fc.getFields();
+            
+            showOperateBtn = false;
+            
+            title = "要素类：'" + obj.parentNode.parentNode.parentNode.firstChild.innerText + "' 字段名为：'" + obj.innerText + "' 的字段定义";
+            fieldTbody = ["<table class='featureInfo'><tbody>"];
+            fieldTbody.push("<tr>");
+            fieldTbody.push("<td>属性名</td>");
+            fieldTbody.push("<td>属性值</td>");
+            fieldTbody.push("</tr>");
+
+            for (var i = 0; i < fieldinfos.count; i++) {
+                var fieldinfo = fieldinfos.get(i);
+                if (null == fieldinfo)
+                    continue;
+                if (obj.innerText == fieldinfo.name) {
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Name</td>");
+                    fieldTbody.push("<td>" + fieldinfo.name + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>FieldType</td>");
+                    fieldTbody.push("<td>" + fieldinfo.fieldType + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>IsSystemField</td>");
+                    fieldTbody.push("<td>" + fieldinfo.isSystemField + "</td>");
+                    fieldTbody.push("</tr>");
+
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Alias</td>");
+                    fieldTbody.push("<td>" + fieldinfo.alias + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>DefaultValue</td>");
+                    fieldTbody.push("<td>" + fieldinfo.defaultValue + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Editable</td>");
+                    fieldTbody.push("<td>" + fieldinfo.editable + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Length</td>");
+                    fieldTbody.push("<td>" + fieldinfo.length + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Nullable</td>");
+                    fieldTbody.push("<td>" + fieldinfo.nullable + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>RegisteredRenderIndex</td>");
+                    fieldTbody.push("<td>" + fieldinfo.registeredRenderIndex + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Precision</td>");
+                    fieldTbody.push("<td>" + fieldinfo.precision + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>Scale</td>");
+                    fieldTbody.push("<td>" + fieldinfo.scale + "</td>");
+                    fieldTbody.push("</tr>");
+
+                    fieldTbody.push("<tr>");
+                    fieldTbody.push("<td>DomainFixed</td>");
+                    fieldTbody.push("<td>" + fieldinfo.domainFixed + "</td>");
+                    fieldTbody.push("</tr>");
+                }
+            }
+            fieldTbody.push("</tbody></table>");
+            var tFile = "dialogLeft:" + 100 + "px; dialogTop:" + 100 + "px; dialogHeight:200px; dialogWidth:400px";
+            var retValue = window.showModalDialog("FeatureProperty.html", window, tFile);
+        }
+        catch (e) {
+        }
+    }
+
+    /*
+     *	查看当前FeatureClass中所有记录
+     */
+    function ViewData() {
+        var ds = __g.dataSourceFactory.openDataSource(ci);
+        var fdsNames = ds.getFeatureDatasetNames();
+        if (fdsNames.length == 0)
+            return;
+        var dataset = ds.openFeatureDataset(fdsNames[0]);
+        var fc = dataset.openFeatureClass(selfc.innerText);
+
+        var filter = __g.new_QueryFilter;
+        var nCount = fc.getCount(filter);
+        if (nCount == 0)
+            return;
+
+        var fieldinfos = fc.getFields();
+       
+         showOperateBtn = true;
+          
+        title = "正在查看 '"+ selfc.innerText + "' 的所有记录";
+        fieldTbody = ["<table class='featureInfo'><tbody>"];
+
+        // 初始化表头
+        fieldTbody.push("<tr>");
+        for (var i = 0; i < fieldinfos.count; i++) {
+            var fieldinfo = fieldinfos.get(i);
+            if (null == fieldinfo || fieldinfo.fieldType == gviFieldType.gviFieldGeometry
+                        || fieldinfo.fieldType == gviFieldType.gviFieldBlob)
+                continue;
+            fieldTbody.push("<td>" + fieldinfo.name + "</td>");
+        }
+        fieldTbody.push("</tr>");
+
+        if (filter != null) {
+            filter.postfixClause = "order by oid asc";
+        }
+        // 查找所有记录
+        var cursor = fc.search(filter, true);
+        if (cursor != null) {
+            var fdeRow = null;
+            while ((fdeRow = cursor.nextRow()) != null) {
+                fieldTbody.push("<tr onclick='changeActiveRow(this)'>");
+                for (var i = 0; i < fieldinfos.count; ++i) {
+                    var fieldinfo = fieldinfos.get(i);
+                    if (null == fieldinfo || fieldinfo.fieldType == gviFieldType.gviFieldGeometry
+                        || fieldinfo.fieldType == gviFieldType.gviFieldBlob)
+                        continue;
+
+                    var strColName = fieldinfos.get(i).name;
+                    var nPos = fdeRow.fieldIndex(strColName);  
+                    var v = fdeRow.getValue(nPos);  // 从库中读取值
+                    fieldTbody.push("<td ondblclick='editFeature(this)'>" + v + "</td>");
+                }
+                fieldTbody.push("</tr>");
+            }
+        }
+        // 通过解析逻辑树获取GroupId对应的GroupName
+        //GroupId2LayerName(dt, fc.featureDataSet);
+        fieldTbody.push("</tbody></table>");
+        var tFile = "dialogLeft:" + 100 + "px; dialogTop:" + 100 + "px; dialogHeight:400px; dialogWidth:600px";
+        var retValue = window.showModalDialog("FeatureProperty.html", window, tFile);
+    }
+
+    /*
+     *	属性查询结果
+     */
+    function ContionQuery(whereclause) {
+        var ds = __g.dataSourceFactory.openDataSource(ci);
+        var fdsNames = ds.getFeatureDatasetNames();
+        if (fdsNames.length == 0)
+            return;
+        var dataset = ds.openFeatureDataset(fdsNames[0]);
+        var fc = dataset.openFeatureClass(selfc.innerText);
+
+        var filter = __g.new_QueryFilter;
+        filter.whereClause = whereclause;
+        var nCount = fc.getCount(filter);
+        if (nCount == 0 || nCount == null)
+            return;
+            
+        showOperateBtn = false;
+        
+        var fieldinfos = fc.getFields();
+        title = "正在查看 '" + selfc.innerText + "' [whereClause = '" + whereclause + "'] 属性查询结果";
+        fieldTbody = ["<table class='featureInfo'><tbody>"];
+
+        // 初始化表头
+        fieldTbody.push("<tr>");
+        for (var i = 0; i < fieldinfos.count; i++) {
+            var fieldinfo = fieldinfos.get(i);
+            if (null == fieldinfo || fieldinfo.fieldType == gviFieldType.gviFieldGeometry
+                    || fieldinfo.fieldType == gviFieldType.gviFieldBlob)
+                continue;
+            fieldTbody.push("<td>" + fieldinfo.name + "</td>");
+        }
+        fieldTbody.push("</tr>");
+
+        if (filter != null) {
+            filter.postfixClause = "order by oid asc";
+        }
+        // 查找所有记录
+        var cursor = fc.search(filter, true);
+        if (cursor != null) {
+            var fdeRow = null;
+            while ((fdeRow = cursor.nextRow()) != null) {
+                fieldTbody.push("<tr>");
+                for (var i = 0; i < fieldinfos.count; ++i) {
+                    var fieldinfo = fieldinfos.get(i);
+                    if (null == fieldinfo || fieldinfo.fieldType == gviFieldType.gviFieldGeometry
+                        || fieldinfo.fieldType == gviFieldType.gviFieldBlob)
+                        continue;
+
+                    var strColName = fieldinfos.get(i).name;
+                    var nPos = fdeRow.fieldIndex(strColName);
+                    var v = fdeRow.getValue(nPos);  // 从库中读取值
+                    fieldTbody.push("<td >" + v + "</td>");
+                }
+                fieldTbody.push("</tr>");
+            }
+        }
+        // 通过解析逻辑树获取GroupId对应的GroupName
+        //GroupId2LayerName(dt, fc.featureDataSet);
+        fieldTbody.push("</tbody></table>");
+        var tFile = "dialogLeft:" + 100 + "px; dialogTop:" + 100 + "px; dialogHeight:400px; dialogWidth:600px";
+        var retValue = window.showModalDialog("FeatureProperty.html", window, tFile);
+    }
+
+    function Query() {
+        var tFile = "dialogLeft:" + 100 + "px; dialogTop:" + 100 + "px; dialogHeight:250px; dialogWidth:500px";
+        var retValue = window.showModalDialog("ContionQuery.html", window, tFile);
+    }   
+</script>
+</html>

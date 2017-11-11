@@ -1,0 +1,413 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>TableLabelSample</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+    <div>
+         <input type="button" id="btnFirstLabel" value="FirstLabel" onclick="btnFirstLabel()" />
+         <input type="button" id="btnSecondLabel" value="SecondLabel" onclick="btnSecondLabel()"/>
+    </div>
+    <div>
+         <input type="button" value="加载" id="btnLoadLabelBindOnCar" onclick="btnLoadLabelBindOnCar()"/><br />
+         <input type="button" value="播放" id="btnPlay" onclick="btnPlay_Click()"/>
+         <input type="button" value="暂停" id="btnPause" onclick="btnPause_Click()"/>
+         <input type="button" value="停止" id="btnStop" onclick="btnStop_Click()"/>
+    </div>
+    <div><input type="button" value="运动物体平移" id="btnMoveMotionObject"  onmousedown="btnMoveMotionObject_Click()"/>
+         <input type="button" value="运动物体旋转" id="btnRotateMotionObject" onclick="btnRotateMotionObject_Click()" />
+         <input type="button" value="插入路径点" id="btnInsertWaypoint" onclick="btnInsertWaypoint_Click()"/>
+         <input type="button" value="完成" id="btnComplete" onclick="btnComplete_Click()" />
+    </div>
+     <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+        </object>
+    </div>
+</body>
+<script type="text/javascript">
+
+    var __g = document.getElementById("renderControl");
+    var __fcMap = {};
+    var __fcGeoMap = {};
+    var fcMap = null;  //IFeatureClass, List<string> 存储dataset里featureclass及对应的空间列名
+
+    var g = null;
+
+    var _geoEditor = null;     // 注意：要绑定事件，必须用类，不能用接口
+    var resultCode;
+
+    var frameCallBack = null;
+    var mouseButtonHandler = null;
+    var keyHandler = null;
+    var frameHandler = null;
+
+    var tableLabel = null;
+    var dynamicTableLabel = null;
+    var motionPath = null;
+    var renderModelPoint = null;
+    var m = null;
+
+    var position = __g.new_Vector3;
+    var point = null;   // 指定label位置
+    var scale = __g.new_Vector3;
+    var angle = __g.new_EulerAngle;
+    var v3 = __g.new_Vector3;
+
+    var firstX = 263.872404083615, firstY = 148.647242545841, firstZ = 0, firstH = 60, firstP = 0, firstR = -0, firstSX = 1, firstSY = 1, firstSZ = 1, firtWhen = 0;
+    var secondX = 303.863713512692, secondY = 174.113186858212, secondZ = 0, secondH = 60, secondP = 0, secondR = 0, secondSX = 1, secondSY = 1, secondSZ = 1, secondWhen = 4;
+    var thirdX = 329.976366250544, thirdY = 191.226407219874, thirdZ = -0.000000, thirdH = 60, thirdP = 0, thirdR = 0, thirdSX = 1, thirdSY = 1, thirdSZ = 1, thirdWhen = 7;
+    var fourthX = 373.749709200332, fourthY = 219.748979658718, fourthZ = -0.000000, fourthH = 60, fourthP = 0, fourthR = 0, fourthSX = 1, fourthSY = 1, fourthSZ = 1, fourthWhen = 10;
+    var fifthX = 496.302347146811, fifthY = 299.098783146403, fifthZ = 12.9880315029168, fifthH = 180, fifthP = 180, fifthR = 0, fifthSX = 1, fifthSY = 1, fifthSZ = 1, fifthWhen = 13;
+
+     window.onload = function () {
+         initialize();
+     }
+
+    function initialize() {
+        //初始化三维控件
+        initAxControl();
+
+        // 加载FDB场景
+        loadFdb("community.FDB");
+
+		point = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+        point.spatialCRS = __fds.spatialReference;
+    }
+
+    /// <summary>
+    /// 加载第一种样式的静态指示标签
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    function btnFirstLabel() {
+        // 创建一个有3行2列的TableLabel
+        tableLabel = __g.objectManager.createTableLabel(3, 2, __rootId);
+        // 设定表头文字
+        tableLabel.titleText = "大楼信息展示";
+        // 设定表格中第1行，第1列的显示文字
+        tableLabel.setRecord(0, 0, "大楼层数");
+        // 第1行，第2列
+        tableLabel.setRecord(0, 1, "2");
+        // 第2行，第1列
+        tableLabel.setRecord(1, 0, "大楼高度");
+        // 第2行，第2列
+        tableLabel.setRecord(1, 1, "5米");
+        // 第3行，第1列
+        tableLabel.setRecord(2, 0, "施工单位");
+        // 第3行，第2列
+        tableLabel.setRecord(2, 1, "金隅集团");
+
+        //标牌的位置
+        position.set(fifthX, fifthY, fifthZ);
+        point.position = position;
+        tableLabel.position = point;
+
+        // 列宽度
+        tableLabel.setColumnWidth(0, 80);
+        tableLabel.setColumnWidth(1, 80);
+
+        // 表的边框颜色
+        tableLabel.borderColor = 0xffffffff;
+        // 表的边框的宽度
+        tableLabel.borderWidth = 2;
+        // 表的背景色
+        tableLabel.tableBackgroundColor = 4290707456;
+
+        // 标题背景色
+        tableLabel.titleBackgroundColor = 0xff000000;
+
+        // 第一列文本样式
+        var headerTextAttribute = __g.new_TextAttribute;
+        headerTextAttribute.textColor = 0xffffffff;
+        headerTextAttribute.outlineColor = 0xff000000;
+        headerTextAttribute.font = "黑体";
+        headerTextAttribute.bold = true;
+        headerTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineLeft;
+        tableLabel.setColumnTextAttribute(0, headerTextAttribute);
+
+        // 第二列文本样式
+        var contentTextAttribute = __g.new_TextAttribute;
+        contentTextAttribute.textColor = 4293256677;
+        contentTextAttribute.outlineColor = 0xff000000;
+        contentTextAttribute.font = "黑体";
+        contentTextAttribute.bold = false;
+        contentTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineLeft;
+        tableLabel.setColumnTextAttribute(1, contentTextAttribute);
+
+        // 标题文本样式
+        var capitalTextAttribute = __g.new_TextAttribute;
+        capitalTextAttribute.textColor = 0xffffffff;
+        capitalTextAttribute.outlineColor = 4279834905;
+        capitalTextAttribute.font = "华文新魏";
+        capitalTextAttribute.textSize = 14;
+        capitalTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineCenter;
+        capitalTextAttribute.bold = true;
+        tableLabel.titleTextAttribute = capitalTextAttribute;
+        angle.heading = 0;
+        angle.tilt = -20;
+        __g.camera.lookAt(position, 30, angle);
+    }
+
+    /// <summary>
+    /// 加载第一种样式的静态指示标签
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    function btnSecondLabel() {
+        // 创建一个有3行2列的TableLabel
+        tableLabel = __g.objectManager.createTableLabel(3, 2, __rootId);
+
+        // 设定文字
+        tableLabel.titleText = "设备信息展示";
+        tableLabel.setRecord(0, 0, "生产日期");
+        tableLabel.setRecord(0, 1, "2012.8.22");
+        tableLabel.setRecord(1, 0, "生产厂商");
+        tableLabel.setRecord(1, 1, "河南许继");
+        tableLabel.setRecord(2, 0, "上次维修日期");
+        tableLabel.setRecord(2, 1, "2012.9.12");
+
+        //标牌的位置
+        position.set(519.744594308959, 244.450276355919, 37.2772957244637);
+        point.position = position;
+        tableLabel.position = point;
+
+        // 列宽度
+        tableLabel.setColumnWidth(0, 110);
+        tableLabel.setColumnWidth(1, 100);
+        tableLabel.borderColor = colorFromARGB(255, 255, 255, 255);
+        tableLabel.borderWidth = 2;
+        tableLabel.tableBackgroundColor = colorFromARGB(200, 255, 255, 165);
+        tableLabel.titleBackgroundColor = colorFromARGB(180, 122, 122, 122);
+
+        // 第一列文本样式
+        var headerTextAttribute = __g.new_TextAttribute;
+        headerTextAttribute.textColor = colorFromARGB(120, 127, 64, 0);
+        headerTextAttribute.outlineColor = 0xff000000;
+        headerTextAttribute.font = "细黑";
+        headerTextAttribute.bold = true;
+        headerTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineLeft;
+        tableLabel.setColumnTextAttribute(0, headerTextAttribute);
+
+        // 第二列文本样式
+        var contentTextAttribute = __g.new_TextAttribute;
+        contentTextAttribute.textColor = 0xffff10ff;
+        contentTextAttribute.outlineColor = colorFromARGB(125, 255, 127, 64);
+        contentTextAttribute.font = "黑体";
+        contentTextAttribute.bold = false;
+        contentTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineLeft;
+        tableLabel.setColumnTextAttribute(1, contentTextAttribute);
+
+        // 标题文本样式
+        var capitalTextAttribute = __g.new_TextAttribute;
+        capitalTextAttribute.textColor = 0xffffffff;
+        capitalTextAttribute.outlineColor = 4279834905;
+        capitalTextAttribute.font = "华文新魏";
+        capitalTextAttribute.textSize = 14;
+        capitalTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineCenter;
+        capitalTextAttribute.bold = true;
+        tableLabel.titleTextAttribute = capitalTextAttribute;
+        angle.heading = 0;
+        angle.tilt = -20;
+        __g.camera.lookAt(position, 30, angle);
+    }
+
+    //加载
+    function btnLoadLabelBindOnCar() {
+        dynamicTableLabel = __g.objectManager.createTableLabel(2, 2, __rootId);
+
+        dynamicTableLabel.titleText = "消防车当前位置";
+        dynamicTableLabel.setRecord(0, 0, "X:");
+        dynamicTableLabel.setRecord(0, 1, firstX.toString());
+        dynamicTableLabel.setRecord(1, 0, "Y:");
+        dynamicTableLabel.setRecord(1, 1, firstY.toString());
+
+        position.set(firstX, firstY, firstZ + 2.4);
+        point.position = position;
+        dynamicTableLabel.position = point;
+
+        dynamicTableLabel.borderColor = 0xffffffff;
+        dynamicTableLabel.borderWidth = 2;
+        dynamicTableLabel.tableBackgroundColor = 4290707456;
+        dynamicTableLabel.titleBackgroundColor = 0xff000000;
+
+        // 表头样式
+        var headerTextAttribute = __g.new_TextAttribute;
+        headerTextAttribute.textColor = 4293256677;
+        headerTextAttribute.outlineColor = 0xff000000;
+        headerTextAttribute.font = "黑体";
+        headerTextAttribute.bold = true;
+        headerTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineLeft;
+        dynamicTableLabel.setColumnTextAttribute(0, headerTextAttribute);
+
+        // 内容样式
+        var contentTextAttribute = __g.new_TextAttribute;
+        contentTextAttribute.textColor = 4293256677;
+        contentTextAttribute.outlineColor = 0xff000000;
+        contentTextAttribute.font = "黑体";
+        contentTextAttribute.bold = false;
+        contentTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineLeft;
+        dynamicTableLabel.setColumnTextAttribute(1, contentTextAttribute);
+
+        // 标题样式
+        var capitalTextAttribute = __g.new_TextAttribute;
+        capitalTextAttribute.textColor = 0xffffffff;
+        capitalTextAttribute.outlineColor = 4279834905;
+        capitalTextAttribute.font = "华文新魏";
+        capitalTextAttribute.textSize = 14;
+        capitalTextAttribute.multilineJustification = gviMultilineJustification.gviMultilineCenter;
+        capitalTextAttribute.bold = true;
+        dynamicTableLabel.titleTextAttribute = capitalTextAttribute;
+
+        angle.heading = 0;
+        angle.tilt = -20;
+        __g.camera.lookAt(position, 30, angle);
+        // 加载一个模型
+        if (renderModelPoint == null) {
+            var modelName = getSamplesRelatePath("/osg/Vehicles/XiaoFangChe/xiaoFangChe3.OSG"); 
+            var geoFactory = __g.geometryFactory;
+            var modePoint = geoFactory.createGeometry(gviGeometryType.gviGeometryModelPoint, gviVertexAttribute.gviVertexAttributeZ);
+            modePoint.modelName = modelName;
+            modePoint.setCoords(firstX, firstY, firstZ, 0, 0);
+            renderModelPoint = __g.objectManager.createRenderModelPoint(modePoint, null, __rootId);
+        }
+
+        // 加载一个运动路径
+        if (motionPath == null) {
+            motionPath = __g.objectManager.createMotionPath(__rootId);
+            // 为MotionPath添加第一个点
+            position.set(firstX, firstY, firstZ);
+            // angle.Set(firstH, firstP, firstR);
+            angle.heading = firstH;
+            angle.tilt = firstP;
+            scale.set(firstSX, firstSY, firstSZ);
+            motionPath.addWaypoint(position, angle, scale, firtWhen);
+            //为MotionPath添加第二个点
+            position.set(secondX, secondY, secondZ);
+            //angle.Set(secondH, secondP, secondR);
+            angle.heading = secondH;
+            angle.tilt = secondP;
+            scale.set(secondSX, secondSY, secondSZ);
+            motionPath.addWaypoint(position, angle, scale, secondWhen);
+            //为MotionPath添加第三个点
+            position.set(thirdX, thirdY, thirdZ);
+            //angle.Set(thirdH, thirdP, thirdR);
+            angle.heading = thirdH;
+            angle.tilt = thirdP;
+            scale.set(thirdSX, thirdSY, thirdSZ);
+            motionPath.addWaypoint(position, angle, scale, thirdWhen);
+            //为MotionPath添加第四个点
+            position.set(fourthX, fourthY, fourthZ);
+            //angle.Set(fourthH, fourthP, fourthR);
+            angle.heading = fourthH;
+            angle.tilt = fourthP;
+            scale.set(fourthSX, fourthSY, fourthSZ);
+            motionPath.addWaypoint(position, angle, scale, fourthWhen);
+        }
+        //将模型绑定到路径上
+        v3.set(0, 0, 0);
+        renderModelPoint.bind(motionPath, v3, 0, 0, 0);
+        // 将标牌绑定到路径上
+        if (dynamicTableLabel != null && motionPath != null) {
+            v3.set(0, 0, 6);
+            dynamicTableLabel.bind(motionPath, v3, 0, 0, 0);
+        }
+        position.set(246.42130135782065, 135.54315354302258, 17.016099817027751);
+        //angle.Set(57.987642426086211, -21.661413151038918, 0.0000000000000079513867036587919);
+        angle.heading = 57.987642426086211;
+        angle.tilt = -21.661413151038918;
+        __g.camera.setCamera(position, angle, gviSetCameraFlags.gviSetCameraNoFlags);
+    }
+
+    //播放
+    function btnPlay_Click() {
+        if (motionPath != null) {
+            motionPath.play();
+        }
+    }
+    //暂停
+    function btnPause_Click() {
+        if (motionPath != null) {
+            motionPath.pause();
+        }
+    }
+
+    //停止
+    function btnStop_Click() {
+        if (motionPath != null) {
+            motionPath.stop();
+        }
+    }
+
+    /// <summary>
+    /// 设置三维场景可先择RenderModelPoint
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    function btnMoveMotionObject_Click() {
+        if (renderModelPoint != null) {
+            if (_geoEditor == null) {
+                _geoEditor = __g.objectEditor;
+            }
+            _geoEditor.finishEdit();
+            __g.featureManager.unhighlightAll();
+
+            __g.interactMode = gviInteractMode.gviInteractEdit;
+
+            resultCode = _geoEditor.startEditRenderGeometry(renderModelPoint, gviGeoEditType.gviGeoEdit3DMove);
+            if (!resultCode) {
+                alert(resultCode);
+            }
+        }
+    }
+
+    function btnRotateMotionObject_Click() {
+        if (renderModelPoint != null) {
+            if (_geoEditor == null) {
+                _geoEditor = __g.objectEditor;
+            }
+            _geoEditor.finishEdit();
+            __g.featureManager.unhighlightAll();
+
+            __g.interactMode = gviInteractMode.gviInteractEdit;
+
+            resultCode = _geoEditor.startEditRenderGeometry(renderModelPoint, gviGeoEditType.gviGeoEdit3DRotate);
+            if (!resultCode) {
+                alert(resultCode);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 将当前renderModelPoint所在的位置插入MotionPath中
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    function btnInsertWaypoint_Click() {
+
+        if (renderModelPoint != null) {
+            var modelPoint = renderModelPoint.getFdeGeometry();
+            var matrix = __g.new_Matrix;
+            matrix = modelPoint.asMatrix();
+            motionPath.addWaypointByMatrix(matrix, motionPath.totalDuration + 4);
+        }
+    }
+
+    /// <summary>
+    /// 取消设置三维场景可选择renderModelPoint
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    function btnComplete_Click() {
+        if (_geoEditor != null) {
+            _geoEditor.finishEdit();
+        }
+        __g.featureManager.unhighlightAll();
+        __g.interactMode = gviInteractMode.gviInteractNormal;
+    }
+ 
+</script>
+</html>

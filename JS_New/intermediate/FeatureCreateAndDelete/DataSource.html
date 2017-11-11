@@ -1,0 +1,278 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <title>数据源</title>
+    <link href="css/openDialog.css" rel="Stylesheet" type="text/css" />
+    <script type="text/javascript" src="../../cm7.js"></script>  
+
+    <script type="text/javascript">
+        var __g = window.dialogArguments.__g;
+        function selConChange(){
+            var sel=$("selType");
+            switch(sel.selectedIndex){
+                case 0:
+                    $("tr1").style.display="block";
+                    $("tr2").style.display="none";
+                    $("tr3").style.display="none";
+                    $("tr4").style.display="none";
+                    $("tr5").style.display="none";
+                    $("tr6").style.display="none";
+                    $("tr7").style.display="none";
+
+                    break;
+               case 1:
+                    $("tr1").style.display="none";
+                    $("tr2").style.display="block";
+                    $("tr3").style.display="block";
+                    $("tr4").style.display="block";
+                    $("tr5").style.display="block";
+                    $("tr6").style.display="block";
+                    $("tr7").style.display="block";
+                    
+                    break;
+               case 2:
+                    $("tr1").style.display="block";
+                    $("tr2").style.display="none";
+                    $("tr3").style.display="none";
+                    $("tr4").style.display="none";
+                    $("tr5").style.display="none";
+                    $("tr6").style.display="none";
+                    $("tr7").style.display="none";
+                    break;
+            }
+        }
+        window.onload=function init(){
+             selConChange();
+        }
+        
+
+        function openfile()
+        {
+           try {
+
+                $("ff").click();
+                var sel=$("selType");
+           
+                var filePath = $("ff").value;
+
+                if (!filePath)
+                   return;
+
+                var ext = filePath.substr(filePath.lastIndexOf(".") + 1)
+
+                switch(sel.selectedIndex){
+                    case 0:
+                        if (ext.toLowerCase() != "fdb") {
+
+                            alert("选择文件类型错误，请选择工程文件(*.fdb)");
+                            $("txtFileName").value = "";
+                            return;
+                        }
+                    break;
+                   case 1:
+                        if (ext.toLowerCase() != "sdb") 
+                        {
+                            alert("选择文件类型错误，请选择地形文件 (*.sdb)");
+                            $("txtFileName").value = "";
+                            return;
+                        }
+                       break;
+                }
+
+                $("txtFileName").value = filePath;
+
+            } catch (e) {
+                $("txtFileName").value = "";
+            }
+        }
+        
+        function Connect()
+        {
+            var ci =__g.new_ConnectionInfo;
+            var sel=$("selType");
+            if (sel.value=="1")
+            {
+                ci.connectionType = gviConnectionType.gviConnectionMySql5x;
+                
+                var txtServerAddress=$("txtServerAddress").value;
+
+                var txtPort=$("txtPort").value;
+                var txtUserName=$("txtUserName").value;
+                var pwd = $("txtPassword").value;
+                var txtDatabase=$("txtDatabase");
+
+                ci.server = txtServerAddress;
+                ci.port = txtPort;
+                ci.userName = txtUserName;
+                ci.password = pwd;
+
+                var ds = __g.dataSourceFactory.openDataSource(ci);
+                if (ds == null)return;
+                txtDatabase.innerHTML="";
+                var names = __g.dataSourceFactory.getDataBaseNames(ci, true);
+                var strTbody = ["<select id='selDatabase' style='width: 175px;height:18px;'>"];
+                for (var i = 0; i < names.length; i++)
+                {
+                    strTbody.push("<option value=" + i + ">" + names[i] + "</option>");
+                }
+                strTbody.push("</select>");
+          
+                txtDatabase.innerHTML=strTbody.join("");
+            }
+            else 
+            {
+               return;
+            }
+        }
+        
+        function OnOK()
+        {
+            var sel=$("selType");
+            var obj = new Object();
+
+            if (sel.value=="1")
+            {            
+                var selType=$("selType").value;
+                var txtServerAddress=$("txtServerAddress").value;
+
+                var txtPort=$("txtPort").value;
+                
+                var selDatabase=$("selDatabase");
+                var txtDatabase=selDatabase.options[selDatabase.selectedIndex].text;
+                
+                var pwd = $("txtPassword").value;
+                var txtUserName=$("txtUserName").value;
+                
+                obj.Password = pwd;
+                obj.selType=selType;
+                obj.Server=txtServerAddress;
+                obj.Port=txtPort;
+                obj.Database=txtDatabase;
+                obj.UserName=txtUserName;
+                
+            }
+            else 
+            {
+                var filepth = $("txtFileName").value;
+                var selType=$("selType").value;
+                obj.Password = "";
+                obj.selType=selType;
+                obj.Server="";
+                obj.Port="";
+                obj.UserName="";
+                obj.Database=filepth;
+               
+            }
+
+            window.returnValue = obj;
+
+            window.close();
+        }
+        
+        function OnCancel()
+        {
+            window.returnValue = null;
+            window.close();
+        }
+    </script>
+
+</head>
+<body leftmargin="20" topmargin="20">
+<form id="formFile" enctype="multipart/form-data">
+        <table width="356" border="0" align="center" cellpadding="0" cellspacing="0" class="tableStyle">
+            <tr>
+                <td align="right" bgcolor="#FFFFFF">
+                    &nbsp;
+                </td>
+                <td height="20" bgcolor="#FFFFFF">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td align="right" bgcolor="#FFFFFF">
+                    数据库类型：
+                </td>
+                <td height="20" bgcolor="#FFFFFF">
+                    <select id="selType" onchange="selConChange()">
+                        <option value="0">gviConnectionFireBird2x</option>
+                        <option value="1">gviConnectionMySql5x</option>
+                        <option value="2">gviConnectionSQLite3</option>
+                    </select>
+                </td>
+            </tr>
+            <tr id="tr1">
+                <td width="85" align="right" bgcolor="#FFFFFF">
+                    文件路径：
+                </td>
+                <td height="36" bgcolor="#FFFFFF">
+                    <input type="file" id="ff" style="display: none" /><input id="txtFileName" type="text"
+                        style="width: 175px; height: 18px;" /><input type="button" id="btnBrowse" value="浏览..."
+                            onclick="openfile()" class="btnStyle"/>
+                </td>
+            </tr>
+            <tr id="tr2">
+                <td width="85" align="right" bgcolor="#FFFFFF">
+                    服务器地址：
+                </td>
+                <td height="36" bgcolor="#FFFFFF">
+                    <input id="txtServerAddress" type="text" style="width: 175px; height: 18px;" />
+                </td>
+            </tr>
+            <tr id="tr3">
+                <td width="85" align="right" bgcolor="#FFFFFF">
+                    端口号：
+                </td>
+                <td height="36" bgcolor="#FFFFFF">
+                    <input id="txtPort" type="text" style="width: 175px; height: 18px;" />
+                </td>
+            </tr>
+            <tr id="tr4">
+                <td width="85" align="right" bgcolor="#FFFFFF">
+                    用户名：
+                </td>
+                <td height="36" bgcolor="#FFFFFF">
+                    <input id="txtUserName" type="text" style="width: 175px; height: 18px;" />
+                </td>
+            </tr>
+            <tr id="tr5">
+                <td align="right" bgcolor="#FFFFFF">
+                    密码：
+                </td>
+                <td height="36" bgcolor="#FFFFFF">
+                    <input id="txtPassword" type="password" style="width: 175px; height: 18px;" />
+                </td>
+            </tr>
+            <tr id="tr6">
+                <td width="85" align="right" bgcolor="#FFFFFF">
+                    &nbsp;
+                </td>
+                <td height="36" bgcolor="#FFFFFF">
+                    <input type="button" value="测试连接" onclick="Connect()" class="btnStyle" />
+                </td>
+            </tr>
+            <tr id="tr7">
+                <td width="85" align="right" bgcolor="#FFFFFF">
+                    数据库：
+                </td>
+                <td id="txtDatabase" height="36" bgcolor="#FFFFFF">
+                    <select id="selDatabase" style="width: 175px;height:18px;">
+                        <option value="0"></option>
+                    </select>
+                </td>
+            </tr>
+            <tr id="tr8">
+                <td height="20" colspan="2" valign="middle" bgcolor="#FFFFFF">
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td height="40" colspan="2" align="center" valign="middle" bgcolor="#F2F2F2">
+                    <input type="button" value="确定" onclick="OnOK()" class="btnStyle" />
+                    <input type="button" value="取消" onclick="OnCancel()" class="btnStyle" style="margin-left: 30px" />
+                </td>
+            </tr>
+        </table>
+</form>
+</body>
+</html>

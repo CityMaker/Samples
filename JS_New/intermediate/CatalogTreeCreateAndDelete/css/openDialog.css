@@ -1,0 +1,49 @@
+﻿body
+        {
+            background: #E0F1F9;
+            font: 12px "宋体";
+            margin: 0;
+            padding: 0;
+        }
+        .tableStyle
+        {
+            width: 356px;
+            border: 1px solid #99CCFF;
+            margin: 25px auto 0 auto;
+        }
+        .btnStyle
+        {
+            width: 56px;
+            height: 23px;
+            cursor: pointer;
+            BORDER-RIGHT: #2C59AA 1px solid;
+            PADDING-RIGHT: 2px; 
+            BORDER-TOP: #2C59AA 1px solid;
+            PADDING-LEFT: 2px; 
+            FONT-SIZE: 12px; 
+            FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#ffffff, EndColorStr=#C3DAF5); 
+            BORDER-LEFT: #2C59AA 1px solid; 
+            CURSOR: pointer; 
+            COLOR: black; 
+            BORDER-BOTTOM: #2C59AA 1px solid
+        }
+        .style1
+        {
+            width: 105px;
+        }
+         .btnStyle1
+        {
+            width: 30px;
+            height: 23px;
+            cursor: pointer;
+            BORDER-RIGHT: #2C59AA 1px solid;
+            PADDING-RIGHT: 2px; 
+            BORDER-TOP: #2C59AA 1px solid;
+            PADDING-LEFT: 2px; 
+            FONT-SIZE: 12px; 
+            FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#ffffff, EndColorStr=#C3DAF5); 
+            BORDER-LEFT: #2C59AA 1px solid; 
+            CURSOR: hand; 
+            COLOR: black; 
+            BORDER-BOTTOM: #2C59AA 1px solid
+        }

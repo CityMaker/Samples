@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML  .0 Transitional//EN" "http://www.w3.org/TR/xhtml /DTD/xhtml -transitional.dtd">
+<html xmlns="http://www.w3.org/ 999/xhtml">
+<head>
+    <title>PrimitiveGlass</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+   
+</head>
+    
+<body >
+   
+    <div style="text-align:center">
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 700px; width:  1000px" > 
+        </object>
+    </div>
+
+</body>
+
+<script type="text/javascript">
+  
+     window.onload = function () {
+         Initialize();
+    
+     }
+
+
+    function Initialize() {
+        initAxControl();
+        loadFdb("CCTV.FDB");
+        __g.camera.flyTime = 0;
+        __g.new_LicenseServer.setHost("192.168.2.200", 8588, "");
+        var model = __fds.getModel("CCTV");
+        var groupCount = model.groupCount;
+         for (var i = 0; i < groupCount; i++){
+                        
+             var group = model.getGroup(i);
+             var primitiveCount = group.primitiveCount;
+             for (var j = 0; j < primitiveCount; j++) {
+                  var primitive = group.getPrimitive(j);
+                   primitive.primitiveType = gviPrimitiveType.gviPrimitiveGlass;
+                }
+         }
+         __fds.updateModel("CCTV", model);
+         __g.refreshModel(__fds, "CCTV");
+    }
+   
+</script>
+</html>

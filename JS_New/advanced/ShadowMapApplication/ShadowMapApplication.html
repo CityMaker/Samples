@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+     <title>ShadowMapApplication</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+    
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+        </object>
+		<button onclick="loop()">动态播放</button>
+		<button onclick="enable()">开启</button>
+		<button onclick="disable()">关闭</button>
+    </div>
+</body>
+     <script type="text/javascript">
+         var __g = document.getElementById("__g");
+         
+         var __fcMap = {};
+         var __fcGeoMap = {};
+         
+		 var d;
+
+		 window.onload = function () {
+			 Initialize();
+		 }
+         
+         function Initialize() {
+             //初始化三维控件
+             initAxControl();
+             
+           var crs = 'GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563,AUTHORITY["EPSG","7030"]],AUTHORITY["EPSG","6326"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4326"]]';
+               __g.reset2(crs);
+             var ang = __g.new_EulerAngle;
+             ang.heading = -15;
+             ang.tilt = -20;
+             //__g.sunConfig.shadowColor = 0xffee0000;
+             __g.sunConfig.sunCalculateMode = gviSunCalculateMode.gviSunModeAccordingToGMT;
+			 var beginDateStr = "2007/01/29 1:00:00";
+             __g.sunConfig.setGMT(beginDateStr);
+			 d = new Date(beginDateStr);
+			 var s = "";
+            s += d.getFullYear() + "/";
+            s += (d.getMonth() + 1) + "/";
+            s += d.getDate() + " ";
+			s += d.getHours() + ":";
+            s += d.getMinutes() + ":";
+            s += d.getSeconds();
+			document.title = s;
+			
+             __g.sunConfig.setSunEuler(ang);
+             var tilePath = getSamplesRelatePath("") + "\\sdk.tdb";
+             var layer = __g.objectManager.create3DTileLayer(tilePath, "", "");
+             __g.camera.flyToObject(layer.guid, gviActionCode.gviActionFlyTo);
+             __g.sunConfig.enableShadow(0, true);
+             var intersectPoint = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+             intersectPoint.setCoords(15441.60, 35249.32, 281.60, 0, 0);
+             intersectPoint.spatialCRS = __datasetSpatialCRS;
+             __g.camera.lookAt2(intersectPoint, 20, ang);
+         }
+		 
+		 var b = 20;
+		 function loop(){
+			setInterval(settime, 1000);
+		 }
+		 
+		 function settime(){
+			var s_cur_time = document.title;
+			d = new Date(s_cur_time);
+			var s = "";
+            s += d.getFullYear() + "/";
+            s += (d.getMonth() + 1) + "/";
+            s += d.getDate() + " ";
+			if(d.getHours() == 23){
+				d.setHours(0);
+				s += (d.getHours()) + ":";
+			}
+			else
+				s += (d.getHours() + 1) + ":";
+            s += d.getMinutes() + ":";
+            s += d.getSeconds();
+			document.title = s;
+			__g.sunConfig.setGMT(s);
+		 }
+         
+         function enable(){
+			__g.sunConfig.enableShadow(0, true);
+		 }
+
+		function disable(){
+			__g.sunConfig.enableShadow(0, false);
+		 }		 
+     </script>
+</html>

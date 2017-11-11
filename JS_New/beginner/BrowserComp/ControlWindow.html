@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>ControlWindow</title>
+    <style type="text/css">
+        div{ margin-top:240px; margin-left:500px;}
+    </style>
+</head>
+<body>
+	<select id="eWeather" onchange="changeWeather()">
+	  <option>晴天</option>
+	  <option>小雨</option>
+	  <option>中雨</option>
+	  <option>大雨</option>
+	  <option>小雪</option>
+	  <option>中雪</option>
+	  <option>大雪</option>
+	</select>
+	<table style="background-color:#ffffff">
+		<tr>
+			<td></td>
+			<td><button onclick="Qian()">向前</button></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><button onclick="Up()">向上</button></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td><button onclick="Left()">向左</button></td>
+			<td></td>
+			<td><button onclick="Right()">向右</button></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><button onclick="Down()">向下</button></td>
+			<td></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><button onclick="Hou()">向后</button></td>
+			<td></td>
+		</tr>
+	</table>
+</body>
+<script type="text/javascript">
+
+window.onload = function(){
+	external.parentWindow.__fnSetPop = fnSetPop;
+}
+
+function fnSetPop(val){
+	document.getElementById("eWeather").selectedIndex = val;
+}
+
+function changeWeather()
+{
+	external.parentWindow.setSelectValue(document.getElementById("eWeather").selectedIndex);
+}
+
+ 
+function Qian()
+{
+  var parentDoc = external;      
+  parentDoc.parentWindow.fnCallByHtmWindow_Qian();
+}
+
+function Hou()
+{
+  var parentDoc = external;      
+  parentDoc.parentWindow.fnCallByHtmWindow_Hou();
+}
+
+function Left()
+{
+  var parentDoc = external;      
+  parentDoc.parentWindow.fnCallByHtmWindow_Left();
+}
+
+function Right()
+{
+  var parentDoc = external;      
+  parentDoc.parentWindow.fnCallByHtmWindow_Right();
+}
+
+function Up()
+{
+  var parentDoc = external;      
+  parentDoc.parentWindow.fnCallByHtmWindow_Up();
+}
+
+function Down()
+{
+  var parentDoc = external;      
+  parentDoc.parentWindow.fnCallByHtmWindow_Down();
+}
+</script>
+</html>

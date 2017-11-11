@@ -1,0 +1,2758 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>CreateGeometry</title>
+    <script type="text/javascript" src="../../cm7.js"></script>  
+</head>
+<style type="text/css">
+   table.featureInfo td,table.featureInfo th{
+        border:1px solid #ddd;
+        border-collapse:collapse;
+        margin:0;
+        padding:0;
+        font-size:90%;
+    }
+
+</style>
+<body style="margin:0px;scroll:no">   
+<div style="float:left"> 
+   <input type="button" value="Circle" onclick="CreateObj(this)"/>
+   <input type="button" value="CirculeArc" onclick="CreateObj(this)"/>
+   <input type="button" value="Polyline" onclick="CreateObj(this)"/>
+   <input type="button" value="Polygon" onclick="CreateObj(this)"/>
+   <input type="button" value="Point" onclick="CreateObj(this)"/>
+   <input type="button" value="Line" onclick="CreateObj(this)"/>
+ <!--  <input type="button" value="Triangle" onclick="CreateObj(this)"/>-->
+   <input type="button" value="TriMesh" onclick="CreateObj(this)"/>
+
+     <!-- <input type="button" value="GeometryCollection" onclick="CreateObj(this)"/>-->
+   <input type="button" value="CompoundLine" onclick="CreateObj(this)"/>
+<!--   <input type="button" value="Ellipse" onclick="CreateObj(this)"/>
+   <input type="button" value="EllipticArc" onclick="CreateObj(this)"/>
+-->     <!--  <input type="button" value="ImagePoint" onclick="CreateObj(this)"/>-->
+   <input type="button" value="ModelPoint" onclick="CreateObj(this)"/>
+      <!-- <input type="button" value="MultiSolid" onclick="CreateObj(this)"/>-->
+  
+   <input type="button" value="MultiPoint" onclick="CreateObj(this)"/>
+   <input type="button" value="MultiTriMesh" onclick="CreateObj(this)"/>
+   <input type="button" value="MultiPolygon" onclick="CreateObj(this)"/>
+   <input type="button" value="MultiPolyline" onclick="CreateObj(this)"/>
+   <!-- <input type="button" value="TriSolid" onclick="CreateObj(this)"/> -->
+    <!--<input type="button" value="ClosedTriMesh" onclick="CreateObj(this)"/> -->
+</div>
+<br>
+<div id="Property" style="float:left;position:absolute">
+
+</div>
+<div style="float:left;display:none">
+    <object id="renderControl" type="application/x-cm-3d8" ></object>
+</div>
+</body>
+
+<script type="text/javascript">
+
+
+    function CreateObj(obj) {
+
+        var __g = document.getElementById("renderControl");
+
+        var prop = document.getElementById('Property');  
+        var gfactory = __g.geometryFactory;
+
+        prop.innerHTML = "";
+
+        if (obj.value == "Point") {
+            var point = gfactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+            point.setCoords(100, 101, 102, 3, 9);
+
+            if (point == null)
+                return;
+
+            var strTbody = ["<table class='featureInfo'><tbody>"];
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Geometry属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Dimension" + "</td>");
+            strTbody.push("<td>" + point.dimension + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxX" + "</td>");
+            strTbody.push("<td>" + point.envelope.maxX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxY" + "</td>");
+            strTbody.push("<td>" + point.envelope.maxY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxZ" + "</td>");
+            strTbody.push("<td>" + point.envelope.maxZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinX" + "</td>");
+            strTbody.push("<td>" + point.envelope.minX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinY" + "</td>");
+            strTbody.push("<td>" + point.envelope.minY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinZ" + "</td>");
+            strTbody.push("<td>" + point.envelope.minZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryType" + "</td>");
+            strTbody.push("<td>" + point.geometryType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsEmpty" + "</td>");
+            strTbody.push("<td>" + point.isEmpty + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsValid" + "</td>");
+            strTbody.push("<td>" + point.isValid + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "VertexAttribute" + "</td>");
+            strTbody.push("<td>" + point.vertexAttribute + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasId" + "</td>");
+            strTbody.push("<td>" + point.hasId + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasM" + "</td>");
+            strTbody.push("<td>" + point.hasM + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasZ" + "</td>");
+            strTbody.push("<td>" + point.hasZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Point属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Id" + "</td>");
+            strTbody.push("<td>" + point.id + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "M" + "</td>");
+            strTbody.push("<td>" + point.m + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "X" + "</td>");
+            strTbody.push("<td>" + point.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Y" + "</td>");
+            strTbody.push("<td>" + point.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Z" + "</td>");
+            strTbody.push("<td>" + point.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("</tbody></table>");
+
+            prop.innerHTML = strTbody.join("");
+
+
+        }
+        else if (obj.value == "Polyline") {
+            var point = gfactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+            var polyline = gfactory.createGeometry(gviGeometryType.gviGeometryPolyline, gviVertexAttribute.gviVertexAttributeZ);
+            var length = 100;
+            for (var i = 0; i < length; i++) {
+                point.setCoords(i, 2 * i, 0, 0, i + 1);
+                polyline.appendPoint(point);
+            }
+            if (polyline == null)
+                return;
+
+            var strTbody = ["<table class='featureInfo'><tbody>"];
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CompoundLine属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "PointCount" + "</td>");
+            strTbody.push("<td>" + polyline.pointCount + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "SegmentCount" + "</td>");
+            strTbody.push("<td>" + polyline.segmentCount + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Curve属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsClosed" + "</td>");
+            strTbody.push("<td>" + polyline.isClosed + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Length" + "</td>");
+            strTbody.push("<td>" + polyline.length + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.X" + "</td>");
+            strTbody.push("<td>" + polyline.startPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.Y" + "</td>");
+            strTbody.push("<td>" + polyline.startPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.Z" + "</td>");
+            strTbody.push("<td>" + polyline.startPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.X" + "</td>");
+            strTbody.push("<td>" + polyline.endPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.Y" + "</td>");
+            strTbody.push("<td>" + polyline.endPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.Z" + "</td>");
+            strTbody.push("<td>" + polyline.endPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Midpoint.X" + "</td>");
+            strTbody.push("<td>" + polyline.midpoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Midpoint.Y" + "</td>");
+            strTbody.push("<td>" + polyline.midpoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Midpoint.Z" + "</td>");
+            strTbody.push("<td>" + polyline.midpoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Geometry属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Dimension" + "</td>");
+            strTbody.push("<td>" + polyline.dimension + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxX" + "</td>");
+            strTbody.push("<td>" + polyline.envelope.maxX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxY" + "</td>");
+            strTbody.push("<td>" + polyline.envelope.maxY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxZ" + "</td>");
+            strTbody.push("<td>" + polyline.envelope.maxZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinX" + "</td>");
+            strTbody.push("<td>" + polyline.envelope.minX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinY" + "</td>");
+            strTbody.push("<td>" + polyline.envelope.minY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinZ" + "</td>");
+            strTbody.push("<td>" + polyline.envelope.minZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryType" + "</td>");
+            strTbody.push("<td>" + polyline.geometryType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsEmpty" + "</td>");
+            strTbody.push("<td>" + polyline.isEmpty + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsValid" + "</td>");
+            strTbody.push("<td>" + polyline.isValid + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "VertexAttribute" + "</td>");
+            strTbody.push("<td>" + polyline.vertexAttribute + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasId" + "</td>");
+            strTbody.push("<td>" + polyline.hasId + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasM" + "</td>");
+            strTbody.push("<td>" + polyline.hasM + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasZ" + "</td>");
+            strTbody.push("<td>" + polyline.hasZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("</tbody></table>");
+
+            prop.innerHTML = strTbody.join("");
+
+        }
+        else if (obj.value == "Polygon") {
+            var polygon = gfactory.createGeometry(gviGeometryType.gviGeometryPolygon, gviVertexAttribute.gviVertexAttributeZM);
+
+            if (polygon == null)
+                return;
+
+            var exteriorRing = polygon.exteriorRing;
+            var point = gfactory.createPoint(gviVertexAttribute.gviVertexAttributeZM);
+            point.setCoords(0, 0, 0, 0, 1);
+            exteriorRing.appendPoint(point);
+            point.setCoords(0, 200, 0, 0, 2);
+            exteriorRing.appendPoint(point);
+            point.setCoords(100, 200, 0, 0, 3);
+            exteriorRing.appendPoint(point);
+            point.setCoords(100, 0, 0, 0, 4);
+            exteriorRing.appendPoint(point);
+            point.setCoords(0, 0, 0, 0, 5);
+            exteriorRing.appendPoint(point);  //闭合
+
+            var interiorRing1 = gfactory.createGeometry(gviGeometryType.gviGeometryRing, gviVertexAttribute.gviVertexAttributeZM);
+            var interiorRing2 = gfactory.createGeometry(gviGeometryType.gviGeometryRing, gviVertexAttribute.gviVertexAttributeZM);
+            point.setCoords(25, 25, 0, 0, 1);
+            interiorRing1.appendPoint(point);
+            point.setCoords(75, 25, 0, 0, 2);
+            interiorRing1.appendPoint(point);
+            point.setCoords(75, 75, 0, 0, 3);
+            interiorRing1.appendPoint(point);
+            point.setCoords(25, 75, 0, 0, 4);
+            interiorRing1.appendPoint(point);
+            point.setCoords(25, 25, 0, 0, 5);
+            interiorRing1.appendPoint(point);  //闭合
+
+            point.setCoords(5, 6, 0, 8, 6);
+            interiorRing2.appendPoint(point);
+            point.setCoords(2, 3, 0, 5, 7);
+            interiorRing2.appendPoint(point);
+            point.setCoords(1, 1, 0, 1, 8);
+            interiorRing2.appendPoint(point);
+            point.setCoords(5, 6, 0, 8, 9);
+            interiorRing2.appendPoint(point);
+
+            polygon.addInteriorRing(interiorRing1);
+            polygon.addInteriorRing(interiorRing2);
+
+
+            var strTbody = ["<table class='featureInfo'><tbody>"];
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Geometry属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Dimension" + "</td>");
+            strTbody.push("<td>" + polygon.dimension + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxX" + "</td>");
+            strTbody.push("<td>" + polygon.envelope.maxX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxY" + "</td>");
+            strTbody.push("<td>" + polygon.envelope.maxY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxZ" + "</td>");
+            strTbody.push("<td>" + polygon.envelope.maxZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinX" + "</td>");
+            strTbody.push("<td>" + polygon.envelope.minX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinY" + "</td>");
+            strTbody.push("<td>" + polygon.envelope.minY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinZ" + "</td>");
+            strTbody.push("<td>" + polygon.envelope.minZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryType" + "</td>");
+            strTbody.push("<td>" + polygon.geometryType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsEmpty" + "</td>");
+            strTbody.push("<td>" + polygon.isEmpty + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsValid" + "</td>");
+            strTbody.push("<td>" + polygon.isValid + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "VertexAttribute" + "</td>");
+            strTbody.push("<td>" + polygon.vertexAttribute + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasId" + "</td>");
+            strTbody.push("<td>" + polygon.hasId + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasM" + "</td>");
+            strTbody.push("<td>" + polygon.hasM + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasZ" + "</td>");
+            strTbody.push("<td>" + polygon.hasZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Polygon属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "InteriorRingCount" + "</td>");
+            strTbody.push("<td>" + polygon.interiorRingCount + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsCoplanar" + "</td>");
+            strTbody.push("<td>" + polygon.isCoplanar + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " SurfacePatch属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "SurfaceInterpolationType" + "</td>");
+            strTbody.push("<td>" + polygon.surfaceInterpolationType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Surface属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Area" + "</td>");
+            strTbody.push("<td>" + polygon.area() + "</td>");
+            strTbody.push("</tr>");
+
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Centroid.X" + "</td>");
+            strTbody.push("<td>" + polygon.centroid.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Centroid.Y" + "</td>");
+            strTbody.push("<td>" + polygon.centroid.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Centroid.Z" + "</td>");
+            strTbody.push("<td>" + polygon.centroid.z + "</td>");
+            strTbody.push("</tr>");
+
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsClosed" + "</td>");
+            strTbody.push("<td>" + polygon.isClosed + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "PointOnSurface.X" + "</td>");
+            strTbody.push("<td>" + polygon.pointOnSurface.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "PointOnSurface.Y" + "</td>");
+            strTbody.push("<td>" + polygon.pointOnSurface.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "PointOnSurface.Z" + "</td>");
+            strTbody.push("<td>" + polygon.pointOnSurface.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("</tbody></table>");
+
+            prop.innerHTML = strTbody.join("");
+
+        }
+        else if (obj.value == "Circle") {
+
+            // 圆心
+            var point = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            point.x = 5; point.y = 6; point.z = 7;
+           
+            // 半径
+            var dRadius = 10.0;
+            var vNormal = __g.new_Vector3;
+            vNormal.set(0, 0, 1);
+
+            var circle = gfactory.createGeometry(gviGeometryType.gviGeometryCircle, gviVertexAttribute.gviVertexAttributeZ);
+            circle.constructCenterAndRadius(point, dRadius, vNormal);
+            if (circle == null)
+                return;
+
+            var strTbody = ["<table class='featureInfo'><tbody>"];
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Geometry属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Dimension" + "</td>");
+            strTbody.push("<td>" + circle.dimension + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxX" + "</td>");
+            strTbody.push("<td>" + circle.envelope.maxX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxY" + "</td>");
+            strTbody.push("<td>" + circle.envelope.maxY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxZ" + "</td>");
+            strTbody.push("<td>" + circle.envelope.maxZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinX" + "</td>");
+            strTbody.push("<td>" + circle.envelope.minX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinY" + "</td>");
+            strTbody.push("<td>" + circle.envelope.minY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinZ" + "</td>");
+            strTbody.push("<td>" + circle.envelope.minZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryType" + "</td>");
+            strTbody.push("<td>" + circle.geometryType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsEmpty" + "</td>");
+            strTbody.push("<td>" + circle.isEmpty + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsValid" + "</td>");
+            strTbody.push("<td>" + circle.isValid + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "VertexAttribute" + "</td>");
+            strTbody.push("<td>" + circle.vertexAttribute + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasId" + "</td>");
+            strTbody.push("<td>" + circle.hasId + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasM" + "</td>");
+            strTbody.push("<td>" + circle.hasM + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasZ" + "</td>");
+            strTbody.push("<td>" + circle.hasZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Curve属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsClosed" + "</td>");
+            strTbody.push("<td>" + circle.isClosed + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Length" + "</td>");
+            strTbody.push("<td>" + circle.length + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsClosed" + "</td>");
+            strTbody.push("<td>" + circle.isClosed + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.X" + "</td>");
+            strTbody.push("<td>" + circle.startPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.Y" + "</td>");
+            strTbody.push("<td>" + circle.startPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.Z" + "</td>");
+            strTbody.push("<td>" + circle.startPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.X" + "</td>");
+            strTbody.push("<td>" + circle.endPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.Y" + "</td>");
+            strTbody.push("<td>" + circle.endPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.Z" + "</td>");
+            strTbody.push("<td>" + circle.endPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Midpoint.X" + "</td>");
+            strTbody.push("<td>" + circle.midpoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Midpoint.Y" + "</td>");
+            strTbody.push("<td>" + circle.midpoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Midpoint.Z" + "</td>");
+            strTbody.push("<td>" + circle.midpoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Circle属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CenterPoint.X" + "</td>");
+            strTbody.push("<td>" + circle.centerPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CenterPoint.Y" + "</td>");
+            strTbody.push("<td>" + circle.centerPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CenterPoint.Z" + "</td>");
+            strTbody.push("<td>" + circle.centerPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Radius" + "</td>");
+            strTbody.push("<td>" + circle.radius + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Normal.X" + "</td>");
+            strTbody.push("<td>" + circle.normal.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Normal.Y" + "</td>");
+            strTbody.push("<td>" + circle.normal.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Normal.Z" + "</td>");
+            strTbody.push("<td>" + circle.normal.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("</tbody></table>");
+
+            prop.innerHTML = strTbody.join("");
+
+        }
+        else if (obj.value == "Ellipse") {
+
+            var point1 = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            point1.setCoords(1, 2, 3, 0, 1);
+            var point2 = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            point2.setCoords(4, 5, 6, 0, 2);
+            var point3 = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            point3.setCoords(7, 8, 9, 0, 3);
+            var point4 = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            point4.setCoords(10, 11, 12, 0, 4);
+
+            var ellipse = gfactory.createGeometry(gviGeometryType.gviGeometryEllipse, gviVertexAttribute.gviVertexAttributeZ);
+            ellipse.constructFromAxisVertex(point1, point2, point3, point4);
+            if (ellipse == null)
+                return;
+
+            var strTbody = ["<table class='featureInfo'><tbody>"];
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Geometry属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Dimension" + "</td>");
+            strTbody.push("<td>" + ellipse.dimension + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxX" + "</td>");
+            strTbody.push("<td>" + ellipse.envelope.maxX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxY" + "</td>");
+            strTbody.push("<td>" + ellipse.envelope.maxY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxZ" + "</td>");
+            strTbody.push("<td>" + ellipse.envelope.maxZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinX" + "</td>");
+            strTbody.push("<td>" + ellipse.envelope.minX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinY" + "</td>");
+            strTbody.push("<td>" + ellipse.envelope.minY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinZ" + "</td>");
+            strTbody.push("<td>" + ellipse.envelope.minZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryType" + "</td>");
+            strTbody.push("<td>" + ellipse.geometryType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsEmpty" + "</td>");
+            strTbody.push("<td>" + ellipse.isEmpty + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsValid" + "</td>");
+            strTbody.push("<td>" + ellipse.isValid + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "VertexAttribute" + "</td>");
+            strTbody.push("<td>" + ellipse.vertexAttribute + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasId" + "</td>");
+            strTbody.push("<td>" + ellipse.hasId + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasM" + "</td>");
+            strTbody.push("<td>" + ellipse.hasM + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasZ" + "</td>");
+            strTbody.push("<td>" + ellipse.hasZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Curve属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsClosed" + "</td>");
+            strTbody.push("<td>" + ellipse.isClosed + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Length" + "</td>");
+            strTbody.push("<td>" + ellipse.length + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsClosed" + "</td>");
+            strTbody.push("<td>" + ellipse.isClosed + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.X" + "</td>");
+            strTbody.push("<td>" + ellipse.startPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.Y" + "</td>");
+            strTbody.push("<td>" + ellipse.startPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.Z" + "</td>");
+            strTbody.push("<td>" + ellipse.startPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.X" + "</td>");
+            strTbody.push("<td>" + ellipse.endPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.Y" + "</td>");
+            strTbody.push("<td>" + ellipse.endPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.Z" + "</td>");
+            strTbody.push("<td>" + ellipse.endPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " ellipse属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CenterPoint.X" + "</td>");
+            strTbody.push("<td>" + ellipse.centerPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CenterPoint.Y" + "</td>");
+            strTbody.push("<td>" + ellipse.centerPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CenterPoint.Z" + "</td>");
+            strTbody.push("<td>" + ellipse.centerPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("</tbody></table>");
+
+            prop.innerHTML = strTbody.join("");
+        }
+        else if (obj.value == "EllipticArc") {
+            var pSemiMajor1 = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            pSemiMajor1.setCoords(0.0, 1.0, 0.0, 0, 0);
+            var pSemiMinor1 = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            pSemiMinor1.setCoords(2.0, 0.0, 0.0, 0, 0);
+            var pSemiMajor2 = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            pSemiMajor2.setCoords(4.0, 1.0, 0.0, 0, 0);
+            var pSemiMinor2 = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            pSemiMinor2.setCoords(2.0, 2.0, 0.0, 0, 0);
+
+            var pFrom = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            pFrom.setCoords(0, 1, 0, 0, 0);
+            var pTo = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            pTo.setCoords(2, 0, 0, 0, 0);
+
+            var ellipticArc = gfactory.createGeometry(gviGeometryType.gviGeometryEllipticArc, gviVertexAttribute.gviVertexAttributeZ);
+            ellipticArc.constructFromAxisVertex(pSemiMajor1, pSemiMinor1, pSemiMajor2, pSemiMinor2);
+            ellipticArc.setEllicpitArc(pFrom, pTo);
+            if (ellipticArc == null)
+                return;
+
+            var strTbody = ["<table class='featureInfo'><tbody>"];
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Geometry属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Dimension" + "</td>");
+            strTbody.push("<td>" + ellipticArc.dimension + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxX" + "</td>");
+            strTbody.push("<td>" + ellipticArc.envelope.maxX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxY" + "</td>");
+            strTbody.push("<td>" + ellipticArc.envelope.maxY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxZ" + "</td>");
+            strTbody.push("<td>" + ellipticArc.envelope.maxZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinX" + "</td>");
+            strTbody.push("<td>" + ellipticArc.envelope.minX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinY" + "</td>");
+            strTbody.push("<td>" + ellipticArc.envelope.minY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinZ" + "</td>");
+            strTbody.push("<td>" + ellipticArc.envelope.minZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryType" + "</td>");
+            strTbody.push("<td>" + ellipticArc.geometryType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsEmpty" + "</td>");
+            strTbody.push("<td>" + ellipticArc.isEmpty + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsValid" + "</td>");
+            strTbody.push("<td>" + ellipticArc.isValid + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "VertexAttribute" + "</td>");
+            strTbody.push("<td>" + ellipticArc.vertexAttribute + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasId" + "</td>");
+            strTbody.push("<td>" + ellipticArc.hasId + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasM" + "</td>");
+            strTbody.push("<td>" + ellipticArc.hasM + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasZ" + "</td>");
+            strTbody.push("<td>" + ellipticArc.hasZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Curve属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsClosed" + "</td>");
+            strTbody.push("<td>" + ellipticArc.isClosed + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Length" + "</td>");
+            strTbody.push("<td>" + ellipticArc.length + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsClosed" + "</td>");
+            strTbody.push("<td>" + ellipticArc.isClosed + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.X" + "</td>");
+            strTbody.push("<td>" + ellipticArc.startPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.Y" + "</td>");
+            strTbody.push("<td>" + ellipticArc.startPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.Z" + "</td>");
+            strTbody.push("<td>" + ellipticArc.startPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.X" + "</td>");
+            strTbody.push("<td>" + ellipticArc.endPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.Y" + "</td>");
+            strTbody.push("<td>" + ellipticArc.endPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.Z" + "</td>");
+            strTbody.push("<td>" + ellipticArc.endPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " ellipticArc属性" + "</td>");
+            strTbody.push("</tr>");
+
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CenterPoint.X" + "</td>");
+            strTbody.push("<td>" + ellipticArc.centerPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CenterPoint.Y" + "</td>");
+            strTbody.push("<td>" + ellipticArc.centerPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CenterPoint.Z" + "</td>");
+            strTbody.push("<td>" + ellipticArc.centerPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CenterPoint.X" + "</td>");
+            strTbody.push("<td>" + ellipticArc.centerPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CenterPoint.Y" + "</td>");
+            strTbody.push("<td>" + ellipticArc.centerPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CenterPoint.Z" + "</td>");
+            strTbody.push("<td>" + ellipticArc.centerPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CentralAngle" + "</td>");
+            strTbody.push("<td>" + ellipticArc.centralAngle + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsCircular" + "</td>");
+            strTbody.push("<td>" + ellipticArc.isCircular + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsLine" + "</td>");
+            strTbody.push("<td>" + ellipticArc.isLine + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsMinor" + "</td>");
+            strTbody.push("<td>" + ellipticArc.isMinor + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsPoint" + "</td>");
+            strTbody.push("<td>" + ellipticArc.isPoint + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("</tbody></table>");
+
+            prop.innerHTML = strTbody.join("");
+        }
+        else if (obj.value == "CirculeArc") {
+            var point1 = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            point1.setCoords(3.56, 4, 5, 0, 1);
+            var point2 = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            point2.setCoords(1, -1, 0, 0, 2);
+            var point3 = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            point3.setCoords(2, 0, 0, 0, 3);
+
+            var circularArc = gfactory.createGeometry(gviGeometryType.gviGeometryCircularArc, gviVertexAttribute.gviVertexAttributeZ);
+            circularArc.constructThreePoints(point1, point2, point3);
+            if (circularArc == null)
+                return;
+
+            var strTbody = ["<table class='featureInfo'><tbody>"];
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Geometry属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Dimension" + "</td>");
+            strTbody.push("<td>" + circularArc.dimension + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxX" + "</td>");
+            strTbody.push("<td>" + circularArc.envelope.maxX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxY" + "</td>");
+            strTbody.push("<td>" + circularArc.envelope.maxY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxZ" + "</td>");
+            strTbody.push("<td>" + circularArc.envelope.maxZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinX" + "</td>");
+            strTbody.push("<td>" + circularArc.envelope.minX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinY" + "</td>");
+            strTbody.push("<td>" + circularArc.envelope.minY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinZ" + "</td>");
+            strTbody.push("<td>" + circularArc.envelope.minZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryType" + "</td>");
+            strTbody.push("<td>" + circularArc.geometryType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsEmpty" + "</td>");
+            strTbody.push("<td>" + circularArc.isEmpty + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsValid" + "</td>");
+            strTbody.push("<td>" + circularArc.isValid + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "VertexAttribute" + "</td>");
+            strTbody.push("<td>" + circularArc.vertexAttribute + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasId" + "</td>");
+            strTbody.push("<td>" + circularArc.hasId + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasM" + "</td>");
+            strTbody.push("<td>" + circularArc.hasM + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasZ" + "</td>");
+            strTbody.push("<td>" + circularArc.hasZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Curve属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsClosed" + "</td>");
+            strTbody.push("<td>" + circularArc.isClosed + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Length" + "</td>");
+            strTbody.push("<td>" + circularArc.length + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.X" + "</td>");
+            strTbody.push("<td>" + circularArc.startPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.Y" + "</td>");
+            strTbody.push("<td>" + circularArc.startPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.Z" + "</td>");
+            strTbody.push("<td>" + circularArc.startPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.X" + "</td>");
+            strTbody.push("<td>" + circularArc.endPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.Y" + "</td>");
+            strTbody.push("<td>" + circularArc.endPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.Z" + "</td>");
+            strTbody.push("<td>" + circularArc.endPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Midpoint.X" + "</td>");
+            strTbody.push("<td>" + circularArc.midpoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Midpoint.Y" + "</td>");
+            strTbody.push("<td>" + circularArc.midpoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Midpoint.Z" + "</td>");
+            strTbody.push("<td>" + circularArc.midpoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " CircularArc属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CenterPoint.X" + "</td>");
+            strTbody.push("<td>" + circularArc.centerPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CenterPoint.Y" + "</td>");
+            strTbody.push("<td>" + circularArc.centerPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CenterPoint.Z" + "</td>");
+            strTbody.push("<td>" + circularArc.centerPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "CentralAngle" + "</td>");
+            strTbody.push("<td>" + circularArc.centralAngle + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "ChordHeight" + "</td>");
+            strTbody.push("<td>" + circularArc.chordHeight + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "ChordLength" + "</td>");
+            strTbody.push("<td>" + circularArc.chordLength + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsLine" + "</td>");
+            strTbody.push("<td>" + circularArc.isLine + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsMinor" + "</td>");
+            strTbody.push("<td>" + circularArc.isMinor + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsPoint" + "</td>");
+            strTbody.push("<td>" + circularArc.isPoint + "</td>");
+            strTbody.push("</tr>");
+
+            if (circularArc.pointOnArc) {
+                strTbody.push("<tr>");
+                strTbody.push("<td>" + "PointOnArc.X" + "</td>");
+                strTbody.push("<td>" + circularArc.pointOnArc.x + "</td>");
+                strTbody.push("</tr>");
+
+                strTbody.push("<tr>");
+                strTbody.push("<td>" + "PointOnArc.Y" + "</td>");
+                strTbody.push("<td>" + circularArc.pointOnArc.y + "</td>");
+                strTbody.push("</tr>");
+
+                strTbody.push("<tr>");
+                strTbody.push("<td>" + "PointOnArc.Z" + "</td>");
+                strTbody.push("<td>" + circularArc.pointOnArc.z + "</td>");
+                strTbody.push("</tr>");
+            }
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Radius" + "</td>");
+            strTbody.push("<td>" + circularArc.radius + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("</tbody></table>");
+
+            prop.innerHTML = strTbody.join("");
+        }
+        else if (obj.value == "Line") {
+            var pFrom = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            pFrom.setCoords(100, 101, 102, 0, 1);
+            var pTo = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            pTo.setCoords(200, 201, 202, 0, 2);
+
+            var line = gfactory.createGeometry(gviGeometryType.gviGeometryLine, gviVertexAttribute.gviVertexAttributeZ);
+            line.startPoint = pFrom;
+            line.endPoint = pTo;
+            if (line == null)
+                return;
+
+            var strTbody = ["<table class='featureInfo'><tbody>"];
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Geometry属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Dimension" + "</td>");
+            strTbody.push("<td>" + line.dimension + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxX" + "</td>");
+            strTbody.push("<td>" + line.envelope.maxX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxY" + "</td>");
+            strTbody.push("<td>" + line.envelope.maxY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxZ" + "</td>");
+            strTbody.push("<td>" + line.envelope.maxZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinX" + "</td>");
+            strTbody.push("<td>" + line.envelope.minX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinY" + "</td>");
+            strTbody.push("<td>" + line.envelope.minY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinZ" + "</td>");
+            strTbody.push("<td>" + line.envelope.minZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryType" + "</td>");
+            strTbody.push("<td>" + line.geometryType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsEmpty" + "</td>");
+            strTbody.push("<td>" + line.isEmpty + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsValid" + "</td>");
+            strTbody.push("<td>" + line.isValid + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "VertexAttribute" + "</td>");
+            strTbody.push("<td>" + line.vertexAttribute + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasId" + "</td>");
+            strTbody.push("<td>" + line.hasId + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasM" + "</td>");
+            strTbody.push("<td>" + line.hasM + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasZ" + "</td>");
+            strTbody.push("<td>" + line.hasZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Curve属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsClosed" + "</td>");
+            strTbody.push("<td>" + line.isClosed + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Length" + "</td>");
+            strTbody.push("<td>" + line.length + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.X" + "</td>");
+            strTbody.push("<td>" + line.startPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.Y" + "</td>");
+            strTbody.push("<td>" + line.startPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.Z" + "</td>");
+            strTbody.push("<td>" + line.startPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.X" + "</td>");
+            strTbody.push("<td>" + line.endPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.Y" + "</td>");
+            strTbody.push("<td>" + line.endPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.Z" + "</td>");
+            strTbody.push("<td>" + line.endPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Midpoint.X" + "</td>");
+            strTbody.push("<td>" + line.midpoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Midpoint.Y" + "</td>");
+            strTbody.push("<td>" + line.midpoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Midpoint.Z" + "</td>");
+            strTbody.push("<td>" + line.midpoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " line属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsPoint" + "</td>");
+            strTbody.push("<td>" + line.isPoint + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("</tbody></table>");
+
+            prop.innerHTML = strTbody.join("");
+        }
+        else if (obj.value == "CompoundLine") {
+            var point1 = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            point1.setCoords(3.56, 4, 5, 0, 1);
+            var point2 = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ); point2.setCoords(1, -1, 0, 0, 2);
+            var point3 = gfactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            point3.setCoords(2, 0, 0, 0, 3);
+
+            var circularArc = gfactory.createGeometry(gviGeometryType.gviGeometryCircularArc, gviVertexAttribute.gviVertexAttributeZ);
+            circularArc.constructThreePoints(point1, point2, point3);
+            if (circularArc == null)
+                return;
+
+            compoundLine = gfactory.createGeometry(gviGeometryType.gviGeometryCompoundLine, gviVertexAttribute.gviVertexAttributeZ);
+            compoundLine.appendSegment(circularArc);
+            if (compoundLine == null)
+                return;
+
+            var strTbody = ["<table class='featureInfo'><tbody>"];
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Geometry属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Dimension" + "</td>");
+            strTbody.push("<td>" + compoundLine.dimension + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxX" + "</td>");
+            strTbody.push("<td>" + compoundLine.envelope.maxX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxY" + "</td>");
+            strTbody.push("<td>" + compoundLine.envelope.maxY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxZ" + "</td>");
+            strTbody.push("<td>" + compoundLine.envelope.maxZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinX" + "</td>");
+            strTbody.push("<td>" + compoundLine.envelope.minX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinY" + "</td>");
+            strTbody.push("<td>" + compoundLine.envelope.minY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinZ" + "</td>");
+            strTbody.push("<td>" + compoundLine.envelope.minZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryType" + "</td>");
+            strTbody.push("<td>" + compoundLine.geometryType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsEmpty" + "</td>");
+            strTbody.push("<td>" + compoundLine.isEmpty + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsValid" + "</td>");
+            strTbody.push("<td>" + compoundLine.isValid + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "VertexAttribute" + "</td>");
+            strTbody.push("<td>" + compoundLine.vertexAttribute + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasId" + "</td>");
+            strTbody.push("<td>" + compoundLine.hasId + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasM" + "</td>");
+            strTbody.push("<td>" + compoundLine.hasM + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasZ" + "</td>");
+            strTbody.push("<td>" + compoundLine.hasZ + "</td>");
+            strTbody.push("</tr>");
+
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Curve属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsClosed" + "</td>");
+            strTbody.push("<td>" + compoundLine.isClosed + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Length" + "</td>");
+            strTbody.push("<td>" + compoundLine.length + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.X" + "</td>");
+            strTbody.push("<td>" + compoundLine.startPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.Y" + "</td>");
+            strTbody.push("<td>" + compoundLine.startPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "StartPoint.Z" + "</td>");
+            strTbody.push("<td>" + compoundLine.startPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.X" + "</td>");
+            strTbody.push("<td>" + compoundLine.endPoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.Y" + "</td>");
+            strTbody.push("<td>" + compoundLine.endPoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "EndPoint.Z" + "</td>");
+            strTbody.push("<td>" + compoundLine.endPoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Midpoint.X" + "</td>");
+            strTbody.push("<td>" + compoundLine.midpoint.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Midpoint.Y" + "</td>");
+            strTbody.push("<td>" + compoundLine.midpoint.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Midpoint.Z" + "</td>");
+            strTbody.push("<td>" + compoundLine.midpoint.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " compoundLine属性" + "</td>");
+            strTbody.push("</tr>");
+
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "PointCount" + "</td>");
+            strTbody.push("<td>" + compoundLine.pointCount + "</td>");
+            strTbody.push("</tr>");
+
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "SegmentCount" + "</td>");
+            strTbody.push("<td>" + compoundLine.segmentCount + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("</tbody></table>");
+
+            prop.innerHTML = strTbody.join("");
+        }
+        else if (obj.value == "Triangle") {
+            var triangle = gfactory.createGeometry(gviGeometryType.gviGeometryTriangle, gviVertexAttribute.gviVertexAttributeNone);
+            if (triangle == null)
+                return;
+
+            var pointP = gfactory.createPoint(gviVertexAttribute.gviVertexAttributeNone);
+            pointP.x = 1; pointP.y = 12;
+            var pointQ = gfactory.createPoint(gviVertexAttribute.gviVertexAttributeNone);
+            pointQ.x = 3; pointQ.y = 234;
+            var pointR = gfactory.createPoint(gviVertexAttribute.gviVertexAttributeNone);
+            pointR.x = 22; pointR.y = 321;
+            triangle.p = pointP;
+            triangle.q = pointQ;
+            triangle.r = pointR;
+
+            var strTbody = ["<table class='featureInfo'><tbody>"];
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Geometry属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Dimension" + "</td>");
+            strTbody.push("<td>" + triangle.dimension + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxX" + "</td>");
+            strTbody.push("<td>" + triangle.envelope.maxX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxY" + "</td>");
+            strTbody.push("<td>" + triangle.envelope.maxY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxZ" + "</td>");
+            strTbody.push("<td>" + triangle.envelope.maxZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinX" + "</td>");
+            strTbody.push("<td>" + triangle.envelope.minX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinY" + "</td>");
+            strTbody.push("<td>" + triangle.envelope.minY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinZ" + "</td>");
+            strTbody.push("<td>" + triangle.envelope.minZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryType" + "</td>");
+            strTbody.push("<td>" + triangle.geometryType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsEmpty" + "</td>");
+            strTbody.push("<td>" + triangle.isEmpty + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsValid" + "</td>");
+            strTbody.push("<td>" + triangle.isValid + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "VertexAttribute" + "</td>");
+            strTbody.push("<td>" + triangle.vertexAttribute + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasId" + "</td>");
+            strTbody.push("<td>" + triangle.hasId + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasM" + "</td>");
+            strTbody.push("<td>" + triangle.hasM + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasZ" + "</td>");
+            strTbody.push("<td>" + triangle.hasZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " triangle属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsDegenerate" + "</td>");
+            strTbody.push("<td>" + triangle.isDegenerate + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "P.X" + "</td>");
+            strTbody.push("<td>" + triangle.p.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "P.Y" + "</td>");
+            strTbody.push("<td>" + triangle.p.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "P.Z" + "</td>");
+            strTbody.push("<td>" + triangle.p.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Q.X" + "</td>");
+            strTbody.push("<td>" + triangle.q.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Q.Y" + "</td>");
+            strTbody.push("<td>" + triangle.q.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Q.Z" + "</td>");
+            strTbody.push("<td>" + triangle.q.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "R.X" + "</td>");
+            strTbody.push("<td>" + triangle.r.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "R.Y" + "</td>");
+            strTbody.push("<td>" + triangle.r.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "R.Z" + "</td>");
+            strTbody.push("<td>" + triangle.r.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " SurfacePatch属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "SurfaceInterpolationType" + "</td>");
+            strTbody.push("<td>" + triangle.surfaceInterpolationType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Surface属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Area" + "</td>");
+            strTbody.push("<td>" + triangle.area() + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Centroid.X" + "</td>");
+            strTbody.push("<td>" + triangle.centroid.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Centroid.Y" + "</td>");
+            strTbody.push("<td>" + triangle.centroid.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Centroid.Z" + "</td>");
+            strTbody.push("<td>" + triangle.centroid.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsClosed" + "</td>");
+            strTbody.push("<td>" + triangle.isClosed + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "PointOnSurface.X" + "</td>");
+            strTbody.push("<td>" + triangle.pointOnSurface.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "PointOnSurface.Y" + "</td>");
+            strTbody.push("<td>" + triangle.pointOnSurface.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "PointOnSurface.Z" + "</td>");
+            strTbody.push("<td>" + triangle.pointOnSurface.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("</tbody></table>");
+
+            prop.innerHTML = strTbody.join("");
+        }
+        else if (obj.value == "TriMesh") {
+            var triMesh = gfactory.createGeometry(gviGeometryType.gviGeometryTriMesh, gviVertexAttribute.gviVertexAttributeZ);
+            if (triMesh == null)
+                return;
+
+            var vertices = new Array();  //ITopoNode数组
+            var point = gfactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+            for (var i = 0; i < 17; ++i) {
+                point.setCoords(i, i, i, 0, 0);
+                vertices.push(triMesh.addPoint(point));
+            }
+
+            point.setCoords(100, 100, 100, 0, 0);
+            triMesh.addPoint(point);
+
+            var facets = new Array();  //ITopoFacet数组
+            facets.push(triMesh.addTriangle(vertices[0], vertices[1], vertices[2]));
+            facets.push(triMesh.addTriangle(vertices[2], vertices[1], vertices[3]));
+            facets.push(triMesh.addTriangle(vertices[3], vertices[1], vertices[4]));
+            facets.push(triMesh.addTriangle(vertices[3], vertices[4], vertices[5]));
+            facets.push(triMesh.addTriangle(vertices[5], vertices[4], vertices[6]));
+            facets.push(triMesh.addTriangle(vertices[5], vertices[6], vertices[7]));
+            facets.push(triMesh.addTriangle(vertices[7], vertices[6], vertices[8]));
+            facets.push(triMesh.addTriangle(vertices[7], vertices[8], vertices[9]));
+            facets.push(triMesh.addTriangle(vertices[7], vertices[9], vertices[10]));
+            facets.push(triMesh.addTriangle(vertices[10], vertices[9], vertices[11]));
+            facets.push(triMesh.addTriangle(vertices[10], vertices[11], vertices[12]));
+            facets.push(triMesh.addTriangle(vertices[13], vertices[10], vertices[12]));
+            facets.push(triMesh.addTriangle(vertices[13], vertices[14], vertices[10]));
+            facets.push(triMesh.addTriangle(vertices[13], vertices[15], vertices[14]));
+            facets.push(triMesh.addTriangle(vertices[15], vertices[16], vertices[14]));
+            facets.push(triMesh.addTriangle(vertices[16], vertices[5], vertices[14]));
+            facets.push(triMesh.addTriangle(vertices[3], vertices[5], vertices[16]));
+            facets.push(triMesh.addTriangle(vertices[2], vertices[3], vertices[16]));
+
+            var strTbody = ["<table class='featureInfo'><tbody>"];
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Geometry属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Dimension" + "</td>");
+            strTbody.push("<td>" + triMesh.dimension + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxX" + "</td>");
+            strTbody.push("<td>" + triMesh.envelope.maxX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxY" + "</td>");
+            strTbody.push("<td>" + triMesh.envelope.maxY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxZ" + "</td>");
+            strTbody.push("<td>" + triMesh.envelope.maxZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinX" + "</td>");
+            strTbody.push("<td>" + triMesh.envelope.minX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinY" + "</td>");
+            strTbody.push("<td>" + triMesh.envelope.minY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinZ" + "</td>");
+            strTbody.push("<td>" + triMesh.envelope.minZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryType" + "</td>");
+            strTbody.push("<td>" + triMesh.geometryType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsEmpty" + "</td>");
+            strTbody.push("<td>" + triMesh.isEmpty + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsValid" + "</td>");
+            strTbody.push("<td>" + triMesh.isValid + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "VertexAttribute" + "</td>");
+            strTbody.push("<td>" + triMesh.vertexAttribute + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasId" + "</td>");
+            strTbody.push("<td>" + triMesh.hasId + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasM" + "</td>");
+            strTbody.push("<td>" + triMesh.hasM + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasZ" + "</td>");
+            strTbody.push("<td>" + triMesh.hasZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "triMesh属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "DirectedEdgeCount" + "</td>");
+            strTbody.push("<td>" + triMesh.directedEdgeCount + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "FacetCount" + "</td>");
+            strTbody.push("<td>" + triMesh.facetCount + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "VertexCount" + "</td>");
+            strTbody.push("<td>" + triMesh.vertexCount + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Surface属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Area" + "</td>");
+            strTbody.push("<td>" + triMesh.area() + "</td>");
+            strTbody.push("</tr>");
+
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Centroid.X" + "</td>");
+            strTbody.push("<td>" + triMesh.centroid.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Centroid.Y" + "</td>");
+            strTbody.push("<td>" + triMesh.centroid.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Centroid.Z" + "</td>");
+            strTbody.push("<td>" + triMesh.centroid.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsClosed" + "</td>");
+            strTbody.push("<td>" + triMesh.isClosed + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "PointOnSurface.X" + "</td>");
+            strTbody.push("<td>" + triMesh.pointOnSurface.x + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "PointOnSurface.Y" + "</td>");
+            strTbody.push("<td>" + triMesh.pointOnSurface.y + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "PointOnSurface.Z" + "</td>");
+            strTbody.push("<td>" + triMesh.pointOnSurface.z + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("</tbody></table>");
+
+            prop.innerHTML = strTbody.join("");
+        }
+        else if (obj.value == "ModelPoint") {
+            var modelPoint = gfactory.createGeometry(gviGeometryType.gviGeometryModelPoint, gviVertexAttribute.gviVertexAttributeZ);
+            modelPoint.setCoords(100, 200, 300, 0, 0);
+            modelPoint.modelName = "testModel";
+            var matrix = __g.new_Matrix;
+            matrix.makeIdentity();
+            modelPoint.fromMatrix(matrix);
+            var boundingBox = __g.new_Envelope;
+            boundingBox.set(50, 60, 70, 150, 160, 170);
+            modelPoint.modelEnvelope = boundingBox;
+
+            if (modelPoint == null)
+                return;
+
+            var strTbody = ["<table class='featureInfo'><tbody>"];
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Geometry属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Dimension" + "</td>");
+            strTbody.push("<td>" + modelPoint.dimension + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxX" + "</td>");
+            strTbody.push("<td>" + modelPoint.envelope.maxX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxY" + "</td>");
+            strTbody.push("<td>" + modelPoint.envelope.maxY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxZ" + "</td>");
+            strTbody.push("<td>" + modelPoint.envelope.maxZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinX" + "</td>");
+            strTbody.push("<td>" + modelPoint.envelope.minX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinY" + "</td>");
+            strTbody.push("<td>" + modelPoint.envelope.minY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinZ" + "</td>");
+            strTbody.push("<td>" + modelPoint.envelope.minZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryType" + "</td>");
+            strTbody.push("<td>" + modelPoint.geometryType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsEmpty" + "</td>");
+            strTbody.push("<td>" + modelPoint.isEmpty + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsValid" + "</td>");
+            strTbody.push("<td>" + modelPoint.isValid + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "VertexAttribute" + "</td>");
+            strTbody.push("<td>" + modelPoint.vertexAttribute + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasId" + "</td>");
+            strTbody.push("<td>" + modelPoint.hasId + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasM" + "</td>");
+            strTbody.push("<td>" + modelPoint.hasM + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasZ" + "</td>");
+            strTbody.push("<td>" + modelPoint.hasZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "modelPoint属性" + "</td>");
+            strTbody.push("</tr>");
+
+            var mat = modelPoint.asMatrix();
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Matrix33[0]" + "</td>");
+            strTbody.push("<td>" + mat.m11 + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Matrix33[1]" + "</td>");
+            strTbody.push("<td>" + mat.m12 + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Matrix33[2]" + "</td>");
+            strTbody.push("<td>" + mat.m13 + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Matrix33[3]" + "</td>");
+            strTbody.push("<td>" + mat.m21 + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Matrix33[4]" + "</td>");
+            strTbody.push("<td>" + mat.m22 + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Matrix33[5]" + "</td>");
+            strTbody.push("<td>" + mat.m23 + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Matrix33[6]" + "</td>");
+            strTbody.push("<td>" + mat.m31 + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Matrix33[7]" + "</td>");
+            strTbody.push("<td>" + mat.m32 + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Matrix33[8]" + "</td>");
+            strTbody.push("<td>" + mat.m33 + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "ModelEnvelope.MaxX" + "</td>");
+            strTbody.push("<td>" + modelPoint.modelEnvelope.maxX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "ModelEnvelope.MaxY" + "</td>");
+            strTbody.push("<td>" + modelPoint.modelEnvelope.maxY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "ModelEnvelope.MaxZ" + "</td>");
+            strTbody.push("<td>" + modelPoint.modelEnvelope.maxZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "ModelEnvelope.MinX" + "</td>");
+            strTbody.push("<td>" + modelPoint.modelEnvelope.minX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "ModelEnvelope.MinY" + "</td>");
+            strTbody.push("<td>" + modelPoint.modelEnvelope.minY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "ModelEnvelope.MinZ" + "</td>");
+            strTbody.push("<td>" + modelPoint.modelEnvelope.minZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("</tbody></table>");
+
+            prop.innerHTML = strTbody.join("");
+        }
+        else if (obj.value == "MultiPolyline") {
+            var multiPolyline = gfactory.createGeometry(gviGeometryType.gviGeometryMultiPolyline, gviVertexAttribute.gviVertexAttributeZ);
+            if (multiPolyline == null)
+                return;
+
+            // 添加两条Polyline
+            var point = gfactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+            var polyline = gfactory.createGeometry(gviGeometryType.gviGeometryPolyline, gviVertexAttribute.gviVertexAttributeZ);
+            var length = 100;
+            for (var i = 0; i < length; i++) {
+                point.setCoords(i, 2 * i, 0, 0, i + 1);
+                polyline.appendPoint(point);
+            }
+            var polylineClone = polyline.clone();
+            polylineClone.removePoints(50, 50);
+
+            multiPolyline.addPolyline(polyline);
+            multiPolyline.addPolyline(polylineClone);
+
+            var strTbody = ["<table class='featureInfo'><tbody>"];
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Geometry属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Dimension" + "</td>");
+            strTbody.push("<td>" + multiPolyline.dimension + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxX" + "</td>");
+            strTbody.push("<td>" + multiPolyline.envelope.maxX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxY" + "</td>");
+            strTbody.push("<td>" + multiPolyline.envelope.maxY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxZ" + "</td>");
+            strTbody.push("<td>" + multiPolyline.envelope.maxZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinX" + "</td>");
+            strTbody.push("<td>" + multiPolyline.envelope.minX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinY" + "</td>");
+            strTbody.push("<td>" + multiPolyline.envelope.minY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinZ" + "</td>");
+            strTbody.push("<td>" + multiPolyline.envelope.minZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryType" + "</td>");
+            strTbody.push("<td>" + multiPolyline.geometryType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsEmpty" + "</td>");
+            strTbody.push("<td>" + multiPolyline.isEmpty + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsValid" + "</td>");
+            strTbody.push("<td>" + multiPolyline.isValid + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "VertexAttribute" + "</td>");
+            strTbody.push("<td>" + multiPolyline.vertexAttribute + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasId" + "</td>");
+            strTbody.push("<td>" + multiPolyline.hasId + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasM" + "</td>");
+            strTbody.push("<td>" + multiPolyline.hasM + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasZ" + "</td>");
+            strTbody.push("<td>" + multiPolyline.hasZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "MultiCurve属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Length" + "</td>");
+            strTbody.push("<td>" + multiPolyline.length + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryCollection属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryCount" + "</td>");
+            strTbody.push("<td>" + multiPolyline.geometryCount + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsOverlap" + "</td>");
+            strTbody.push("<td>" + multiPolyline.isOverlap + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("</tbody></table>");
+
+            prop.innerHTML = strTbody.join("");
+        }
+        else if (obj.value == "MultiPolygon") {
+            var multiPolygon = gfactory.createGeometry(gviGeometryType.gviGeometryMultiPolygon, gviVertexAttribute.gviVertexAttributeZ);
+            if (multiPolygon == null)
+                return;
+
+            //添加第一个polygon
+            var polygonFirst = gfactory.createGeometry(gviGeometryType.gviGeometryPolygon, gviVertexAttribute.gviVertexAttributeZ);
+            if (polygonFirst == null)
+                return;
+            /// 外环顺时针：1-4-3-2-1
+            ///  4-------3
+            ///  |       |
+            ///  |       |
+            ///  1-------2
+            var exteriorRing = polygonFirst.exteriorRing;
+            var point = gfactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+            point.setCoords(0, 0, 0, 0, 1);
+            exteriorRing.appendPoint(point);
+            point.setCoords(0, 200, 0, 0, 2);
+            exteriorRing.appendPoint(point);
+            point.setCoords(100, 200, 0, 0, 3);
+            exteriorRing.appendPoint(point);
+            point.setCoords(100, 0, 0, 0, 4);
+            exteriorRing.appendPoint(point);
+            point.setCoords(0, 0, 0, 0, 5);
+            exteriorRing.appendPoint(point);  //闭合
+            /// 内环逆时针：1-2-3-4-1
+            ///  4-------3
+            ///  |       |
+            ///  |       |
+            ///  1-------2
+            var interiorRing = gfactory.createGeometry(gviGeometryType.gviGeometryRing, gviVertexAttribute.gviVertexAttributeZ);
+            point.setCoords(25, 25, 0, 0, 1);
+            interiorRing.appendPoint(point);
+            point.setCoords(75, 25, 0, 0, 2);
+            interiorRing.appendPoint(point);
+            point.setCoords(75, 75, 0, 0, 3);
+            interiorRing.appendPoint(point);
+            point.setCoords(25, 75, 0, 0, 4);
+            interiorRing.appendPoint(point);
+            point.setCoords(25, 25, 0, 0, 5);
+            interiorRing.appendPoint(point);  //闭合
+            polygonFirst.addInteriorRing(interiorRing);
+
+            //Clone一个新的内环
+            var pInteriorRingNew = interiorRing.clone();
+            polygonFirst.addInteriorRing(pInteriorRingNew);
+            multiPolygon.addPolygon(polygonFirst);
+
+            //Clone一个新的polygon
+            var pPolygonNew = polygonFirst.clone();
+            multiPolygon.addPolygon(pPolygonNew);
+
+            var strTbody = ["<table class='featureInfo'><tbody>"];
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Geometry属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Dimension" + "</td>");
+            strTbody.push("<td>" + multiPolygon.dimension + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxX" + "</td>");
+            strTbody.push("<td>" + multiPolygon.envelope.maxX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxY" + "</td>");
+            strTbody.push("<td>" + multiPolygon.envelope.maxY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxZ" + "</td>");
+            strTbody.push("<td>" + multiPolygon.envelope.maxZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinX" + "</td>");
+            strTbody.push("<td>" + multiPolygon.envelope.minX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinY" + "</td>");
+            strTbody.push("<td>" + multiPolygon.envelope.minY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinZ" + "</td>");
+            strTbody.push("<td>" + multiPolygon.envelope.minZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryType" + "</td>");
+            strTbody.push("<td>" + multiPolygon.geometryType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsEmpty" + "</td>");
+            strTbody.push("<td>" + multiPolygon.isEmpty + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsValid" + "</td>");
+            strTbody.push("<td>" + multiPolygon.isValid + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "VertexAttribute" + "</td>");
+            strTbody.push("<td>" + multiPolygon.vertexAttribute + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasId" + "</td>");
+            strTbody.push("<td>" + multiPolygon.hasId + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasM" + "</td>");
+            strTbody.push("<td>" + multiPolygon.hasM + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasZ" + "</td>");
+            strTbody.push("<td>" + multiPolygon.hasZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "MultiSurface属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Area" + "</td>");
+            strTbody.push("<td>" + multiPolygon.getArea() + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryCollection属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryCount" + "</td>");
+            strTbody.push("<td>" + multiPolygon.geometryCount + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsOverlap" + "</td>");
+            strTbody.push("<td>" + multiPolygon.isOverlap + "</td>");
+            strTbody.push("</tr>");
+
+
+            strTbody.push("</tbody></table>");
+
+            prop.innerHTML = strTbody.join("");
+        }
+        else if (obj.value == "MultiPoint") {
+            var multiPoint = gfactory.createGeometry(gviGeometryType.gviGeometryMultiPoint, gviVertexAttribute.gviVertexAttributeZMID);
+            if (multiPoint == null)
+                return;
+
+            var point = gfactory.createPoint(gviVertexAttribute.gviVertexAttributeZMID);
+            var length = 100;
+            for (var i = 0; i < length; i++) {
+                point.setCoords(i, 2 * i, 3 * i, 0, i + 1);
+                multiPoint.addPoint(point);
+            }
+
+            var strTbody = ["<table class='featureInfo'><tbody>"];
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Geometry属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Dimension" + "</td>");
+            strTbody.push("<td>" + multiPoint.dimension + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxX" + "</td>");
+            strTbody.push("<td>" + multiPoint.envelope.maxX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxY" + "</td>");
+            strTbody.push("<td>" + multiPoint.envelope.maxY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxZ" + "</td>");
+            strTbody.push("<td>" + multiPoint.envelope.maxZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinX" + "</td>");
+            strTbody.push("<td>" + multiPoint.envelope.minX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinY" + "</td>");
+            strTbody.push("<td>" + multiPoint.envelope.minY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinZ" + "</td>");
+            strTbody.push("<td>" + multiPoint.envelope.minZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryType" + "</td>");
+            strTbody.push("<td>" + multiPoint.geometryType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsEmpty" + "</td>");
+            strTbody.push("<td>" + multiPoint.isEmpty + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsValid" + "</td>");
+            strTbody.push("<td>" + multiPoint.isValid + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "VertexAttribute" + "</td>");
+            strTbody.push("<td>" + multiPoint.vertexAttribute + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasId" + "</td>");
+            strTbody.push("<td>" + multiPoint.hasId + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasM" + "</td>");
+            strTbody.push("<td>" + multiPoint.hasM + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasZ" + "</td>");
+            strTbody.push("<td>" + multiPoint.hasZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryCollection属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryCount" + "</td>");
+            strTbody.push("<td>" + multiPoint.geometryCount + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsOverlap" + "</td>");
+            strTbody.push("<td>" + multiPoint.isOverlap + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("</tbody></table>");
+
+            prop.innerHTML = strTbody.join("");
+        }
+        else if (obj.value == "MultiTriMesh") {
+            var multiTriMesh = gfactory.createGeometry(gviGeometryType.gviGeometryMultiTrimesh, gviVertexAttribute.gviVertexAttributeZ);
+            if (multiTriMesh == null)
+                return;
+
+            var triMesh = gfactory.createGeometry(gviGeometryType.gviGeometryTriMesh, gviVertexAttribute.gviVertexAttributeZ);
+            if (triMesh == null)
+                return;
+
+            var vertices = new Array();  //ITopoNode数组
+            var point = gfactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+            for (var i = 0; i < 17; ++i) {
+                point.setCoords(i, i, i, 0, 0);
+                vertices.push(triMesh.addPoint(point));
+            }
+
+            var facets = new Array();  //ITopoFacet数组
+            facets.push(triMesh.addTriangle(vertices[0], vertices[1], vertices[2]));
+            facets.push(triMesh.addTriangle(vertices[2], vertices[1], vertices[3]));
+            facets.push(triMesh.addTriangle(vertices[3], vertices[1], vertices[4]));
+            facets.push(triMesh.addTriangle(vertices[3], vertices[4], vertices[5]));
+            facets.push(triMesh.addTriangle(vertices[5], vertices[4], vertices[6]));
+            facets.push(triMesh.addTriangle(vertices[5], vertices[6], vertices[7]));
+            facets.push(triMesh.addTriangle(vertices[7], vertices[6], vertices[8]));
+            facets.push(triMesh.addTriangle(vertices[7], vertices[8], vertices[9]));
+            facets.push(triMesh.addTriangle(vertices[7], vertices[9], vertices[10]));
+            facets.push(triMesh.addTriangle(vertices[10], vertices[9], vertices[11]));
+            facets.push(triMesh.addTriangle(vertices[10], vertices[11], vertices[12]));
+            facets.push(triMesh.addTriangle(vertices[13], vertices[10], vertices[12]));
+            facets.push(triMesh.addTriangle(vertices[13], vertices[14], vertices[10]));
+            facets.push(triMesh.addTriangle(vertices[13], vertices[15], vertices[14]));
+            facets.push(triMesh.addTriangle(vertices[15], vertices[16], vertices[14]));
+            facets.push(triMesh.addTriangle(vertices[16], vertices[5], vertices[14]));
+            facets.push(triMesh.addTriangle(vertices[3], vertices[5], vertices[16]));
+            facets.push(triMesh.addTriangle(vertices[2], vertices[3], vertices[16]));
+
+            multiTriMesh.addTriMesh(triMesh);
+
+            var strTbody = ["<table class='featureInfo'><tbody>"];
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + " Geometry属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Dimension" + "</td>");
+            strTbody.push("<td>" + multiTriMesh.dimension + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxX" + "</td>");
+            strTbody.push("<td>" + multiTriMesh.envelope.maxX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxY" + "</td>");
+            strTbody.push("<td>" + multiTriMesh.envelope.maxY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MaxZ" + "</td>");
+            strTbody.push("<td>" + multiTriMesh.envelope.maxZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinX" + "</td>");
+            strTbody.push("<td>" + multiTriMesh.envelope.minX + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinY" + "</td>");
+            strTbody.push("<td>" + multiTriMesh.envelope.minY + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Envelope.MinZ" + "</td>");
+            strTbody.push("<td>" + multiTriMesh.envelope.minZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryType" + "</td>");
+            strTbody.push("<td>" + multiTriMesh.geometryType + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsEmpty" + "</td>");
+            strTbody.push("<td>" + multiTriMesh.isEmpty + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsValid" + "</td>");
+            strTbody.push("<td>" + multiTriMesh.isValid + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "VertexAttribute" + "</td>");
+            strTbody.push("<td>" + multiTriMesh.vertexAttribute + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasId" + "</td>");
+            strTbody.push("<td>" + multiTriMesh.hasId + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasM" + "</td>");
+            strTbody.push("<td>" + multiTriMesh.hasM + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "HasZ" + "</td>");
+            strTbody.push("<td>" + multiTriMesh.hasZ + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryCollection属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "GeometryCount" + "</td>");
+            strTbody.push("<td>" + multiTriMesh.geometryCount + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "IsOverlap" + "</td>");
+            strTbody.push("<td>" + multiTriMesh.isOverlap + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "MultiSurface属性" + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("<tr>");
+            strTbody.push("<td>" + "Area" + "</td>");
+            strTbody.push("<td>" + multiTriMesh.getArea() + "</td>");
+            strTbody.push("</tr>");
+
+            strTbody.push("</tbody></table>");
+
+            prop.innerHTML = strTbody.join("");
+        }
+    }
+</script>
+</html>

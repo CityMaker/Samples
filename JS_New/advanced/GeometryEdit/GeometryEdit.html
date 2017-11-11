@@ -1,0 +1,249 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>GeometryEdit</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="../../cm7.js"></script>
+<script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+<input type="button" onclick="btnCreatePolyline()" value="创建RenderPolyline"/>
+<input type="checkbox" id ="cbBeginEdit" onclick="cbBeginEdit_CheckedChanged()"/>
+我要编辑<br />
+<input type="checkbox"  checked="checked" id="rbMove" onclick="rbMove_CheckedChanged()" />
+平移
+<input type="checkbox" id="rbRotate" onclick="rbRotate_CheckedChanged()" />
+旋转
+<input type="checkbox" id="rbScale" onclick=" rbScale_CheckedChanged()"/>
+缩放
+<input type="checkbox" id="rbVertex" onclick=" rbVertex_CheckedChanged()"/>
+顶点编辑
+<br />
+<div>
+  <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+  </object>
+</div>
+</body>
+<script type="text/javascript">
+
+    var __rowBuffer = null;
+    var __featureLayer = null;
+    var __fid;
+    var __geo;    
+	
+	var isCreateRender = false;
+	var rpolyline;
+	var currentGeometry;
+
+
+     window.onload = function () {
+         initialize();
+     }
+
+     function onObjectEditFinish() {
+		var rr = __g.objectManager.getObjectById(rpolyline.guid);
+		alert(rr.type);
+
+		if(isCreateRender)
+			return;
+
+        var filter = __g.new_QueryFilter;
+        filter.whereClause = "oid =" + __fid;
+        document.title = filter.whereClause;
+
+        var fc = __fcMap[__featureLayer.featureClassId];
+        var cursor = fc.update(filter);
+        var rb = cursor.nextRow();
+
+        if (rb) {
+            var nPos = rb.fieldIndex("Geometry");
+            if (nPos != -1) {
+                alert(__geo.modelName);
+                rb.setValue(nPos, __geo);
+            }
+        }
+        cursor.updateRow(rb);
+        cursor.close();
+    }
+
+    function onObjectEditing(Geometry) { 
+        __geo = Geometry;
+    }
+
+    function initialize() {
+
+        //初始化三维控件
+        initAxControl();
+
+        // 加载场景
+        loadFdb("community.FDB");
+               
+    }  
+
+	function btnCreatePolyline(){
+		__g.objectEditor.finishEdit();
+
+		isCreateRender = true;
+
+		__geo = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPolyline, gviVertexAttribute.gviVertexAttributeZ);
+		rpolyline = __g.objectManager.createRenderPolyline(__geo, null, __rootId);
+		var resultCode = __g.objectEditor.startEditRenderGeometry(rpolyline, gviGeoEditType.gviGeoEditCreator);
+		if(!resultCode)
+			alert(__g.getLastError());
+	}
+     
+    function EditGeometry() {
+        __g.objectEditor.finishEdit();   //用于当拾取到基准面时，或者没有正常右键结束连续调用Start时
+        if (currentGeometry) {
+            var resultCode = true;
+            if (rbMove.checked)
+                resultCode = __g.objectEditor.startEditRenderGeometry(currentGeometry, gviGeoEditType.gviGeoEdit3DMove);
+            else if (rbRotate.checked)
+                resultCode = __g.objectEditor.startEditRenderGeometry(currentGeometry, gviGeoEditType.gviGeoEdit3DRotate);
+            else if (rbScale.checked)
+                resultCode = __g.objectEditor.startEditRenderGeometry(currentGeometry, gviGeoEditType.gviGeoEdit3DScale);
+            else if (rbVertex.checked)
+                resultCode = __g.objectEditor.startEditRenderGeometry(currentGeometry, gviGeoEditType.gviGeoEditVertex);
+            else if (rbZrotate.checked)
+                resultCode = __g.objectEditor.startEditRenderGeometry(currentGeometry, gviGeoEditType.gviGeoEditZRotate);
+            else if (rbZscale.checked)
+                resultCode = __g.objectEditor.startEditRenderGeometry(currentGeometry, gviGeoEditType.gviGeoEditZScale);
+            if (!resultCode)
+                alert(resultCode.ToString());
+        }
+        else if (__rowBuffer && __featureLayer) {
+            var code = true;
+            if (rbMove.checked)
+                code = __g.objectEditor.startEditFeatureGeometry(__rowBuffer, __featureLayer, gviGeoEditType.gviGeoEdit3DMove);
+            else if (rbRotate.checked)
+                code = __g.objectEditor.startEditFeatureGeometry(__rowBuffer, __featureLayer, gviGeoEditType.gviGeoEdit3DRotate);
+            else if (rbScale.checked)
+                code = __g.objectEditor.startEditFeatureGeometry(__rowBuffer, __featureLayer, gviGeoEditType.gviGeoEdit3DScale);
+            else if (rbVertex.checked)
+                code = __g.objectEditor.startEditFeatureGeometry(__rowBuffer, __featureLayer, gviGeoEditType.gviGeoEditVertex);
+            else if (rbZrotate.checked)
+                code = __g.objectEditor.startEditFeatureGeometry(__rowBuffer, __featureLayer, gviGeoEditType.gviGeoEditZRotate);
+            else if (rbZscale.checked)
+                code = __g.objectEditor.startEditFeatureGeometry(__rowBuffer, __featureLayer, gviGeoEditType.gviGeoEditZScale);
+            if (!code)
+                alert(code.ToString());
+        }
+    }
+
+     function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {  
+           __g.featureManager.unhighlightAll();        
+            
+            // 置空
+            currentGeometry = null;
+            __rowBuffer = null;
+            __featureLayer = null;
+
+            if (pickResult) {                
+                switch (pickResult.type) {
+                    case gviObjectType.gviObjectFeatureLayer:
+                        {
+                            //var flpr = pickResult as IFeatureLayerPickResult;
+                            __fid = pickResult.featureId;
+                            //加载多FeatureClass时要每次重新获取
+                            var fc = __fcMap[pickResult.featureLayer.featureClassId];
+                            __featureLayer = pickResult.featureLayer;
+
+                            var cursor = null;
+                            try {
+                                __rowBuffer = fc.createRowBuffer();
+                                var filter = __g.new_QueryFilter;
+                                //filter.AddSubField("oid");  //注意：StartEditFeatureGeometry里必须传入一个完整的rowbuffer，所以这里不能限定字段
+                                filter.whereClause = "oid =" + __fid;
+                                cursor = fc.search(filter, false);
+                                var row = null;
+                                if ((row = cursor.nextRow()) != null) { 
+                                    __rowBuffer = row
+                                    var pos = row.fieldIndex("Geometry");
+                                    var fdeGeo = row.getValue(pos);
+
+                                    //for test
+                                    document.title = "name: " + fdeGeo.modelName;
+                                    var mat = fdeGeo.asMatrix();
+                                }
+                            }
+                            catch (ex) {
+                                alert(ex.Message);
+                            }
+                            finally {
+                                if (cursor != null) {
+                                    cursor.close();    //一定要释放COM对象
+                                }
+                            }
+
+                            __g.featureManager.highlightFeature(fc, __fid, 0xffff0000);
+                            EditGeometry();
+                        }
+                        break;
+
+                    case gviObjectType.gviObjectRenderModelPoint: {
+                            rmodelpoint = pickResult.modelPoint;
+                            currentGeometry = rmodelpoint;
+                            EditGeometry();      
+                        }
+                        break;
+                    case gviObjectType.gviObjectRenderPoint: {
+                            rpoint = pickResult.point;
+                            currentGeometry = rpoint;
+                            EditGeometry();      
+                        }
+                        break;
+                    case gviObjectType.gviObjectRenderPolyline: {
+                            rpolyline = pickResult.polyline;
+                            currentGeometry = rpolyline;
+                            EditGeometry();      
+                        }
+                        break;
+                    case gviObjectType.gviObjectRenderPolygon: {
+                            rpolygon = pickResult.polygon;
+                            currentGeometry = rpolygon;
+                            EditGeometry();                           
+                        }
+                        break;
+                }
+            }
+        }
+     
+    function cbBeginEdit_CheckedChanged() {
+        if (cbBeginEdit.checked) {
+            // 进入编辑模式
+            __g.interactMode = gviInteractMode.gviInteractEdit;
+            __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectFeatureLayer | gviMouseSelectObjectMask.gviSelectRenderGeometry;
+            __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;            
+            document.title = "请在屏幕中点选需要编辑的对象。。。。。";
+        }
+        else {
+			__g.interactMode = gviInteractMode.gviInteractNormal;
+            __g.featureManager.unhighlightAll();
+            __g.objectEditor.cancelEdit();    
+        }
+    }
+
+
+    function rbMove_CheckedChanged() {
+        if (rbMove.checked)
+            EditGeometry();
+    }
+
+    function rbRotate_CheckedChanged() {
+    if (rbRotate.checked)
+        EditGeometry();
+    }
+
+    function rbScale_CheckedChanged() {
+        if (rbScale.checked)
+            EditGeometry();
+    }
+
+	function rbVertex_CheckedChanged(){
+		if(rbScale.checked)
+			 EditGeometry();
+	}
+
+ 
+</script>
+</html>

@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>ExportManager</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="../../cm7.js"></script>
+<script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+<button onclick="captureScreen()">CaptureScreen</button>
+&nbsp;<br />
+<object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+</object>
+<img id="testImage" />
+</body>
+<script type="text/javascript">
+    function getTempFilePath() {
+        return (__g.internalTool.getRuntimeTempPath() + "Gvitech").replace(/\//g, "\\");
+    }
+
+    function getSamplesRelatePath(relPath) {
+        return (getTempFilePath() + relPath).replace(/\//g, "\\");
+    }
+	
+    /************************************************************************/
+    /* 出图事件                                                             */
+    /************************************************************************/
+    function onPictureExportBegin(nw, nh) {
+        document.title = "出图开始了：" + nw + " * " + nh;
+    }
+
+    function onPictureExporting(index, per) {
+        document.title = "出图中, 已完成" + (per * 100) + "%";
+    }
+
+    function onPictureExportEnd(time, isAborted, base64Str) {
+        document.title = "出图完成!";
+		document.getElementById("testImage").src = base64Str;
+    }
+
+     window.onload = function () {
+         initialize();
+     }
+
+	function initialize() {
+        //初始化三维控件
+        initAxControl();
+        __g.viewport.logoVisible = false;
+
+        // 加载场景
+        loadFdb("SDKDEMO.FDB");
+	}
+
+    /*
+    *	出图
+    */
+    function captureScreen() {
+        var higquality = false;
+		var b = __g.exportManager.exportImage("base64", 200, 200, higquality);
+        if (!b) {
+            alert("Capture Screen Failed, Please check it.");
+        }
+    }
+
+</script>
+</html>

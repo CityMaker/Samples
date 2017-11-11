@@ -1,0 +1,134 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>ImportModel</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+<button onclick="mouseLocation()">鼠标定位</button>
+&nbsp;<br />
+<object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+</object>
+</body>
+<script type="text/javascript">
+    var _renderGeometry;
+    var flagEvent = true;
+    var _geometry;
+    var fc_building;
+    var modelPath;
+    var modelName;
+    var model;
+
+     window.onload = function () {
+         initialize();
+     }
+
+	function initialize() {
+        //初始化三维控件
+        initAxControl();
+
+        // 加载场景
+        loadFdb("SDKDEMO.FDB");
+	}
+
+    /************************************************************************/
+    /* 鼠标插入模型
+    /************************************************************************/
+    function mouseLocation() {
+        //鼠标插入模型函数
+        //    var rootLocation = window.location.href.replace("file:///", "");
+        //    var myPosition = rootLocation.lastIndexOf("/");
+        //    modelPath = rootLocation.substring(0, parseInt(myPosition) + 1) + "/Model/Apartment1/Apartment1.osg";
+
+        modelPath = getSamplesRelatePath("\\osg\\Buildings\\Apartment\\Apartment.osg");
+        
+        if (modelPath != "") {
+            __g.interactMode = gviInteractMode.gviInteractEdit;
+            //将模型插入到“建筑”要素类中
+            fc_building = __fds.openFeatureClass("Building")
+            if (fc_building != null) {
+                createSingleModel(modelPath, fc_building, "Geometry");
+                flagEvent == true;
+            }
+        }
+    }
+    
+    function createSingleModel(modelPath, fc, geoColume) {
+        var geoFactory = __g.geometryFactory;
+        var modelPoint = geoFactory.createGeometry(gviGeometryType.gviGeometryModelPoint, gviVertexAttribute.gviVertexAttributeZ);
+        modelPoint.spatialCRS = fc.featureDataSet.spatialReference;
+        modelPoint.modelName = modelPath;
+        modelPoint.setCoords(0, 0, 0, 0, 0);
+        var symbol = __g.new_ModelPointSymbol;
+        _renderGeometry = __g.objectManager.createRenderModelPoint(modelPoint, symbol, __rootId);
+        _renderGeometry.maxVisibleDistance = 10000;
+        var _geoEditor = __g.objectEditor;
+        var bRet = _geoEditor.startEditRenderGeometry(_renderGeometry, gviGeoEditType.gviGeoEditCreator);
+    }
+
+    function onObjectEditing(Geometry) {
+        _geometry = Geometry;
+    }
+
+    function onObjectEditFinish() {
+        saveSingleModel();
+    }
+    
+    function saveSingleModel() {
+        if (_renderGeometry != null) {
+            __g.objectManager.deleteObject(_renderGeometry.guid);
+            _renderGeometry = null;
+        }
+        var cursor = fc_building.insert();
+        var row = fc_building.createRowBuffer();
+        var posName = row.fieldIndex("ModelName");
+        var posGeometry = row.fieldIndex("Geometry");
+        if (_geometry != null) {
+            var len = modelPath.lastIndexOf(".");
+            var len2 = modelPath.lastIndexOf("\\");
+            modelName = modelPath.substring(len2 + 1, len);
+            importModel(fc_building.featureDataSet, modelPath, modelName);
+            var mp = _geometry;
+            mp.modelName = modelName;
+            mp.modelEnvelope = model.envelope;
+            row.setValue(posName, modelName);
+            row.setValue(posGeometry, mp);
+        }
+        cursor.insertRow(row);
+        var id = cursor.lastInsertId;
+        cursor.close();
+        row.setValue(0, id);
+        __g.featureManager.createFeature(fc_building, row);
+        __g.interactMode = gviInteractMode.gviInteractNormal;
+    }
+    
+    function importModel(dataset, modelPath, modelName) {
+        var rm = dataset;
+        var resourceFac = __g.resourceFactory;
+        var imgSet;
+        if (resourceFac != null && modelPath != "") {
+            
+            var vm = resourceFac.createModelAndImageFromFile(modelPath);
+            
+            var images = vm["images"];
+            model = vm["model"];
+            var matrix = vm["matrix"];
+            rm.addModel(modelName, model, null);
+            
+            var count = images.getCount();
+            if (count > 0) {
+                var imageNames = images.getAllKeys();
+                for (var i = 0; i < count; i++) {
+                    var imageName = imageNames[i];
+                    var img = images.getProperty(imageName);
+                    rm.addImage(imageName, img);
+                    __g.refreshImage(dataset, imageName);
+                }
+            }
+            __g.refreshModel(dataset, modelName);
+        }
+    }
+</script>
+</html>

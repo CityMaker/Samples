@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML  .0 Transitional//EN" "http://www.w3.org/TR/xhtml /DTD/xhtml -transitional.dtd">
+<html xmlns="http://www.w3.org/ 999/xhtml">
+<head>
+    <title>Presentation2</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util_globe.js"></script>
+   
+ </head>
+ <body >
+      <div style="text-align:center">
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 700px; width:  1000px" > 
+        </object>
+    </div>
+
+</body>
+
+<script type="text/javascript">
+  
+     window.onload = function () {
+         Initialize();
+    
+     }
+    function Initialize() {
+        initAxControl();
+        loadFdb("SDKDEMO.FDB");
+        __g.new_LicenseServer.setHost("192.168.2.200", 8588, "");
+
+        var presentation = __g.objectManager.createPresentation(888);
+            presentation.playMode = gviPresentationPlayMode.gviPresentationPlayAutomatic;
+            presentation.playAlgorithm = gviPresentationPlayAlgorithm.gviPresentationPlayAlgorithmFlyTo;
+            presentation.playSpeedFactor = gviPresentationPlaySpeed.gviPresentationPlaySlow
+            presentation.captionWidth = 380;
+            presentation.captionPosition = gviPresentationCaptionPosition.gviPresentationCaptionPositionBottomCenter;
+            var step1 = presentation.createCaptionStep(gviPresentationStepContinue.gviPresentationStepContinueWait, 3, "show caption", "创建相机绑定了运动物体的例子!", -1, 0);
+            this.dynamicObject = __g.objectManager.createDynamicObject(__rootId);
+            this.dynamicObject.crsWKT = __datasetCRS.asWKT();
+            var fde_polyline = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPolyline, gviVertexAttribute.gviVertexAttributeZ);
+            fde_polyline.spatialCRS = __datasetCRS;
+            var fde_point = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            fde_point.setCoords(15155.84, 35448.08, 5.00, 0, 0);
+            fde_polyline.appendPoint(fde_point);
+            fde_point.setCoords(15121.75, 35508.72, 5.00, 0, 0);
+            fde_polyline.appendPoint(fde_point);
+            fde_point.setCoords(15242.71, 35588.95, 5.00, 0, 0);
+            fde_polyline.appendPoint(fde_point);
+            fde_point.setCoords(15283.48, 35517.22, 5.00, 0, 0);
+            fde_polyline.appendPoint(fde_point);
+            var lineSymbol = __g.new_CurveSymbol;
+            lineSymbol.color = 0xffff00ff;  // 紫红色
+            lineSymbol.width = 2;
+            this.testRenderPolyline = __g.objectManager.createRenderPolyline(fde_polyline, lineSymbol, '');
+            //第一点  
+            var vec = __g.new_Vector3;
+            vec.set(15155.84, 35448.08, 5.00);
+            var firstpoint = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            firstpoint.position = vec;
+            firstpoint.spatialCRS = __datasetCRS;
+            this.dynamicObject.addWaypoint2(firstpoint, 20);
+            //第二点
+            vec.set(15121.75, 35508.72, 5.00);
+            var secondpoint = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            secondpoint.position = vec;
+            secondpoint.spatialCRS = __datasetCRS;
+            this.dynamicObject.addWaypoint2(secondpoint, 20);
+            //第三点
+            vec.set(15242.71, 35588.95, 5.00);
+            var thirdpoint = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            thirdpoint.position = vec;
+            thirdpoint.spatialCRS = __datasetCRS;
+            this.dynamicObject.addWaypoint2(thirdpoint, 20);
+            //第四点
+            vec.set(15283.48, 35517.22, 5.00);
+            var fourpoint = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPoint, gviVertexAttribute.gviVertexAttributeZ);
+            fourpoint.position = vec;
+            fourpoint.spatialCRS = __datasetCRS;
+            this.dynamicObject.addWaypoint2(fourpoint, 20);
+
+            var modePoint = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryModelPoint, gviVertexAttribute.gviVertexAttributeZ);
+            modePoint.modelName = getSamplesRelatePath("") + "\\osg\\Vehicles\\XiaoFangChe\\xiaoFangChe.OSG";
+            modePoint.setCoords(15155.84, 35448.08, 5.00, 0, 0);
+            modePoint.spatialCRS = __datasetCRS;
+            this.renderModelPoint = __g.objectManager.createRenderModelPoint(modePoint, null, '');
+            var v3 = __g.new_Vector3;
+            v3.set(0, 0, 0);
+            this.renderModelPoint.bind2(this.dynamicObject, v3, 0, 0, 0);
+            this.dynamicObject.play();
+            __g.camera.flyToObject(this.renderModelPoint.guid, 3);
+            var step2 = presentation.createFollowDynamicObjectStep(gviPresentationStepContinue.gviPresentationStepContinueWait, 12, "FollowDynamicObject", this.dynamicObject.guid, 2);
+            var step3 = presentation.createCaptionStep(gviPresentationStepContinue.gviPresentationStepContinueWait, 1, "show caption", "创建重新启动运动物体!", -1, 3);
+            var step4 = presentation.createRestartDynamicObjectStep(gviPresentationStepContinue.gviPresentationStepContinueWait, 12, "FollowDynamicObject", this.dynamicObject.guid, 4);
+            presentation.play(0);
+    }
+   
+</script>
+</html>

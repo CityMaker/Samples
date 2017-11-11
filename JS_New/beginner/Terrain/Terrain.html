@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Terrain</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+
+<body style="margin:0px;scroll:no" >
+    <div style="float:left">
+        <button onclick="closeDEM()">开关DEM</button>
+        <button onclick="showTerrain()">显示隐藏地形</button>
+        <button onclick="getWkt()">获取WKT</button>
+        <select id="GetElevationType">
+            <option>GetElevationFromMemory</option>
+            <option>GetElevationFromDatabase</option>
+        </select>
+        <button onclick="getElevation()">获取高程</button>
+    </div>
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object>
+    </div>  
+</body>
+
+<script type="text/javascript">
+    
+     window.onload = function () {
+         initialize();
+     }
+
+    function initialize() {
+        //初始化三维控件
+        initAxControl();
+
+        //注册地形        
+        var tmpTedPath = getSamplesRelatePath("")+"\\terrain\\terrain.ted";
+        __g.terrain.registerTerrain(tmpTedPath, "");
+        __g.terrain.flyTo(0);
+        __g.onkeyup=fnKeyUp;
+    }
+     
+    function fnKeyUp(e){
+        //alert('1');
+    }
+
+    //开关DEM
+    function closeDEM(){
+       __g.terrain.demAvailable =!__g.terrain.demAvailable;
+   }
+
+    //隐藏显示地形
+    function showTerrain() {
+        if (__g.terrain.visibleMask == gviViewportMask.gviView0)
+            __g.terrain.visibleMask = gviViewportMask.gviViewNone;
+        else
+            __g.terrain.visibleMask = gviViewportMask.gviView0;
+    }
+
+    //获取Wkt
+    function getWkt() {
+        alert(__g.terrain.crsWKT);
+    }
+
+    //获取高程
+    function getElevation(){
+                // 注册三维控件选择事件
+                __g.interactMode = gviInteractMode.gviInteractSelect;
+                __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+                __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectTerrain;
+    }
+
+    function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+        if (pickResult == null)
+            return;
+        if (pickResult.type == gviObjectType.gviObjectTerrain) {
+            var elevatation = __g.terrain.getElevation(intersectPoint.x, intersectPoint.y, $("GetElevationType").selectedIndex);
+            alert("当前位置高程为:" + elevatation);
+        }
+    }
+
+</script>
+</html>

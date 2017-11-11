@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+     <title>ComplexParticleEffect</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+    
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+        </object>
+    </div>
+</body>
+     <script type="text/javascript">
+         var __g = document.getElementById("renderControl");
+         
+         var __fcMap = {};
+         var __fcGeoMap = {};
+
+         var position = __g.new_Vector3;
+         var point = null;
+         var angle = __g.new_EulerAngle;
+
+         var fire = null;
+         var smoke = null;
+         var motionPath = null;
+         var renderModelPoint = null;
+         var fire = null;
+         var skinMesh = null;
+
+         var v3 = __g.new_Vector3;
+         var scale = __g.new_Vector3;
+
+         var m = null;
+         var strTbody;
+
+         var fireX = 230.470701075769, fireY = 194.420220940001, fireZ = 0;
+         var smokeX = 238.742303818727, smokeY = 175.634296068382, smokeZ = 0;
+         var fireX = 242, fireY = 180, fireZ = 0;
+
+         var firstX = 263.872404083615, firstY = 148.647242545841, firstZ = 0, firstH = 60, firstP = 0, firstR = -0, firstSX = 1, firstSY = 1, firstSZ = 1, firtWhen = 0;
+         var secondX = 303.863713512692, secondY = 174.113186858212, secondZ = 0, secondH = 60, secondP = 0, secondR = 0, secondSX = 1, secondSY = 1, secondSZ = 1, secondWhen = 12;
+         var thirdX = 329.976366250544, thirdY = 191.226407219874, thirdZ = -0.000000, thirdH = 60, thirdP = 0, thirdR = 0, thirdSX = 1, thirdSY = 1, thirdSZ = 1, thirdWhen = 21;
+         var fourthX = 373.749709200332, fourthY = 219.748979658718, fourthZ = -0.000000, fourthH = 60, fourthP = 0, fourthR = 0, fourthSX = 1, fourthSY = 1, fourthSZ = 1, fourthWhen = 30;
+
+         var gugeX = 236.121223768856, gugeY = 182.851418447895, gugeZ = 0.05;
+
+		 window.onload = function () {
+			 initialize();
+		 }
+
+        function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+             if (pickResult == null)
+                 return;
+             if (pickResult != null) {
+                 if (pickResult.type == 307/*gviObjectType.gviObjectComplexParticleEffect*/) {
+                     var cpr = pickResult.complexParticleEffect;
+                     cpr.highlight(0xffff0000);
+                 }
+             }
+         }
+         
+         function initialize() {
+             //初始化三维控件
+             initAxControl();
+
+             // 加载FDB场景
+             loadFdb("community.fdb");
+
+			 point = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+             point.spatialCRS = __fds.spatialReference;
+
+             position.set(fireX, fireY, fireZ);
+             angle.heading = 0;
+             angle.tilt = -10;
+             __g.camera.lookAt(position, 8, angle);
+             
+             LoadFire();
+
+             __g.interactMode = gviInteractMode.gviInteractSelect;
+             __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectParticleEffect;
+             __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+         }
+         
+         /// <summary>
+         /// 火的粒子特效
+         /// </summary>
+         function LoadFire() {
+             fire = __g.objectManager.createComplexParticleEffect(1003, __rootId);             
+             v3.set(fireX, fireY, fireZ);
+             point.position = v3;
+             fire.position = point;
+         }         
+    
+     </script>
+</html>

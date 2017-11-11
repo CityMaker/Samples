@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML  .0 Transitional//EN" "http://www.w3.org/TR/xhtml /DTD/xhtml -transitional.dtd">
+<html xmlns="http://www.w3.org/ 999/xhtml">
+<head>
+    <title>Temporal</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+   
+</head>
+    
+<body >
+   
+    <div style="text-align:center">
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 700px; width:  1000px" > 
+        </object>
+    </div>
+
+</body>
+
+<script type="text/javascript">
+  
+     window.onload = function () {
+         Initialize();
+    
+     }
+
+
+    function Initialize() {
+        initAxControl();
+        __g.new_LicenseServer.setHost("192.168.2.200", 8588, "");
+
+        var tm_data = __g.new_ConnectionInfo;
+        tm_data.connectionType = 3;
+        tm_data.database = getSamplesRelatePath("/TemporalBuilding.FDB");
+        tm_data.userName = "";
+        tm_data.password = "";
+        var ds = __g.dataSourceFactory.openDataSource(tm_data);
+        var setnames = ds.getFeatureDatasetNames();
+        if (setnames.length == 0)
+            return;
+        var keyDatetimesList = new Array();
+        var fcMap = new Array();
+        for (var i = 0; i < setnames.length; i++) {
+            var fs = ds.openFeatureDataset(setnames[i]);
+            var fcnames = fs.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+            if (fcnames.length == 0)
+                continue;
+            for (var j = 0; j < fcnames.length; j++) {
+                var geoNames = new Array();
+                var fc = fs.openFeatureClass(fcnames[j]);
+                var fieldinfos = fc.getFields();
+                for (var k = 0; k < fieldinfos.count; k++) {
+                    var fieldinfo = fieldinfos.get(k);
+                    if (fieldinfo == null)
+                        continue;
+                    var geometryDef = fieldinfo.geometryDef;
+                    if (geometryDef == null)
+                        continue;
+                    geoNames.push(fieldinfo.name);
+                }
+                fcMap.push(fc, geoNames);
+               
+            }
+        }
+
+        keyDatetimesList = [
+			"2013/9/23 00:00:01",
+			"2013/9/24 00:00:01",
+			"2013/9/25 00:00:01",
+			"2013/9/26 00:00:01",
+			"2013/9/27 00:00:01",
+			"2013/9/28 00:00:01",
+			"2013/9/29 00:00:01",
+			"2013/9/30 00:00:01",
+			"2013/10/1 00:00:01",
+			"2013/10/2 00:00:01",
+			"2013/10/3 00:00:01",
+			"2013/10/4 00:00:01",
+			"2013/10/5 00:00:01"];
+
+        var hasfly = false;
+        this.layerList = new Array();
+        for (var l = 0; l < fcMap.length; (l = l + 2)) {
+            var fc = fcMap[l];
+            var geoNames = fcMap[l + 1];
+            for (var b = 0; b < geoNames.length; b++) {
+                geoName = geoNames[b];
+                var featureLayer = __g.objectManager.createFeatureLayer(fc, geoName, null, null, "");
+                if (featureLayer == null)
+                    continue;
+                featureLayer.enableTemporal = true;
+                this.layerList.push(featureLayer);
+                if (!hasfly && (fc.name == "建筑")) {
+                    var fieldinfos = fc.getFields();
+                    var fieldinfo = fieldinfos.get(fieldinfos.indexOf(geoName));
+                    var geometryDef = fieldinfo.geometryDef;
+                    var env = geometryDef.envelope;
+                    if (env == null || (env.maxX == 0.0 && env.maxY == 0.0 && env.maxZ == 0.0 &&
+                            env.minX == 0.0 && env.minY == 0.0 && env.minZ == 0.0))
+                        continue;
+                    var angle = __g.new_EulerAngle;
+                    angle.set(0, -30, 100);
+                    __g.camera.lookAt(env.center, 300, angle);
+                    hasfly = true;
+                }
+            }
+        }
+
+        for (var y = 0; y < this.layerList.length; y++) {
+            this.layerList[y].time = keyDatetimesList[0];
+        }
+        setTimeout(function () {
+            for (var y = 0; y < this.layerList.length; y++) {
+                this.layerList[y].time = keyDatetimesList[1];
+            }
+        }, 1 * 1000);
+        setTimeout(function () {
+            for (var y = 0; y < this.layerList.length; y++) {
+                this.layerList[y].time = keyDatetimesList[2];
+            }
+        }, 2 * 1000);
+        setTimeout(function () {
+            for (var y = 0; y <this.layerList.length; y++) {
+                this.layerList[y].time = keyDatetimesList[3];
+            }
+        }, 3 * 1000);
+        setTimeout(function () {
+            for (var y = 0; y < this.layerList.length; y++) {
+              this.layerList[y].time = keyDatetimesList[4];
+            }
+        }, 4 * 1000);
+        setTimeout(function () {
+            for (var y = 0; y < this.layerList.length; y++) {
+              this.layerList[y].time = keyDatetimesList[5];
+            }
+        }, 5 * 1000);
+        setTimeout(function () {
+            for (var y = 0; y < this.layerList.length; y++) {
+                this.layerList[y].time = keyDatetimesList[6];
+            }
+        }, 6 * 1000);
+        setTimeout(function () {
+            for (var y = 0; y < this.layerList.length; y++) {
+                this.layerList[y].time = keyDatetimesList[7];
+            }
+        }, 7 * 1000);
+        setTimeout(function () {
+            for (var y = 0; y < this.layerList.length; y++) {
+                this.layerList[y].time = keyDatetimesList[8];
+            }
+        }, 8 * 1000);
+        setTimeout(function () {
+            for (var y = 0; y < this.layerList.length; y++) {
+               this.time = keyDatetimesList[9];
+            }
+        }, 9 * 1000);
+        setTimeout(function () {
+            for (var y = 0; y < this.layerList.length; y++) {
+                this.layerList[y].time = keyDatetimesList[10];
+            }
+        }, 10 * 1000);
+        setTimeout(function () {
+            for (var y = 0; y < this.layerList.length; y++) {
+                this.layerList[y].time = keyDatetimesList[11];
+            }
+        }, 11 * 1000);
+        setTimeout(function () {
+            for (var y = 0; y < this.layerList.length; y++) {
+                this.layerList[y].time = keyDatetimesList[12];
+            }
+        }, 12 * 1000);			
+       
+    }
+   
+</script>
+</html>

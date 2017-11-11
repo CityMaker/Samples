@@ -1,0 +1,303 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>DriveRoad</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="../../cm7.js"></script>
+<script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+<div align="center">
+<input type="button" onclick="pickResult()" value="选定路段"  style="height:30px;width:100px; font-size:16px;color:blue"/>
+<input type="button" id ="cbBeginEdit" onclick="driveRoad()" value="驱动道路" style="height:30px;width:100px;font-size:16px;color:blue"/>
+</div>
+<div align="center">
+  <object id="renderControl" type="application/x-cm-3d8" style="height: 700px; width: 1000px">
+  </object>
+</div>
+</body>
+<script type="text/javascript">
+    var __fcMap = {};     //key: guid, value: fc
+    var __fcGeoMap = {};  //key: guid, value: geoNames[]
+    var fid = 0;
+    var flRet = [];
+
+    var polyline = null;
+    var center = null;
+    var curPoint = null;
+    var nextPoint = null;
+    var p = null;
+    var q = null;
+    var vecCurPos = null;
+    var vecNextPos = null;
+    var vecDirect = null;
+    var vecZ = null;
+    var vecTarget = null;
+    var vecP = null;
+    var vecQ = null;
+
+    window.onload = function () {
+        Initialize();
+
+        vecZ = __g.new_Vector3;
+    }
+
+    function Initialize() {
+        //初始化三维控件
+        initAxControl();
+        __g.new_LicenseServer.setHost("192.168.2.200", 8588, "");
+        var tmpSHPPath = getSamplesRelatePath("") + "\\shp\\road\\road.shp";
+        var connInfo = __g.new_ConnectionInfo;
+        connInfo.connectionType = gviConnectionType.gviConnectionShapeFile;
+        connInfo.database = tmpSHPPath;
+        connInfo.userName = "";
+        connInfo.password = "";
+
+        try {
+            var ds = __g.dataSourceFactory.openDataSource(connInfo);
+            var fdsNames = ds.getFeatureDatasetNames();
+            if (fdsNames.length == 0)
+                return flRet;
+            var fds = ds.openFeatureDataset(fdsNames[0]);
+            __fds = fds;
+            __datasetCRS = fds.spatialReference;
+            var fcNames = fds.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+            if (fcNames.length == 0)
+                return;
+            for (var i = 0; i < fcNames.length; i++) {
+                var fc = fds.openFeatureClass(fcNames[i]);
+                // 找到FC里面的所有空间列字段
+                var geoNames = [];
+                var fieldinfos = fc.getFields();
+                for (var j = 0; j < fieldinfos.count; j++) {
+                    var fi = fieldinfos.get(j);
+                    if (fi && fi.geometryDef)
+                        geoNames.push(fi.name);
+                }
+                __fcMap[fc.guid] = fc;
+                __fcGeoMap[fc.guid] = geoNames;
+            }
+        }
+        catch (e) {
+            exceptionHandler(e);
+        }
+
+        var needfly = true;
+        // CreateFeautureLayer
+        var hasfly = !needfly;
+        for (var fcId in __fcGeoMap) {
+            var fc = __fcMap[fcId];
+            var geoNames = __fcGeoMap[fcId];
+            for (var k = 0; k < geoNames.length; k++) {
+                var geoName = geoNames[k];
+                var fl = __g.objectManager.createFeatureLayer(fc, geoName, null, null, '');
+                var errorCode = __g.getLastError();
+                if (__g.getLastError() != 0) {
+                    alert("__g.getLastError():" + errorCode);
+                    return;
+                }
+                if (fl)
+                    flRet.push(fl);
+
+                if (!hasfly) {
+                    var fieldinfos = fc.getFields();
+                    var fieldinfo = fieldinfos.get(fieldinfos.indexOf(geoName));
+                    var geometryDef = fieldinfo.geometryDef;
+                    var env = geometryDef.envelope;
+                    if (env.maxX == 0.0 && env.maxY == 0.0 && env.maxZ == 0.0 &&
+                        env.minX == 0.0 && env.minY == 0.0 && env.minZ == 0.0)
+                        continue;
+                    var ang = __g.new_EulerAngle;
+                    ang.heading = 100;
+                    ang.tilt = -20;
+                    var position = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+                    position.setCoords(env.center.x, env.center.y, env.center.z, 0, 0);
+                    position.spatialCRS = __datasetCRS;
+                    __g.camera.lookAt2(position, 1000, ang);
+                    __envelope = env;
+                    hasfly = true;
+                }
+            }
+        }
+    }
+
+
+    function pickResult() {
+        __g.interactMode = gviInteractMode.gviInteractSelect;
+        __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectFeatureLayer;
+        __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+    }
+        function onMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+            if (pickResult == null) 
+                return;
+            if (pickResult.type != gviObjectType.gviObjectFeatureLayer)
+                return;                
+            var pt = pickResult.featureLayer;
+            fid = pickResult.featureId;
+            var featureClass = null;
+            var fc = __fcMap[pt.featureClassId];
+            var fdeRow = fc.getRow(fid);
+            var col = fdeRow.fields;
+            for (var i = 0; i < col.count; i++) {
+                var info = col.get(i);
+                if (info.geometryDef != null &&
+                info.geometryDef.geometryColumnType == gviGeometryColumnType.gviGeometryColumnPolyline) {
+                    var nPos = fdeRow.fieldIndex(info.name);
+                    polyline = fdeRow.getValue(nPos);
+                    if (fc) {
+                        __g.featureManager.highlightFeature(fc, fid, 0xffff0000);
+                    }
+                    nPos = fdeRow.fieldIndex("WIDTH");
+                    width = 10;
+                }
+            }
+          }
+        
+   
+    function driveRoad() {
+        //debugger
+        if (polyline != null) {
+            center = polyline.envelope.center;
+            var mp = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryModelPoint, gviVertexAttribute.gviVertexAttributeZ);
+            mp.spatialCRS = __datasetCRS;
+            mp.position = center;
+            var model = __g.resourceFactory.createModel();
+            var group = __g.new_DrawGroup; ;
+            var primitive = __g.new_DrawPrimitive;
+            var material = __g.new_DrawMaterial;
+            material.textureName = getSamplesRelatePath("") + "\\shp\\road\\textrure.jpg";
+            material.cullMode = gviCullFaceMode.gviCullNone;
+            material.wrapModeS = gviTextureWrapMode.gviTextureWrapRepeat;
+            material.wrapModeT = gviTextureWrapMode.gviTextureWrapRepeat;
+            var va = new Array();
+            var ta = new Array();
+            var rPointToDelList = new Array();  //拾取时DrawEnvelope产生的RenderPolyline
+            var rModelpointToDelList = new Array();
+            // 逐点外扩
+            for (var i = 0; i < polyline.pointCount; i++) {
+                if (i == polyline.pointCount - 1) {
+                    curPoint = polyline.getPoint(i);
+                    vecCurPos = curPoint.position;
+                    // 最后一个点重用最后的方向向量
+                    vecTarget = vecDirect.crossProduct(vecZ);
+                    vecTarget.normalize();
+                    vecTarget.multiplyByScalar(width / 2);
+                    vecP = vecCurPos.add(vecTarget);
+                    vecTarget.multiplyByScalar(-1);
+                    vecQ = vecCurPos.add(vecTarget);
+                    // 设置外扩点
+                    var p = curPoint.clone();
+                    p.position = vecP;
+                    var Q = curPoint.clone();
+                    Q.position = vecQ;
+                    // 把点坐标加进顶点数组
+                    va.push(vecP.x - center.x);
+                    va.push(vecP.y - center.y);
+                    va.push(vecP.z - center.z);
+                    va.push(vecQ.x - center.x);
+                    va.push(vecQ.y - center.y);
+                    va.push(vecQ.z - center.z);
+                    // 加纹理坐标
+                    ta.push(0);  //P点纹理
+                    if (i == 0)
+                        lastV = 0.0;
+                    else
+                        lastV = lastV + length / 10;  //v方向上每隔10米重复一次
+                    ta.push(lastV);
+                    ta.push(1);  //Q点纹理
+                    ta.push(lastV);
+                    {
+                        var ps = __g.new_SimplePointSymbol;
+                        ps.fillColor = 0xffff0000;
+                        ps.size = 5;
+                        rPointToDelList.push(__g.objectManager.createRenderPoint(p, ps, __rootId));
+                        rPointToDelList.push(__g.objectManager.createRenderPoint(q, ps, __rootId));
+                    }
+                    break;
+                }
+                
+                // 当不是最后一个点时：
+                curPoint = polyline.getPoint(i);
+                nextPoint = polyline.getPoint(i + 1);
+                vecCurPos = curPoint.position;
+                vecNextPos = nextPoint.position;
+                // 运算
+                vecNextPos.multiplyByScalar(-1);
+                vecDirect = vecCurPos.add(vecNextPos);  //方向向量
+                vecZ.set(0, 0, 1);
+                vecTarget = vecDirect.crossProduct(vecZ);
+                vecTarget.normalize();
+                vecTarget.multiplyByScalar(width / 2);
+                vecP = vecCurPos.add(vecTarget);
+                vecTarget.multiplyByScalar(-1);
+                vecQ = vecCurPos.add(vecTarget);
+                // 设置外扩点
+                var p = curPoint.clone();
+                p.position = vecP;
+                var q = curPoint.clone();
+                q.position = vecQ;
+                // 把点坐标加进顶点数组
+                va.push(vecP.x - center.x);
+                va.push(vecP.y - center.y);
+                va.push(vecP.z - center.z);
+                va.push(vecQ.x - center.x);
+                va.push(vecQ.y - center.y);
+                va.push(vecQ.z - center.z);
+                // 加纹理坐标
+                ta.push(0);  //P点纹理
+                if (i == 0)
+                    lastV = 0.0;
+                else
+                    lastV = lastV + length / 5;  //v方向上每隔10米重复一次
+                length = vecDirect.length;  //计算长度给奇数点用
+                ta.push(lastV);
+                ta.push(1);  //Q点纹理
+                ta.push(lastV);
+                {
+                    var ps = __g.new_SimplePointSymbol;
+                    ps.fillColor = 0xffff0000;
+                    ps.size = 5;
+                    rPointToDelList.push(__g.objectManager.createRenderPoint(p, ps, __rootId));
+                    rPointToDelList.push(__g.objectManager.createRenderPoint(q, ps, __rootId));
+                }
+            }
+            // 计算索引坐标
+            var ia = new Array();
+            for (var j = 0; j < va.length / 6 - 1; j++) {
+                ia.push(2 * j);
+                ia.push(2 * j + 1);
+                ia.push(2 * j + 2);
+                ia.push(2 * j + 1);
+                ia.push(2 * j + 3);
+                ia.push(2 * j + 2);
+            }
+
+            var vaReal = __g.new_FloatArray;
+            vaReal.arrayString = va.toString();
+            primitive.vertexArray = vaReal;
+
+            var taReal = __g.new_FloatArray;
+            taReal.arrayString = ta.toString();
+            primitive.texcoordArray = taReal;
+
+            var iaReal = __g.new_FloatArray;
+            iaReal.arrayString = ia.toString();
+            primitive.indexArray = iaReal;
+
+            primitive.material = material;
+            group.addPrimitive(primitive);
+            model.addGroup(group);
+            // 在内存中临时存储模型
+            var modelName = fid.toString();
+            __g.objectManager.addModel(modelName, model);
+            mp.modelName = modelName;
+            mp.modelEnvelope = model.envelope;
+            // 可视化临时模型
+            var rmp = __g.objectManager.createRenderModelPoint(mp, null, __rootId);
+            rmp.maxVisibleDistance = 100000;
+            rmp.mouseSelectMask = gviViewportMask.gviViewNone;
+            rModelpointToDelList.push(rmp);
+        }
+    }        
+</script>
+</html>

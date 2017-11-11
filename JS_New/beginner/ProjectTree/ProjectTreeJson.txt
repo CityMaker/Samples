@@ -1,0 +1,63 @@
+{
+   "children" : [
+      {
+         "children" : [
+            {
+               "id" : "50CAE48B-A809-4527-A4E4-DCEC2680500E",
+               "name" : "模型",
+               "visibility" : 1
+            },
+            {
+               "children" : [
+                  {
+                     "id" : "CA7C1C3C-606A-4897-8E10-13AFA34AC2B3",
+                     "name" : "红",
+                     "visibility" : 0
+                  },
+                  {
+                     "id" : "3A0975CE-EF08-47DD-A7B9-F44E52DF6440",
+                     "name" : "黄",
+                     "visibility" : 0
+                  }
+               ],
+               "id" : "4964182A-A144-48D3-AA5F-C63B968C4594",
+               "name" : "图标标签",
+               "visibility" : 0
+            },
+            {
+               "id" : "CDF832E1-ACEA-44EF-9824-2EF14ED7AC3A",
+               "name" : "新建运动物体1",
+               "visibility" : 1
+            },
+            {
+               "children" : [
+                  {
+                     "id" : "15D1FD4A-F19A-44F1-9178-5D24DE238842",
+                     "name" : "运动物体",
+                     "visibility" : 0
+                  },
+                  {
+                     "id" : "0623C73E-D73F-49BE-A551-2FD8B2D34E5F",
+                     "name" : "LocationStep",
+                     "visibility" : 0
+                  },
+                  {
+                     "id" : "5A9734BE-6CC1-4E14-A454-C329D358F0A9",
+                     "name" : "演示显示隐藏操作",
+                     "visibility" : 0
+                  }
+               ],
+               "id" : "B2597B53-D0D0-428F-866F-45E155D9AC7A",
+               "name" : "Presentation",
+               "visibility" : 1
+            }
+         ],
+         "id" : "E8EEAA0A-2F7B-4D23-9BAF-BFF14CB47833",
+         "name" : "root",
+         "visibility" : 2
+      }
+   ],
+   "id" : "11111111-1111-1111-1111-111111111111",
+   "name" : "__root__",
+   "visibility" : 2
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>PropertyWindow</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />   
+	<style type="text/css">
+<!--
+.tt {
+	color: #F00;
+}
+.dd {
+	color: #00F;
+}
+-->
+    </style>   
+	<script type="text/javascript">
+	function QueryString(sName) {
+		var sSource = String(window.document.location);
+		var sReturn = "";
+		var sQUS = "?";
+		var sAMP = "&";
+		var sEQ = "=";
+		var iPos;
+		iPos = sSource.indexOf(sQUS);
+		var strQuery = sSource.substr(iPos, sSource.length - iPos);
+		var strLCQuery = strQuery.toLowerCase();
+		var strLCName = sName.toLowerCase();
+		iPos = strLCQuery.indexOf(sQUS + strLCName + sEQ);
+		if (iPos == -1) {
+		   iPos = strLCQuery.indexOf(sAMP + strLCName + sEQ);
+		   if (iPos == -1) return "";
+		}
+		sReturn = strQuery.substr(iPos + sName.length + 2, strQuery.length - (iPos + sName.length + 2));
+		var iPosAMP = sReturn.indexOf(sAMP);
+		if (iPosAMP == -1) return sReturn;
+		else {
+		   sReturn = sReturn.substr(0, iPosAMP);
+		}
+		return sReturn;
+	}
+
+	window.onload = function () {
+		var obj=document.getElementById("FIDvalue");
+		obj.innerHTML = QueryString("id");
+
+		obj=document.getElementById("ImageValue");
+		obj.innerHTML = external.parentWindow.imageCount;
+
+		obj=document.getElementById("TriangleValue");
+		obj.innerHTML = external.parentWindow.triangleCount;
+    }
+
+	function glow()
+	{
+		var parentDoc = external;  
+		parentDoc.parentWindow.fnCallByHtmWindow_glow();
+	}
+	</script>
+</head>
+<body>
+	<table style="background-color:#ffffff">
+		<tr>
+			<th>字段名</th>
+			<th>字段值</th>
+		</tr>
+		<tr>
+			<td class='tt'>FID</td>
+			<td class='dd' id='FIDvalue'>1</td>
+		</tr>
+		<!-- <tr>
+			<td class='tt'>绘制组个数</td>
+			<td class='dd' id='GroupValue'>1</td>
+		</tr>
+		<tr>
+			<td class='tt'>绘制单元个数</td>
+			<td class='dd' id='PrimitiveValue'>1</td>
+		</tr> -->
+		<tr>
+			<td class='tt'>贴图个数</td>
+			<td class='dd' id='ImageValue'>1</td>
+		</tr>
+		<tr>
+			<td class='tt'>三角面个数</td>
+			<td class='dd' id='TriangleValue'>1</td>
+		</tr>
+	</table>
+	<div><input type="button" name="btnGlow" id="btnGlow" value="闪烁" onclick="glow()" /></div>
+</body>
+</html>

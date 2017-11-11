@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+     <title>ToolTipShow</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="../../cm7.js"></script>
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>    
+    <div>
+        <object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px">
+        </object>
+    </div>
+</body>
+     <script type="text/javascript">
+         var __g = document.getElementById("renderControl");         
+         var __fcMap = {};
+         var __fcGeoMap = {};         
+		 window.onload = function () {
+			 Initialize();
+		 }
+         function Initialize() {
+             //初始化三维控件
+             initAxControl();
+             var textRender1 = __g.new_ToolTipTextRender;
+             textRender1.expression = "'Point oid: '..$(oid)";
+             var textRender2 = __g.new_ToolTipTextRender;
+             textRender2.expression = "'Polyline oid: '..$(oid)";
+             var textRender3 = __g.new_ToolTipTextRender;
+             textRender3.expression = "'Polygon oid: '..$(oid)";
+             var textSymbol = __g.new_TextSymbol;
+             var textAttribute = __g.new_TextAttribute;
+             textAttribute.textColor = colorFromARGB(255, 0, 0, 255);
+             textSymbol.textAttribute = textAttribute;
+             textSymbol.pivotAlignment = gviPivotAlignment.gviPivotAlignBottomCenter;
+             textSymbol.verticalOffset = 10;
+             //textRender1.symbol = textSymbol;
+             //textRender2.symbol = textSymbol;
+            // textRender3.symbol = textSymbol;
+             var geoRender = __g.new_SimpleGeometryRender;
+             var geoSymbol = __g.new_ImagePointSymbol;
+             geoSymbol.imageName = "huang.png";
+             geoSymbol.size = 55;
+             geoRender.symbol = geoSymbol;
+             this.pointFeatureLayer = loadFdb("point.FDB", textRender1, geoRender);
+                         
+             var geoRender1 = __g.new_SimpleGeometryRender;
+             var geoSymbol1 = __g.new_CurveSymbol;
+             geoSymbol1.color = colorFromARGB(255, 255, 0, 255);  
+             geoRender1.symbol = geoSymbol1;
+             this.polylineFeatureLayer = loadFdb("polyline.FDB", textRender2, geoRender1);
+
+             var geoRender2 = __g.new_SimpleGeometryRender;
+             var geoSymbol2 = __g.new_SurfaceSymbol;
+             geoSymbol2.color = 0xffff0000;
+             geoRender2.symbol = geoSymbol2;
+             this.polygonFeatureLayer = loadFdb("polygon.FDB", textRender3, geoRender2);          
+         }  
+     </script>
+</html>

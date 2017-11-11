@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>UIImageButton</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="../../cm7.js"></script>
+<script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+<body>
+<input type="button" value="删除全部" onclick="delAll()"/>
+<object id="renderControl" type="application/x-cm-3d8" style="height: 600px; width: 800px "></object>
+</body>
+<script type="text/javascript">
+	var buttons = [];
+	var intersectPoint;
+	var ang;
+	var rootWindow;
+        var uiLeft;
+        var uiTop;
+        var uiRight;
+        var uiBottom;
+		
+    window.onload = function () {
+        setTimeout(function () {
+            //初始化三维控件
+            initAxControl();
+
+            // 加载场景
+            loadFdb("SDKDEMO.FDB");
+            intersectPoint = __g.geometryFactory.createPoint(gviVertexAttribute.gviVertexAttributeZ);
+            intersectPoint.setCoords(0, 0, 0, 0, 0);
+           // intersectPoint.spatialCRS = __datasetSpatialCRS;
+             ang = __g.new_EulerAngle;
+			 
+			uiLeft = __g.new_UIDim;
+			uiTop = __g.new_UIDim;
+			uiRight = __g.new_UIDim;
+			uiBottom = __g.new_UIDim;
+
+            this.manager = __g.uiWindowManager;
+			rootWindow = this.manager.uiRootWindow;
+            this.manager.destroyAllWindows();
+            var rect = __g.new_UIRect;
+			uiLeft.init(0, 0);
+			uiTop.init(0.8, 0);
+			uiRight.init(0.2, 0);
+			uiBottom.init(1, 0);
+            rect.init(uiLeft, uiTop, uiRight, uiBottom);
+            this.button1 = this.manager.createImageButton();
+			rootWindow.addChild(button1);
+            this.button1.setArea(rect);
+            this.button1.name = "location1";
+            this.button1.text = "location1";
+            this.button1.isVisible = true;
+            var imagePath = getSamplesRelatePath("/png");
+            this.button1.normalImage = imagePath + "/location/普通/2c495ffc-4641-447b-a5a4-636e4f3e7976.png";
+            this.button1.hoverImage = imagePath + "/location/按下/2c495ffc-4641-447b-a5a4-636e4f3e7976.png";
+            this.button1.pushedImage = imagePath + "/location/选中/2c495ffc-4641-447b-a5a4-636e4f3e7976.png";
+            this.button1.subscribeEvent(gviUIEventType.gviUIMouseClick);
+			uiLeft.init(0.2, 0);
+			uiTop.init(0.8, 0);
+			uiRight.init(0.4, 0);
+			uiBottom.init(1, 0);
+            rect.init(uiLeft, uiTop, uiRight, uiBottom);
+            var button2 = this.manager.createImageButton();
+			rootWindow.addChild(button2);
+            button2.setArea(rect);
+            button2.name = "location2";
+            button2.text = "location2";
+            button2.isVisible = true;
+            button2.normalImage = imagePath + "/location/普通/2e0ca5d1-73d2-4c28-9698-2b64c89cc806.png";
+            button2.hoverImage = imagePath + "/location/按下/2e0ca5d1-73d2-4c28-9698-2b64c89cc806.png";
+            button2.pushedImage = imagePath + "/location/选中/2e0ca5d1-73d2-4c28-9698-2b64c89cc806.png";
+            button2.subscribeEvent(gviUIEventType.gviUIMouseClick);
+            // 加载按钮
+            //loadButtons();
+        }, 1);
+    }
+
+    function onUIWindowEvent(args, type) {
+        document.title = "触发：" + type;
+
+        if (args.uiWindow == null)
+            return;
+
+//        if (type == gviUIEventType.gviUIMouseClick)
+//        {
+//            if (args.uiWindow.type == gviUIWindowType.gviUIImageButton)
+//            {
+//                switch (args.uiWindow.name)
+//                {
+//                    case "漫游":
+//                        __g.interactMode = gviInteractMode.gviInteractNormal;                        
+//                        break;
+//                    case "点选":
+//                        __g.interactMode = gviInteractMode.gviInteractSelect;
+//                        break;    
+//                }
+//            }
+//        }
+       
+        if (type == gviUIEventType.gviUIMouseClick) {
+            if (args.uiWindow.type == gviUIWindowType.gviUIImageButton) {
+                switch (args.uiWindow.name) {
+                    case "location1":
+                        intersectPoint.setCoords(15415.510188040265, 35593.117437895737, 59.003287982044796, 0, 0);
+                        ang.set(47.7, -30.55, 0);
+                        __g.camera.setCamera2(intersectPoint, ang, gviSetCameraFlags.gviSetCameraNoFlags);
+                        break;
+                    case "location2":
+                        intersectPoint.setCoords(15243.39327614102, 35593.454101290568, 19.083291340718386, 0, 0);
+                        ang.set(-37.01, -15.27, 0);
+                        __g.camera.setCamera2(intersectPoint, ang, gviSetCameraFlags.gviSetCameraNoFlags);
+                        break;
+                }
+            }
+        }
+    }
+
+
+    /*
+    *	加载按钮
+    */
+    function loadButtons() {
+        var rect = __g.new_UIRect;
+        rect.init(0, 10, 0, 10, 0, 42, 0, 42);
+        var manager = __g.uiWindowManager;
+
+        var button1 = manager.createImageButton();
+        button1.setArea(rect);
+        button1.name = "漫游";
+        button1.isVisible = true;
+        var imagePath = getSamplesRelatePath("/png");
+        button1.normalImage = imagePath + "/button/漫游/normal.png"; 
+        button1.hoverImage = imagePath + "/button/漫游/hover.png";
+        button1.pushedImage = imagePath + "/button/漫游/pushed.png";
+        button1.subscribeEvent(gviUIEventType.gviUIMouseClick);
+		button1.toolTipText = "漫游";
+		buttons.push(button1);
+
+        rect.init(0, 52, 0, 10, 0, 84, 0, 42);
+        var button2 = manager.createImageButton();
+        button2.setArea(rect);
+        button2.name = "点选";
+        button2.isVisible = true;
+        button2.normalImage = imagePath + "/button/点选/normal.png";
+        button2.hoverImage = imagePath + "/button/点选/hover.png";
+        button2.pushedImage = imagePath + "/button/点选/pushed.png";
+        button2.subscribeEvent(gviUIEventType.gviUIMouseClick);
+		button2.toolTipText = "点选";
+		buttons.push(button2);
+    }
+
+	function delAll(){
+		var manager = __g.uiWindowManager;
+		manager.destroyAllWindows();
+		for(var i=0; i<buttons.length; i++){
+			//manager.destroyWindow(buttons[i]);
+			buttons[i].isVisible = false;
+		}
+		
+		var imagePath = getSamplesRelatePath("/png");
+		var rect = __g.new_UIRect;
+        rect.init(0, 94, 0, 10, 0, 126, 0, 42);
+		var button3 = manager.createImageButton();
+        button3.setArea(rect);
+        button3.name = "天气";
+        button3.isVisible = true;
+        button3.normalImage = imagePath + "/button/天气/normal.png";
+        button3.hoverImage = imagePath + "/button/天气/hover.png";
+        button3.pushedImage = imagePath + "/button/天气/pushed.png";
+        button3.subscribeEvent(gviUIEventType.gviUIMouseClick);
+		button3.toolTipText = "天气";
+	}
+</script>
+</html>

@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>CreateFixBillboard</title>
+    <script type="text/javascript" src="../../cm7.js"></script>  
+    <script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+
+<body style="margin:0px;scroll:no"  > 
+<div align="center"> 
+<br />
+  请输入显示的内容:<input type="text" id="neirong" size="20"/> 
+  请设置字体大小:<input type="text" id="fontsize" size="1"/>    
+   请选择字体颜色：<select id="fontcolor" onchange="selectfont_color()">
+       <option value="0">红色</option>
+       <option value="1">白色</option>
+       <option value="2">蓝色</option>
+       <option value="3">绿色</option>
+       <option value="4">黄色</option>
+       <option value="5">紫色</option>      
+   </select>
+   请选择轮廓线颜色：<select id="linecolor" onchange="selectline_color()">
+       <option value="0">红色</option>
+       <option value="1">白色</option>
+       <option value="2">蓝色</option>
+       <option value="3">绿色</option>
+       <option value="4">黄色</option>
+       <option value="5">紫色</option>      
+   </select>     
+   <input id="Normal" type="checkbox" onchange="BeginNormal()" />进入漫游
+   <input id="lunkuo" type="checkbox" onchange="ShowOutline()" />显示轮廓线
+</div>
+        
+<div align="center">
+<br />
+    <object id="renderControl" type="application/x-cm-3d8" style="height: 700px; width: 1000px "></object>
+</div>
+</body>
+
+<script type="text/javascript">
+    
+     window.onload = function () {
+         Initialize();
+     }
+
+    function Initialize() {
+        //初始化三维控件
+        initAxControl();
+        
+        __g.interactMode = gviInteractMode.gviInteractSelect;
+        __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectAll;
+        __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+
+		attachMouse();
+    }
+
+    /*
+     *	绑定RenderControl拾取事件
+     */
+    function attachMouse() {
+        __g.onmouseclickselect = fnMouseClickSelect;
+    }
+
+
+    function fnMouseClickSelect(pickResult, intersectPoint, mask, eventSender) {
+		if(pickResult == null)
+			return;
+
+        if (pickResult.type == gviObjectType.gviObjectLabel) {
+            alert("拾取到" + pickResult.type + "类型，内容为" + pickResult.label.text);
+        }
+        else if (pickResult.type == gviObjectType.gviObjectRenderModelPoint) {
+            alert("拾取到" + pickResult.type + "类型，模型名称为" + pickResult.modelPoint.modelName);
+        }
+        else if (pickResult.type == gviObjectType.gviObjectRenderPoint) {
+            alert("拾取到" + pickResult.type + "类型，大小为" + pickResult.point.symbol.size);
+        }
+        else if (pickResult.type == gviObjectType.gviObjectRenderPolyline) {
+            alert("拾取到" + pickResult.type + "类型，GUID为" + pickResult.polyline.guid);
+        }
+        else if (pickResult.type == gviObjectType.gviObjectRenderPolygon) {
+            alert("拾取到" + pickResult.type + "类型，GUID为" + pickResult.polygon.guid);
+        }
+        else if (pickResult.type == gviObjectType.gviObjectRenderPOI) {
+			alert("拾取到" + pickResult.type + "类型，名称为" + pickResult.renderPOI.getFdeGeometry().name);
+        }
+		else if (pickResult.type == gviObjectType.gviObjectTerrainRegularPolygon) {
+			alert("拾取到" + pickResult.type + "类型，geometryCount为" + pickResult.terrainRegularPolygon.getFdeGeometry().geometryCount);
+        }
+		else if (pickResult.type == gviObjectType.gviObjectTerrainArrow) {
+			var arrow = pickResult.terrainArrow;
+			var fdeGeo = arrow.getFdeGeometry();
+			var geo = fdeGeo.getGeometry(0);
+			alert("拾取到" + pickResult.type + "类型，geometryType为" + geo.geometryType);
+        }
+        else if (pickResult.type == gviObjectType.gviObjectReferencePlane) {
+            //var selmode = $("CreateObjMode");
+            var ang = __g.new_EulerAngle;
+            ang.heading = 0;
+            ang.tilt = -20;
+                 var neirong = document.getElementById("neirong").value;
+                 var fontsize= document.getElementById("fontsize").value;
+                        var textAttribute = __g.new_TextAttribute;
+                        textAttribute.textColor = selectfont_color(); //红
+                        textAttribute.size = fontsize;
+                        var retMap = __g.utility.createFixedBillboard(neirong, textAttribute, 50, 100, true);
+                        __g.objectManager.addModel("fixedModel", retMap["model"]);
+                        __g.objectManager.addImage(retMap["imageName"], retMap["image"]);
+
+                        var gfactory = __g.geometryFactory;
+                        var fde_modelpoint = gfactory.createGeometry(gviGeometryType.gviGeometryModelPoint,
+                            gviVertexAttribute.gviVertexAttributeZ);
+                        if (intersectPoint == null) return;
+                        fde_modelpoint.setCoords(intersectPoint.x, intersectPoint.y, intersectPoint.z, 0, 0);
+                        fde_modelpoint.modelName = "fixedModel";
+                        this.rmodelpoint = __g.objectManager.createRenderModelPoint(fde_modelpoint, null, __rootId);
+                        this.rmodelpoint.showOutline = $("lunkuo").checked;
+                        __g.setRenderParam(gviRenderControlParameters.gviRenderParamOutlineColor, selectline_color());
+                        __g.camera.lookAt(intersectPoint.position, 100, ang);
+                    
+                 
+            }
+
+      }
+                function selectfont_color() {
+                    var mask = $("fontcolor").selectedIndex;
+                    switch (mask) {
+                        case 0:
+                            return 0xffff0000;//红
+                        case 1:
+                            return 0xffffffff; //白
+                        case 2:
+                            return 0xff0000ff;//蓝
+                        case 3:
+                            return 0xff00ff00;//绿
+                        case 4:
+                            return 0xffffff00; //黄
+                        case 5:
+                            return 0xff800080; //紫
+                        
+                    }
+
+                }
+                function selectline_color() {
+                    var mask = $("linecolor").selectedIndex;
+                    switch (mask) {
+                        case 0:
+                            return 0xffff0000; //红
+                        case 1:
+                            return 0xffffffff; //白
+                        case 2:
+                            return 0xff0000ff; //蓝
+                        case 3:
+                            return 0xff00ff00; //绿
+                        case 4:
+                            return 0xffffff00; //黄
+                        case 5:
+                            return 0xff800080; //紫
+
+                    }
+
+                }
+
+
+    function BeginNormal() {
+        if ($("Normal").checked)
+            __g.interactMode = gviInteractMode.gviInteractNormal;
+        else
+            __g.interactMode = gviInteractMode.gviInteractSelect;
+    }
+    function ShowOutline() {
+        if ($("lunkuo").checked) {
+            this.rmodelpoint.showOutline = true;
+            __g.setRenderParam(gviRenderControlParameters.gviRenderParamOutlineColor, selectline_color());
+        }
+        else
+           this.rmodelpoint.showOutline = false;
+
+    }
+     
+</script>
+</html>

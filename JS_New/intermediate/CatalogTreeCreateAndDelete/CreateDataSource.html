@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html" charset="gb2312" />
+    <title>数据源</title>
+    <link href="css/openDialog.css" rel="Stylesheet" type="text/css" />
+    <script type="text/javascript" src="../../cm7.js"></script>  
+	<style type="text/css">
+		#formFile tr{height:32px;line-height:32px;background-color:white;}
+		#formFile tr td span{display:inline-block;width:100px;text-align:right;}
+		#formFile tr td input{width:180px;}
+		#formFile tr td .btnStyle{width:40px;text-align:center;}
+	</style>
+</head>
+<body>
+<form id="formFile" enctype="multipart/form-data">
+        <table border="0" align="center" cellpadding="0" cellspacing="0" class="tableStyle">
+			<thead>
+				<tr style="display:block;">
+					<td><span>数据库类型：</span></td>
+					<td height="20" bgcolor="#FFFFFF">
+						<select id="selType" onchange="selConChange()">
+							<option value="0">gviConnectionMySql5x</option>
+							<option value="1">gviConnectionFireBird2x</option>
+							<option value="2">gviConnectionSQLite3</option>
+						</select>
+					</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr id="tr2">
+					<td><span>服务器地址：</span></td>
+					<td>
+						<input id="txtServerAddress" type="text" value="192.168.2.121" />
+					</td>
+				</tr>
+				<tr id="tr3">
+					<td>
+						<span>端口号：</span>
+					</td>
+					<td>
+						<input id="txtPort" type="text" value="3306" />
+					</td>
+				</tr>
+				<tr id="tr4">
+					<td>
+						<span>用户名：</span>
+					</td>
+					<td>
+						<input id="txtUserName" value="root" type="text"  />
+					</td>
+				</tr>
+				<tr id="tr5">
+					<td>
+						<span>密码：</span>
+					</td>
+					<td>
+						<input id="txtPassword" type="password" value="666666"/>
+					</td>
+				</tr>
+				 <tr id="tr7">
+					<td>
+					   <span>数据库：</span>
+					</td>
+					<td>
+						<input type="file" id="ff" style="display: none" />
+						<input id="txtFileName" type="text" />
+						<input type="button" id="btnBrowse" value="浏览..." onclick="openfile()" class="btnStyle"/>
+					</td>
+				</tr>
+				<tr id="tr9">
+					<td><span>数据库：</span></td>
+					<td>
+					   <input type="text" value="yatou" id="dbf" />
+					</td>
+				</tr>
+				<tr>
+					<td height="40" colspan="2" align="center" valign="middle" bgcolor="#F2F2F2">
+						<input type="button" value="确定" onclick="OnOK()" class="btnStyle" />
+					</td>
+				</tr>
+			</tbody>
+        </table>
+</form>
+<script type="text/javascript">
+        function selConChange() {
+            var sel = document.getElementById("selType");
+            switch (sel.selectedIndex) {
+                case 0:
+                    document.getElementById("tr2").style.display = "block";
+                    document.getElementById("tr3").style.display = "block";
+                    document.getElementById("tr4").style.display = "block";
+                    document.getElementById("tr5").style.display = "block";
+                    document.getElementById("tr7").style.display = "none";
+                    document.getElementById("tr9").style.display = "block";
+                   
+                    break;
+                case 1:
+                    document.getElementById("tr2").style.display = "none";
+                    document.getElementById("tr3").style.display = "none";
+                    document.getElementById("tr4").style.display = "none";
+                    document.getElementById("tr5").style.display = "none";
+                    document.getElementById("tr9").style.display = "none";
+                    document.getElementById("tr7").style.display = "block";
+                    break;
+                case 2:
+                    document.getElementById("tr2").style.display = "none";
+                    document.getElementById("tr3").style.display = "none";
+                    document.getElementById("tr4").style.display = "none";
+                    document.getElementById("tr5").style.display = "none";
+                    document.getElementById("tr9").style.display = "none";
+                    document.getElementById("tr7").style.display = "block";
+                    break;
+            }
+        }
+        window.onload = function init() {
+            selConChange();
+        }
+        function OnOK() {
+            var sel = document.getElementById("selType");
+            var obj = new Object();
+            if (sel.value == "0") {
+                var selType = document.getElementById("selType").value;
+                var txtServerAddress = document.getElementById("txtServerAddress").value;
+                var txtPort = document.getElementById("txtPort").value;
+                var pwd = document.getElementById("txtPassword").value;
+                var txtUserName = document.getElementById("txtUserName").value;
+                var dbf = document.getElementById("dbf").value;
+                obj.selType = selType;
+                obj.Server = txtServerAddress;
+                obj.Port = txtPort;
+                obj.Password = pwd;
+                obj.UserName = txtUserName;
+                obj.Database = dbf;
+            }
+            else {
+                var selType = document.getElementById("selType").value;
+                var txtFileName = document.getElementById("txtFileName").value;
+                obj.selType = selType;
+                obj.Server = "";
+                obj.Port = "";
+                obj.Password = "";
+                obj.UserName = "";
+                obj.Database = txtFileName;
+
+            }
+
+            window.returnValue = obj;
+
+            window.close();
+        }
+        function openfile() {
+            try {
+
+                document.getElementById("ff").click();
+                var sel = document.getElementById("selType");
+
+                var filePath = document.getElementById("ff").value;
+
+                if (!filePath)
+                    return;
+
+                var ext = filePath.substr(filePath.lastIndexOf(".") + 1)
+
+                switch (sel.selectedIndex) {
+                    case 1:
+                        if (ext.toLowerCase() != "fdb") {
+
+                            alert("选择文件类型错误，请选择工程文件(*.fdb)");
+                            document.getElementById("txtFileName").value = "";
+                            return;
+                        }
+                        break;
+                    case 0:
+                        if (ext.toLowerCase() != "sdb") {
+                            alert("选择文件类型错误，请选择地形文件 (*.sdb)");
+                            document.getElementById("txtFileName").value = "";
+                            return;
+                        }
+                        break;
+                }
+
+                document.getElementById("txtFileName").value = filePath;
+
+            } catch (e) {
+                document.getElementById("txtFileName").value = "";
+            }
+        }
+    </script>
+</body>
+</html>
