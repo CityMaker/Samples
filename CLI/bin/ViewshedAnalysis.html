@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Help Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+<!--
+.tt {
+	color: #F00;
+}
+-->
+    </style>    
+</head>
+<body>
+	<p>
+		操作指南：<br> 
+		<br>
+		1、点击“开始分析”按扭，在三维场景中选择第一个点作为三角锥的起点，在右面的TextBox中会给出该起点的坐标<br> 
+		<br> 
+		2、移动鼠标，会在三维场景中出现一个三角锥的选择区域（视锥张角可在界面上提前指定），在右面的TextBox中会给出目标点的坐标<br>		
+		<br>
+		3、在三维场景中再次点击，确定三角锥区域边界。程序开始用选择区对应的二维polygon对场景中“建筑”要素类进行空间查询，并将查询结果添加成为遮挡物，进行视域分析。<br>
+		<br>
+		<span class="tt">注意：该步骤需要的时间较长，右侧的Text会显示当前进度，请耐心等待</span> <br>		
+		4、再次点击“开始分析”按钮，即清除上一次的遮挡物重新选择指定区域进行视域分析。<br>
+		<br>
+	</p>
+</body>
+</html>

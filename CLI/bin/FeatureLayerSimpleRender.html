@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Help Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+</head>
+<body>
+	<p>
+		初级操作指南：<br> 
+		<br>
+		1、右侧列表中节点命名规则是 “FeatureLayer类型_要素类名称_FeatureLayer最大可视距离”  <br> 
+		<br>
+		2、勾选右侧列表项前的复选框，可显示或关闭FeatureLayer显示 <br>
+		<br>
+		3、双击右侧列表项，可使相机定位到该FeatureLayer上方 <br>
+		<br>
+		<br>
+		中级操作指南：<br> 
+		<br>
+		1、右键列表中节点弹出四个下拉框：  <br> 
+		   （1）SetTextRender <br>  
+		   配置文字风格，包括：文字内容、字体、颜色、样式等 <br> <br> 
+
+		   （2）UnloadTextRender <br>  
+		   卸载文字风格，即恢复默认无文字风格状态 <br> <br> 
+
+		   （3）SetGeometryRender <br> 
+		   配置几何物体渲染风格，又根据几何物体分为四种类型：<br> 
+		   模型图层可配置模型的颜色<br> 
+		   点图层可配置点颜色、点大小等、图片点<br> 
+		   线图层可配置线颜色<br> 
+		   面图层可配置面颜色、面边框颜色<br> <br> 
+
+		   （4）UnloadGeometryRender <br>  卸载渲染风格配置，即恢复默认无渲染风格状态<br> <br> 
+
+        注意：配置文字内容时，要求遵循lua脚本语法 for example： 'model_gid:'..$(Groupid)  <br> 
+              在界面操作时，点击左边名为"Expression"的超链接文字，即可进行示例配置，第一次使用时可参考。<br> 
+		<br>
+		2、在文字风格配置框和渲染风格配置框内，如之前进行了配置则显示已有的参数； <br>
+		如之前未进行配置，则显示默认参数<br>
+		<br>
+		3、编辑参数方法：鼠标快速双击要编辑的单元格，则会弹出对应类型的编辑器。<br>
+		比如颜色选择器、bool型值用checkbox来表示等，提供界面化输入值。<br>
+	</p>
+</body>
+</html>

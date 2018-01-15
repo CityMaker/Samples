@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Help Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+<!--
+.tt {
+	color: #00F;
+}
+-->
+    </style>    
+</head>
+<body>
+	<p>
+	程序刚启动时，默认把SDKDEMO.FDB加载到树控件上，但未创建三维场景Layer。<br>
+	</p>
+
+	<p>
+	///-------------------在FC上右键菜单----------------------------------///<br><br>
+
+	-HasTemporal     判断当前选中FC是否开启了时态 <br><br>
+
+	-EnableTemporal  对当前选中FC开启时态。如之前已经开启时态，此时会抛异常。<br><br>
+
+	-DisableTemporal 对当前选中FC关闭时态。如之前未开启时态，此时会抛异常。<br><br>
+
+	-SearchAll  <br>
+	如当前FC未开启时态，则是普通的全查询，查询出所有的记录。                <br>
+	如当前FC已开启时态，此时利用TemporalCursor/TemporalManger/TemporalInstanceCursor查询出所有要素的所有时序数据。（包括base表和temporal表所有的记录）<br><br>
+
+	-SearchBase 查询开启时态下最新的数据<br>
+	仅当前FC已开启时态时支持。在全查询基础上，仅查出要素的最新数据（即死亡时间==正无穷的时序数据）。<br><br>
+
+	-GetKeyDatetime <br>
+	获取所有时序节点时间，用最大最小值设置界面右下方的TrackBarTime控件，以便播放用。<br>
+	同时，用最大最小值设置树控件下方的“自定义时间轴”组中的两个时间拾取控件的值，“开始时间”为最小值，“结束时间”为最大值。<br><br>
+
+	-StopRender<br>
+	从三维控件中删除FeatureLayer<br><br>
+
+	-StartRender<br>
+	因为一旦在三维控件中由FC创建了对应的FeatureLayer，此时想再编辑FC的时态相关信息，则必须重启exe程序。因此仅在想浏览编辑好的数据时才点此处。<br><br>
+	</p>
+
+
+	<p>
+	///-------------FeatureLayerEnableTemporal 复选框---------------------///<br>
+	FeatureLayerEnableTemporal 复选框<br>
+	设置三维RenderControl中的FeatureLayer是否开启时态功能。这个是对三维场景的设置，不是FC!<br><br>
+	</p>
+
+
+
+	<p>
+	///-------------------自定义时间轴----------------------------------///<br>
+	因为直接从FC中GetKeyDatetime获取的时间节点覆盖的范围很广，可能从1900年到2000年，而我只想关注1990年到2000年10年间的数据变化，就可以在这里设置。<br>
+	推荐：特别是在要素死亡时间为正无穷时，此处可通过设置结束时间将TrackBar控件间隔变得稀疏，便于浏览FeatureLayer的变化。<br>
+	PS：此处设置不对FDB中的数据产生任何影响，仅仅是改变界面上TrackBar控件的数据范围。<br>
+	</p>
+
+
+
+	<p>
+	///-------------------要素增删改面板----------------------------------///<br>
+	-插入新要素<br>
+	利用ITemporalManager::Insert往当前FC中插入一条带指定出生时间的新要素。此时，该要素只有最新数据，没有历史时序数据。<br><br>
+
+	-重置要素出生时间<br>
+	前提操作：在三维窗口下方的表格中选中一条记录。<br>
+	通过ITemporalCursor::ResetBirthDatetime给指定记录重设出生时间<br><br>
+
+	-重置要素死亡时间<br>
+	前提操作：通过树控件上的右键菜单SearchBase获取当前死亡时间为正无穷的数据，然后在三维窗口下方的表格中选中一条记录。<br>
+	通过ITemporalCursor::Dead()给指定记录设置死亡时间。<br><br>
+
+	-删除选中要素<br>
+	根据oid从FDB中删除要素<br>
+	</p>
+
+
+	<p>
+	///-------------------时序增删改面板----------------------------------///<br>
+	默认该面板下的listbox为空白，必须先在右侧表格Grid控件中选中一条记录，此时会在时序面板listbox中列出该要素所有的时序。<br>
+	-删除选中时序<br>
+	根据指定的时序的开始时间或者结束时间，用ITemporalInstanceCursor删除对应的时序信息。删除后listbox中会自动刷新列出更新后的时序数据<br><br>
+
+	-更新选中时序<br>
+	根据指定的时序的开始时间或者结束时间，用ITemporalInstanceCursor::Update把时序数据中的“Name”列值更新为：<br>
+	新的Name列值 = 原来的Name列值_当前时刻<br>
+	更新完成后不会自动刷新，此时需要从树控件右键菜单中重新查询，在表格控件中查看新的Name。<br><br>
+
+	-插入新时序<br>
+	前提操作：在三维窗口下方的表格中选中一条记录。<br>
+	利用ITemporalCursor::Insert给当前选中要素插入一条新的时序信息。<br>
+	</p>
+
+
+	<p>
+	///-------------------*****浏览时序数据*****----------------------------------///<br>
+	四步走：<br>
+	前提：各种编辑时态数据操作<br>
+	1.树控件中FC右键开启时态<br>
+	2.树控件中FC右键GetKeyDatetimes，通常还需要自定义时间轴，将范围控制在关注的区域内。<br>
+	3.勾选树控件下方的FeatureLayerEnableTemporal复选框<br>
+	4.树控件中FC右键StartRendering<br>
+	鼠标拖动TrackBar控件，即可看到数据在三维中的时态变化了。<br>
+	</p>
+
+
+</body>
+</html>

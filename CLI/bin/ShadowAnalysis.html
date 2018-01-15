@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+    <title>Help Page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style type="text/css">
+<!--
+.tt {
+	color: #F00;
+}
+-->
+    </style>    
+</head>
+<body>
+	<p>
+		操作指南：<br> 
+		<br>
+		1、点击“开始分析”按扭，在三维场景中选择第一个点作为圆心，在下面的TextBox中会给出该圆心的坐标<br> 
+		<br> 
+		2、移动鼠标，会在三维场景中出现一个黄色的圆形选择区域，在右面的TextBox中会给出相对于圆心的距离作为圆半径<br>		
+		<br>
+		3、在三维场景中再次点击，确定圆形区域边界。程序开始用选择区对应的二维polygon对场景中“建筑”要素类进行空间查询，并将查询结果添加成为遮挡物，进行日照分析。<br>
+		<br>
+		<span class="tt">注意：该步骤需要的时间较长，右侧的Text会显示当前进度，请耐心等待</span> <br>		
+		4、再次点击“开始分析”按钮，即清除上一次的遮挡物重新选择指定区域进行日照分析。<br>
+		<br>
+		5、改变右侧SunDirction的heading值，可以模拟太阳从东至西（-360 ~ 360）移动，建筑物的阴影变化；<br>
+		   改变右侧SunDirction的tilt值，可以模拟太阳从低到高（0 ~ 90）移动，建筑物的阴影变化；<br>
+		<br>
+	</p>
+</body>
+</html>
