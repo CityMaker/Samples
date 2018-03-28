@@ -53,7 +53,7 @@
 			document.title = s;
 			
              __g.sunConfig.setSunEuler(ang);
-             var tilePath = getSamplesRelatePath("") + "\\sdk.tdb";
+             var tilePath = getSamplesRelatePath("") + "\\sdk.tdbx";
              var layer = __g.objectManager.create3DTileLayer(tilePath, "", "");
              __g.camera.flyToObject(layer.guid, gviActionCode.gviActionFlyTo);
              __g.sunConfig.enableShadow(0, true);
