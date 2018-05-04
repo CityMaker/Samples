@@ -28,31 +28,62 @@
          function Initialize() {
              //初始化三维控件
              initAxControl();             
-             __g.new_LicenseServer.setHost("192.168.2.132", 8588, "");
-			 document.title = __g.new_LicenseServer.hasRuntimeLicense;
+             //__g.new_LicenseServer.setHost("192.168.2.132", 8588, "");
+			 //document.title = __g.new_LicenseServer.hasRuntimeLicense;
              __g.camera.flyTime = 0;
-             var tilePath = getSamplesRelatePath("") + "\\sdk.tdb";
-             test3DTileLayer = __g.objectManager.create3DTileLayer("C:\\TestData\\TDBX\\wd0118.tdbx", '', '');
+             var tilePath = getSamplesRelatePath("") + "/REVIT-ALL2013.tdbx";
+             test3DTileLayer = __g.objectManager.create3DTileLayer(tilePath, '', '');
              __g.camera.flyToObject(this.test3DTileLayer.guid, gviActionCode.gviActionFlyTo);
-             this.currentGeometry = null;
-             this.currentRenderGeometry = null;
-             this.terrainHole = null;
-             __g.interactMode = gviInteractMode.gviInteractEdit;
 
-             this.currentGeometry = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPolyline, gviVertexAttribute.gviVertexAttributeZ);
-             //this.currentGeometry.spatialCRS = datasetCRS;
-             this.currentRenderGeometry = __g.objectManager.createRenderPolyline(this.currentGeometry, null, '');
-             this.currentRenderGeometry.heightStyle = gviHeightStyle.gviHeightOnEverything;
-             __g.objectEditor.startEditRenderGeometry(this.currentRenderGeometry, gviGeoEditType.gviGeoEditCreator);
+			 var c = __g.new_ConnectionInfo;
+			 c.connectionType = gviConnectionType.gviConnectionFireBird2x;
+			 c.userName = "";
+             c.password = "";
+			 c.database = getSamplesRelatePath("") + "/REVIT-ALL2013.TDBX.FDB";
+			  var  ds =  __g.dataSourceFactory.openDataSource(c);			
+			 var setnames = ds.getFeatureDatasetNames();
+			  var fds = ds.openFeatureDataset(setnames[0]);
+			 var fcnames=fds.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+			  if (setnames.length == 0)
+				return;		
+			 var fc=fds.openFeatureClass(fcnames[0]);
+			
+
+             __g.interactMode = gviInteractMode.gviInteractSelect;
+			 __g.mouseSelectMode = gviMouseSelectMode.gviMouseSelectClick;
+			 __g.mouseSelectObjectMask = gviMouseSelectObjectMask.gviSelectTileLayer;
+
 			 
 			EventCall = {
-                onObjectEditing: function (geometry) {
-                    this.currentGeometry = geometry;
-                },
-                onObjectEditFinish: function () {					
-					var vm = test3DTileLayer.polylineIntersect(this.currentGeometry);
-					if(vm.fid > -1)
-						document.title = vm.featureDataSetName + "," + vm.featureClassName;
+                onMouseClickSelect: function (pickResult, intersectPoint, mask, eventSender) {		
+					if(pickResult.type = gviObjectType.gviObject3DTileLayer){
+						var ret = __g.camera.getCamera2();
+						var length = ret.position.distance3D(intersectPoint);
+						var factor = length * 0.001;
+						
+						var aimingPoint = __g.camera.getAimingPoint2(intersectPoint, ret.angle, factor);
+                        var sourcePoint = __g.camera.getAimingPoint2(intersectPoint, ret.angle, -factor);
+                        var intersetPolyline = __g.geometryFactory.createGeometry(gviGeometryType.gviGeometryPolyline, gviVertexAttribute.gviVertexAttributeZ);
+                        intersetPolyline.spatialCRS = fds.spatialReference;
+                        intersetPolyline.appendPoint(sourcePoint);
+                        intersetPolyline.appendPoint(aimingPoint);
+					
+						var vm = test3DTileLayer.polylineIntersect(intersetPolyline);
+						if(vm.fid > -1){
+							//document.title = vm.featureDataSetName + "," + vm.featureClassName + "," + vm.fid;
+							var row = fc.getRow(vm.fid);
+							var index = row.fieldIndex("Geometry");
+							var mp = row.getValue(index) ;
+							var mps = __g.new_ModelPointSymbol;
+							mps.color = 0xffff00ff;
+							mps.enableColor = true;
+							mps.enableTexture = false;
+							mps.setResourceDataSet(fc.featureDataSet);
+							var rmp = __g.objectManager.createRenderModelPoint(mp, mps, rootId);
+						    rmp.depthTestMode = gviDepthTestMode.gviDepthTestDisable; 
+							__g.camera.flyToObject(rmp.guid, 0);
+						}					
+					}
                 }
             }
             __g.callback = EventCall;
