@@ -48,6 +48,7 @@ function initControlEvents(control) {
     if (typeof (onUIWindowEvent) == "function") ____events["onUIWindowEvent"] = onUIWindowEvent;
     if (typeof (onProjectChanged) == "function") ____events["onProjectChanged"] = onProjectChanged;
     if (typeof (onFullScreenChanged) == "function") ____events["onFullScreenChanged"] = onFullScreenChanged;
+	if (typeof (onAsyncSearchFinished) == "function") ____events["onAsyncSearchFinished"] = onAsyncSearchFinished;
     control.callback = ____events;
     
 }
