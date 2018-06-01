@@ -1,0 +1,77 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>FeatureClassQuery</title>
+<script type="text/javascript" src="../../cm7.js"></script>
+<script type="text/javascript" src="../../cm7_sample_util.js"></script>
+</head>
+
+<body>
+<object id="renderControl" type="application/x-cm-3d8" width="100%" height="50">
+</object>
+<hr />
+<button onclick="start()">查询服务数据</button>
+<div id="divResult"></div>
+</body>
+</html>
+<script type="text/javascript">    
+
+	window.onload = function(){
+        initAxControl();       
+	}
+    
+    function start() {
+		var ci = __g.new_ConnectionInfo;
+		ci.connectionType = gviConnectionType.gviConnectionCms7Http;
+		ci.server = "39.106.30.46";
+		ci.port = 8040;
+		ci.database = "SDKDEMO";						
+		var ds = __g.dataSourceFactory.openDataSource(ci);
+		var fdsNames = ds.getFeatureDatasetNames();
+		if (fdsNames.length == 0)
+			return;
+			
+		for (var i = 0; i < fdsNames.length; i++) {
+			var setname = fdsNames[i];
+			var dataset = ds.openFeatureDataset(setname);
+
+			var fcnames = dataset.getNamesByType(gviDataSetType.gviDataSetFeatureClassTable);
+			if (fcnames == null || fcnames.Length == 0)
+				continue;
+			for (var j = 0; j < fcnames.length; j++) {
+				var fcname = fcnames[j];
+				var fc = dataset.openFeatureClass(fcname);	
+				searchFeature(fc);	
+			}
+		}       
+    }
+
+    function searchFeature(fc) {		
+		a = new Date().getTime(); 
+		var str = '';	
+		var oidlist = [];
+        var filter = __g.new_QueryFilter;
+		filter.addSubField("oid");
+        var cursor = fc.search(filter, true);
+		var r = null;
+		while ((r = cursor.nextRow()) != null) {
+			var oid = r.getValue(0);  // 从库中读取值
+			oidlist.push(oid);
+		}		
+		b = new Date().getTime();
+		console.log("[1]:" + (b-a));		
+		
+		for(var k=0; k<oidlist.length; k++){
+			var oid = oidlist[k];
+			var row = fc.getRow(oid);
+			var geoidx = row.fieldIndex("Geometry");
+			var geo = row.getValue(geoidx);
+		}		
+		c = new Date().getTime();
+		console.log("[2]:" + (c-b));
+   }
+
+    
+
+</script>
