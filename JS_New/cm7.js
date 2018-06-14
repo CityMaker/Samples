@@ -48,7 +48,9 @@ function initControlEvents(control) {
     if (typeof (onUIWindowEvent) == "function") ____events["onUIWindowEvent"] = onUIWindowEvent;
     if (typeof (onProjectChanged) == "function") ____events["onProjectChanged"] = onProjectChanged;
     if (typeof (onFullScreenChanged) == "function") ____events["onFullScreenChanged"] = onFullScreenChanged;
-	if (typeof (onAsyncSearchFinished) == "function") ____events["onAsyncSearchFinished"] = onAsyncSearchFinished;
+    if (typeof (onInteractFocusChanged) == "function") ____events["onInteractFocusChanged"] = onInteractFocusChanged;
+    if (typeof (onCameraChanged) == "function") ____events["onCameraChanged"] = onCameraChanged;
+    if (typeof (onAsyncSearchFinished) == "function") ____events["onAsyncSearchFinished"] = onAsyncSearchFinished;
     control.callback = ____events;
     
 }
@@ -56,14 +58,7 @@ function initControlEvents(control) {
 function $(e) {
     return document.getElementById(e);
 }
-____cppcall = {
-    __get_new_object: function() {
-        return new Object();
-    },
-    __get_jsarray_from_vbarray: function(vba) {
-        return vba.toArray();
-    }
-}
+
 
 /************************************************************************/
 /* 产生随机数
@@ -726,7 +721,18 @@ gviObjectType = {
     gviObjectComplexParticleEffect: 307,
     gviObjectViewshed: 308,
     gviObjectHeatMap: 309,
-    gviObjectClipPlaneOperation: 310
+    gviObjectClipPlaneOperation: 310,
+	gviObjectRenderPipeLine: 311,
+	gviObjectPlotGatheringPlace: 312,
+	gviObjectPlotAttackArrow: 313,
+	gviObjectPlotTailedAttackArrow: 314,
+	gviObjectPlotSquadCombat: 315,
+	gviObjectPlotTailedSquadCombat: 316,
+	gviObjectPlotDoubleArrow: 317,
+	gviObjectPlotTripleArrow: 318,
+	gviObjectHotLink: 319,
+	gviObjectOverlayUILabel: 320,
+	gviObjectVolumeMeasureOperation: 321
 };
 
 /*!
@@ -804,10 +810,13 @@ gviMouseSelectObjectMask = {
     gviSelectParticleEffect: 128,
     gviSelectRenderGeometry: 256,
     gviSelectSkinnedMesh: 512,
-    gviSelectTileHole: 1024,
+    
     gviSelectOverlayLabel: 2048,
     gviSelectTerrainObject: 4096,
+	gviSelectRenderPipeLine: 8192,
     gviSelectTerrainVideo: 16384,
+	gviSelectObjectOnEverything: 32768,
+	gviSelectPlot: 65536,
     gviSelectAll: 65535
 };
 
@@ -1165,7 +1174,20 @@ gviRenderControlParameters = {
     gviRenderParamOcclusionQuery: 11,
     gviRenderParamOutlineColor: 12,
     gviRenderParamAlphaTestValue: 13,
-    gviRenderParamClipPlaneLineColor: 14
+    gviRenderParamClipPlaneLineColor: 14,
+	gviRenderParamWireframeEffect : 15,
+	gviRenderParamStarEffect : 16,	
+	gviRenderParamFlyAroundLoop : 17, 
+	gviRenderParamLight0Specular : 18,
+	gviRenderParamLight1Ambient : 19,
+	gviRenderParamLight1Diffuse : 20,
+	gviRenderParamLight1Specular : 21,
+	gviRenderParamPopupWindowColor : 22,
+	gviRenderParamFlyAroundTime : 23,
+	gviMediaPlayerUIMode : 24,			
+	gviRenderParamPresentationResWinStyle : 25,
+	gviRenderParamWireframeColor : 26,
+	gviRenderParamMouseHoverBright : 27	
 };
 
 /*!
