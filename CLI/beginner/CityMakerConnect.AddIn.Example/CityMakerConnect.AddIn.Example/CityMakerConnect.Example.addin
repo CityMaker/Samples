@@ -10,6 +10,7 @@
 
   <Runtime>
     <Import assembly = "CityMakerConnect.AddIn.Example.dll">
+      <ConditionEvaluator name="HasLoginCondition" class="CityMakerExplorer.AddIn.Example.HasLoginConditionEvaluator" />
     </Import>
   </Runtime>
   
@@ -18,6 +19,12 @@
     <MenuItem     id = "ExamplePage"       type = "RibbonPage"       label = "插件示例" insertafter="mapPage" >
       <MenuItem   id = "ExampleGroup1"    type = "RibbonPageGroup"  label = "登录">
           <MenuItem id = "add"   label = "登录"  type="ButtonCommand"  icon="AddTerainLayer"  class="CityMakerExplorer.AddIn.Example.LoginCommand" />
+      </MenuItem>
+
+      <MenuItem   id = "ExampleGroup2"    type = "RibbonPageGroup"  label = "其它">
+        <Condition name="HasLoginCondition" action="Disable">
+          <MenuItem id = "ss"   label = "测试"  type="ButtonCommand"  icon="AddTerainLayer"  class="CityMakerExplorer.AddIn.Example.TestCommand" />
+        </Condition>
       </MenuItem>
     </MenuItem>
  

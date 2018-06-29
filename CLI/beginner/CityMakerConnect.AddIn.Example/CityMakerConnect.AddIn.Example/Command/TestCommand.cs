@@ -5,9 +5,7 @@ using System.Windows.Forms;
 
 namespace CityMakerExplorer.AddIn.Example
 {
-    
-
-    class LoginCommand : AbstractCommand
+    class TestCommand : AbstractCommand
     {
         public override void RestoreEnv()
         {
@@ -16,12 +14,7 @@ namespace CityMakerExplorer.AddIn.Example
         public override void Run(object sender, EventArgs e)
         {
             CommandManager.Push(this);
-            LoginForm form = new LoginForm();
-            if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                ExampleProcess.Instance().HasLogin = true;
-                CityMakerExplorer.AddIn.WinForm.MainFrmService.BarPerformClick("normal");
-            }
+            MessageBox.Show("test");
         }
     }
 }

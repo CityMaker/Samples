@@ -121,12 +121,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command\LoginCommand.cs" />
+    <Compile Include="Command\TestCommand.cs" />
+    <Compile Include="ConditionEvaluator.cs" />
     <Compile Include="Dialog\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dialog\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExampleProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
