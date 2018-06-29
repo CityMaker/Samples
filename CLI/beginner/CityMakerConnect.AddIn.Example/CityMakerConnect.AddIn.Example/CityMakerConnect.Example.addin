@@ -1,0 +1,26 @@
+﻿<AddIn name        = "CityMakerBuilder Application"
+       author      = "YDH"
+       url         = "http://www.gvitech.com"
+       description = "Base addIn of CityMakerBuilder"
+       addInManagerHidden = "true">
+
+	<Manifest>
+		<Identity name = "CityMakerConnect.AddIn.Example"/>
+	</Manifest>
+
+  <Runtime>
+    <Import assembly = "CityMakerConnect.AddIn.Example.dll">
+    </Import>
+  </Runtime>
+  
+	<Path name = "/Workbench/MainMenu/Explorer">
+		<!--地形操作-->
+    <MenuItem     id = "ExamplePage"       type = "RibbonPage"       label = "插件示例" insertafter="mapPage" >
+      <MenuItem   id = "ExampleGroup1"    type = "RibbonPageGroup"  label = "登录">
+          <MenuItem id = "add"   label = "登录"  type="ButtonCommand"  icon="AddTerainLayer"  class="CityMakerExplorer.AddIn.Example.LoginCommand" />
+      </MenuItem>
+    </MenuItem>
+ 
+	</Path>
+  
+</AddIn>

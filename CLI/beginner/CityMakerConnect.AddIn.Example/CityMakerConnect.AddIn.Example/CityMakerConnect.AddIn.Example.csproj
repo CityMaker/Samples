@@ -1,0 +1,151 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{39BD6237-AAB1-472A-A0D1-B1398F444ACF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>CityMakerConnect.AddIn.Example</RootNamespace>
+    <AssemblyName>CityMakerConnect.AddIn.Example</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CityMakerConnect.AddIn.Core">
+      <HintPath>C:\Program Files\CityMaker 8\CityMaker Connect\CityMakerConnect.AddIn.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CityMakerConnect.AddIn.WinForm">
+      <HintPath>C:\Program Files\CityMaker 8\CityMaker Connect\CityMakerConnect.AddIn.WinForm.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CityMakerConnect.UserControls.CommonControls">
+      <HintPath>C:\Program Files\CityMaker 8\CityMaker Connect\CityMakerConnect.UserControls.CommonControls.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CityMakerConnect.UserControls.FeatureQuery">
+      <HintPath>C:\Program Files\CityMaker 8\CityMaker Connect\CityMakerConnect.UserControls.FeatureQuery.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CityMakerConnect.UserControls.LayerTree">
+      <HintPath>C:\Program Files\CityMaker 8\CityMaker Connect\CityMakerConnect.UserControls.LayerTree.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CityMakerConnect.UserControls.RightPanel">
+      <HintPath>C:\Program Files\CityMaker 8\CityMaker Connect\CityMakerConnect.UserControls.RightPanel.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CityMakerConnect.WorkSpace">
+      <HintPath>C:\Program Files\CityMaker 8\CityMaker Connect\CityMakerConnect.WorkSpace.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Gvitech.CityMaker.Common.v8.0">
+      <HintPath>C:\Program Files\CityMaker 8\CityMaker Connect\Gvitech.CityMaker.Common.v8.0.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Gvitech.CityMaker.FdeCore.v8.0">
+      <HintPath>C:\Program Files\CityMaker 8\CityMaker Connect\Gvitech.CityMaker.FdeCore.v8.0.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Gvitech.CityMaker.FdeDataInterop.v8.0">
+      <HintPath>C:\Program Files\CityMaker 8\CityMaker Connect\Gvitech.CityMaker.FdeDataInterop.v8.0.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Gvitech.CityMaker.FdeGeometry.v8.0">
+      <HintPath>C:\Program Files\CityMaker 8\CityMaker Connect\Gvitech.CityMaker.FdeGeometry.v8.0.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Gvitech.CityMaker.FdeUndoRedo.v8.0">
+      <HintPath>C:\Program Files\CityMaker 8\CityMaker Connect\Gvitech.CityMaker.FdeUndoRedo.v8.0.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Gvitech.CityMaker.Math.v8.0">
+      <HintPath>C:\Program Files\CityMaker 8\CityMaker Connect\Gvitech.CityMaker.Math.v8.0.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Gvitech.CityMaker.RenderControl.v8.0">
+      <HintPath>C:\Program Files\CityMaker 8\CityMaker Connect\Gvitech.CityMaker.RenderControl.v8.0.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Gvitech.CityMaker.Resource.v8.0">
+      <HintPath>C:\Program Files\CityMaker 8\CityMaker Connect\Gvitech.CityMaker.Resource.v8.0.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Command\LoginCommand.cs" />
+    <Compile Include="Dialog\LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CityMakerConnect.Example.addin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Dialog\LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
